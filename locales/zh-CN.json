@@ -282,6 +282,8 @@
       "note": "订单特殊说明",
       "checkout": "结账",
       "empty": "您的购物车为空",
+      "product_disclosure": "产品披露信息",
+      "product_disclosures": "产品披露信息",
       "cart_error": "更新购物车时出错。请重试。",
       "cart_quantity_error_html": "您只能向购物车添加 {{ quantity }} 件此商品。",
       "headings": {
@@ -391,7 +393,6 @@
       "view_addresses": "查看地址",
       "return": "返回账户详细信息"
     },
-    "account_fallback": "账户",
     "activate_account": {
       "title": "激活账户",
       "subtext": "创建密码以激活您的账户。",

@@ -361,6 +361,17 @@
           }
         }
       }
+    },
+    "customer_accounts": {
+      "name": "고객 계정",
+      "settings": {
+        "paragraph": {
+          "content": "고객 계정 설정에서 [표시 여부를 관리](/admin/settings/customer_accounts)하십시오."
+        },
+        "customer_account_menu": {
+          "label": "메뉴"
+        }
+      }
     }
   },
   "sections": {
@@ -987,12 +998,11 @@
         "menu_color_scheme": {
           "label": "메뉴 색상 구성표"
         },
-        "enable_customer_avatar": {
-          "label": "고객 계정 아바타",
-          "info": "고객이 Shop에 로그인한 경우에만 표시됩니다. [고객 계정 관리하기](/admin/settings/customer_accounts)"
-        },
         "header__utilities": {
           "content": "유틸리티"
+        },
+        "customer_account_menu": {
+          "content": "[테마 설정](/editor?context=theme&category=customer%20accounts)에서 고객 계정을 관리하십시오."
         }
       }
     },
@@ -3155,30 +3165,6 @@
         "name": "축소 가능한 콘텐츠"
       }
     },
-    "main-account": {
-      "name": "계정"
-    },
-    "main-activate-account": {
-      "name": "계정 활성화"
-    },
-    "main-addresses": {
-      "name": "주소"
-    },
-    "main-login": {
-      "name": "로그인",
-      "shop_login_button": {
-        "enable": "Shop으로 로그인 활성화"
-      }
-    },
-    "main-order": {
-      "name": "주문"
-    },
-    "main-register": {
-      "name": "등록"
-    },
-    "main-reset-password": {
-      "name": "암호 재설정"
-    },
     "related-products": {
       "name": "관련 제품",
       "settings": {
@@ -3395,6 +3381,20 @@
       },
       "presets": {
         "name": "빠른 주문 목록"
+      }
+    },
+    "disclosures": {
+      "name": "고지 사항",
+      "settings": {
+        "paragraph": {
+          "content": "이 제품에 필수적인 안전 경고 및 규제 관련 고지 사항입니다."
+        },
+        "heading": {
+          "label": "제목"
+        },
+        "open_by_default": {
+          "label": "기본으로 열기"
+        }
       }
     }
   }

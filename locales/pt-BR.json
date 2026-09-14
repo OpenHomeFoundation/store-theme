@@ -292,6 +292,8 @@
       "note": "Instruções especiais do pedido",
       "checkout": "Finalizar a compra",
       "empty": "O carrinho está vazio",
+      "product_disclosure": "Informação de divulgação do produto",
+      "product_disclosures": "Informações de divulgação do produto",
       "cart_error": "Ocorreu um erro ao atualizar o carrinho. Tente de novo.",
       "cart_quantity_error_html": "É possível adicionar apenas {{ quantity }} unidade(s) desse item ao carrinho.",
       "headings": {
@@ -403,7 +405,6 @@
       "view_addresses": "Ver endereços",
       "return": "Retornar às Informações da conta"
     },
-    "account_fallback": "Conta",
     "activate_account": {
       "title": "﻿Ativar conta",
       "subtext": "Crie uma senha para ativar sua conta.",

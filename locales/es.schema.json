@@ -361,6 +361,17 @@
           }
         }
       }
+    },
+    "customer_accounts": {
+      "name": "Cuentas de cliente",
+      "settings": {
+        "paragraph": {
+          "content": "[Gestiona la visibilidad](/admin/settings/customer_accounts) en la configuración de las cuentas de cliente."
+        },
+        "customer_account_menu": {
+          "label": "Menú"
+        }
+      }
     }
   },
   "sections": {
@@ -987,12 +998,11 @@
         "menu_color_scheme": {
           "label": "Esquema de colores del menú"
         },
-        "enable_customer_avatar": {
-          "label": "Avatar de cuenta de cliente",
-          "info": "Solo visible cuando los clientes iniciaron sesión con Shop. [Gestionar cuentas de clientes](/admin/settings/customer_accounts)"
-        },
         "header__utilities": {
           "content": "Utilidades"
+        },
+        "customer_account_menu": {
+          "content": "Gestiona las cuentas de cliente en la [configuración del tema](/editor?context=theme&category=customer%20accounts)."
         }
       }
     },
@@ -3155,30 +3165,6 @@
         "name": "Contenido desplegable"
       }
     },
-    "main-account": {
-      "name": "Cuenta"
-    },
-    "main-activate-account": {
-      "name": "Activación de cuenta"
-    },
-    "main-addresses": {
-      "name": "Direcciones"
-    },
-    "main-login": {
-      "name": "Inicio de sesión",
-      "shop_login_button": {
-        "enable": "Habilitar Iniciar sesión con Shop"
-      }
-    },
-    "main-order": {
-      "name": "Pedido"
-    },
-    "main-register": {
-      "name": "Registro"
-    },
-    "main-reset-password": {
-      "name": "Restablecimiento de contraseña"
-    },
     "related-products": {
       "name": "Productos relacionados",
       "settings": {
@@ -3395,6 +3381,20 @@
       },
       "presets": {
         "name": "Lista de pedidos rápidos"
+      }
+    },
+    "disclosures": {
+      "name": "Divulgaciones",
+      "settings": {
+        "paragraph": {
+          "content": "Advertencias de seguridad y divulgaciones normativas obligatorias para este producto."
+        },
+        "heading": {
+          "label": "Título"
+        },
+        "open_by_default": {
+          "label": "Abrir de forma predeterminada"
+        }
       }
     }
   }

@@ -302,6 +302,8 @@
       "note": "Posebna navodila za naročilo",
       "checkout": "Zaključi nakup",
       "empty": "Vaša košarica je prazna",
+      "product_disclosure": "Razkritje o izdelku",
+      "product_disclosures": "Razkritja o izdelku",
       "cart_error": "Pri posodabljanju vaše košarice je prišlo do napake. Poskusite znova.",
       "cart_quantity_error_html": "V košarico lahko dodate največ toliko tovrstnih izdelkov: {{ quantity }}.",
       "update": "Posodobitev",
@@ -415,7 +417,6 @@
       "view_addresses": "Prikaži naslove",
       "return": "Nazaj na podatke o računu"
     },
-    "account_fallback": "Račun",
     "log_in": "Prijava",
     "log_out": "Odjava",
     "activate_account": {

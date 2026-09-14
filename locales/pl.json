@@ -302,6 +302,8 @@
       "note": "Specjalne instrukcje do zamówienia",
       "checkout": "Realizuj zakup",
       "empty": "Twój koszyk jest pusty",
+      "product_disclosure": "Dodatkowa informacja o produkcie",
+      "product_disclosures": "Dodatkowe informacje o produkcie",
       "cart_error": "Wystąpił błąd podczas aktualizowania Twojego koszyka. Spróbuj ponownie.",
       "cart_quantity_error_html": "Możesz dodać do koszyka tylko {{ quantity }} sztuk(i) tej pozycji.",
       "update": "Aktualizuj",
@@ -415,7 +417,6 @@
       "view_addresses": "Wyświetl adresy",
       "return": "Wróć do szczegółów konta"
     },
-    "account_fallback": "Konto",
     "log_in": "Zaloguj się",
     "log_out": "Wyloguj",
     "activate_account": {

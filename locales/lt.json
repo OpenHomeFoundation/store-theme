@@ -302,6 +302,8 @@
       "note": "Specialūs nurodymai dėl užsakymo",
       "checkout": "Atsiskaityti",
       "empty": "Jūsų krepšelis tuščias",
+      "product_disclosure": "Atskleidžiama produkto informacija",
+      "product_disclosures": "Atskleidžiama produkto informacija",
       "cart_error": "Atnaujinant krepšelį įvyko klaida. Bandykite dar kartą.",
       "cart_quantity_error_html": "Į krepšelį galite įdėti tik {{ quantity }}šios prekės vnt.",
       "update": "Atnaujinti",
@@ -415,7 +417,6 @@
       "view_addresses": "Žr. adresus",
       "return": "Grįžti į paskyros informaciją"
     },
-    "account_fallback": "Paskyra",
     "log_in": "Prisijungti",
     "log_out": "Atsijungti",
     "activate_account": {

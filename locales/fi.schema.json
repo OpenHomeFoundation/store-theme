@@ -361,6 +361,17 @@
           }
         }
       }
+    },
+    "customer_accounts": {
+      "name": "Asiakastilit",
+      "settings": {
+        "paragraph": {
+          "content": "[Hallitse näkyvyyttä](/admin/settings/customer_accounts) asiakastilien asetuksista."
+        },
+        "customer_account_menu": {
+          "label": "Valikko"
+        }
+      }
     }
   },
   "sections": {
@@ -987,12 +998,11 @@
         "menu_color_scheme": {
           "label": "Värimallivalikko"
         },
-        "enable_customer_avatar": {
-          "label": "Asiakastilin avatar",
-          "info": "Näkyvissä vain, kun asiakkaat ovat kirjautuneet Shopiin. [Hallinnoi asiakastilejä](/admin/settings/customer_accounts)"
-        },
         "header__utilities": {
           "content": "Apuohjelmat"
+        },
+        "customer_account_menu": {
+          "content": "Hallitse asiakastilejä [teeman asetuksista](/editor?context=theme&category=customer%20accounts)."
         }
       }
     },
@@ -3155,30 +3165,6 @@
         "name": "Pienenettävä sisältö"
       }
     },
-    "main-account": {
-      "name": "Tili"
-    },
-    "main-activate-account": {
-      "name": "Tilin aktivointi"
-    },
-    "main-addresses": {
-      "name": "Osoitteet"
-    },
-    "main-login": {
-      "name": "Kirjautuminen",
-      "shop_login_button": {
-        "enable": "Ota käyttöön kirjautuminen Shopilla"
-      }
-    },
-    "main-order": {
-      "name": "Tilaus"
-    },
-    "main-register": {
-      "name": "Rekisteröinti"
-    },
-    "main-reset-password": {
-      "name": "Salasanan nollaus"
-    },
     "related-products": {
       "name": "Liittyvät tuotteet",
       "settings": {
@@ -3395,6 +3381,20 @@
       },
       "presets": {
         "name": "Pikatilausluettelo"
+      }
+    },
+    "disclosures": {
+      "name": "Ilmoitukset",
+      "settings": {
+        "paragraph": {
+          "content": "Tämän tuotteen pakolliset turvallisuusvaroitukset ja säädösten edellyttämät ilmoitukset."
+        },
+        "heading": {
+          "label": "Otsikko"
+        },
+        "open_by_default": {
+          "label": "Avoinna oletuksena"
+        }
       }
     }
   }

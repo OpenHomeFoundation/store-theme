@@ -292,6 +292,8 @@
       "note": "Ostale posebne upute",
       "checkout": "Završi kupnju",
       "empty": "Vaša je košarica prazna",
+      "product_disclosure": "Obavijest o proizvodu",
+      "product_disclosures": "Obavijesti o proizvodu",
       "cart_error": "Došlo je do pogreške prilikom ažuriranja košarice. Pokušajte ponovno.",
       "cart_quantity_error_html": "U svoju košaricu možete dodati {{ quantity }} kom ovog artikla.",
       "update": "Ažuriraj",
@@ -403,7 +405,6 @@
       "view_addresses": "Prikaži adrese",
       "return": "Povratak na pojedinosti o računu"
     },
-    "account_fallback": "Račun",
     "log_in": "Prijava",
     "log_out": "Odjava",
     "activate_account": {

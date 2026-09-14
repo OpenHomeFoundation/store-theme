@@ -282,6 +282,8 @@
       "note": "Spesielle instruksjoner for bestillingen",
       "checkout": "Kasse",
       "empty": "Handlekurven din er tom",
+      "product_disclosure": "Produktopplysning",
+      "product_disclosures": "Produktopplysninger",
       "cart_error": "Det oppstod en feil under oppdateringen av handlekurven din. Prøv på nytt.",
       "cart_quantity_error_html": "Du kan bare legge {{ quantity }} av denne varen i handlekurven.",
       "headings": {
@@ -391,7 +393,6 @@
       "view_addresses": "Vis adresser",
       "return": "Gå tilbake til kontodetaljer"
     },
-    "account_fallback": "Konto",
     "activate_account": {
       "title": "Aktiver konto",
       "subtext": "Opprett passordet ditt for å aktivere kontoen.",

@@ -292,6 +292,8 @@
       "note": "Instrucciones especiales del pedido",
       "checkout": "Pagar pedido",
       "empty": "Tu carrito esta vacío",
+      "product_disclosure": "Aviso sobre el producto",
+      "product_disclosures": "Avisos sobre el producto",
       "cart_error": "Hubo un error al actualizar tu carrito de compra. Inténtalo de nuevo.",
       "cart_quantity_error_html": "Solo puedes agregar {{ quantity }} de este artículo a tu carrito.",
       "headings": {
@@ -403,7 +405,6 @@
       "view_addresses": "Ver direcciones",
       "return": "Regresar a detalles de la cuenta"
     },
-    "account_fallback": "Cuenta",
     "activate_account": {
       "title": "Activar cuenta",
       "subtext": "Crea tu contraseña para activar tu cuenta.",

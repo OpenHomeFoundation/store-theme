@@ -153,6 +153,17 @@
         }
       }
     },
+    "customer_accounts": {
+      "name": "Customer accounts",
+      "settings": {
+        "paragraph": {
+          "content": "[Manage visibility](/admin/settings/customer_accounts) in customer account settings."
+        },
+        "customer_account_menu": {
+          "label": "Menu"
+        }
+      }
+    },
     "brand_information": {
       "name": "Brand information",
       "settings": {
@@ -1145,9 +1156,8 @@
             "label": "Left"
           }
         },
-        "enable_customer_avatar": {
-          "label": "Customer account avatar",
-          "info": "Only visible when customers are signed in with Shop. [Manage customer accounts](/admin/settings/customer_accounts)"
+        "customer_account_menu": {
+          "content": "Manage customer accounts in [theme settings](/editor?context=theme&category=customer%20accounts)."
         }
       }
     },
@@ -1639,15 +1649,6 @@
         "name": "Multirow"
       }
     },
-    "main-account": {
-      "name": "Account"
-    },
-    "main-activate-account": {
-      "name": "Account activation"
-    },
-    "main-addresses": {
-      "name": "Addresses"
-    },
     "main-article": {
       "name": "Blog post",
       "blocks": {
@@ -1897,15 +1898,6 @@
           }
         }
       }
-    },
-    "main-login": {
-      "name": "Login",
-      "shop_login_button": {
-        "enable": "Enable Sign in with Shop"
-      }
-    },
-    "main-order": {
-      "name": "Order"
     },
     "main-page": {
       "name": "Page"
@@ -2408,12 +2400,6 @@
           "label": "Loop video"
         }
       }
-    },
-    "main-register": {
-      "name": "Registration"
-    },
-    "main-reset-password": {
-      "name": "Password reset"
     },
     "main-search": {
       "name": "Search results",
@@ -3395,6 +3381,20 @@
       },
       "presets": {
         "name": "Collapsible content"
+      }
+    },
+    "disclosures": {
+      "name": "Disclosures",
+      "settings": {
+        "paragraph": {
+          "content": "Required safety warnings and regulatory disclosures for this product."
+        },
+        "heading": {
+          "label": "Heading"
+        },
+        "open_by_default": {
+          "label": "Open by default"
+        }
       }
     }
   }

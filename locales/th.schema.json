@@ -361,6 +361,17 @@
           }
         }
       }
+    },
+    "customer_accounts": {
+      "name": "บัญชีผู้ใช้ของลูกค้า",
+      "settings": {
+        "paragraph": {
+          "content": "[จัดการการมองเห็น](/admin/settings/customer_accounts)ในการตั้งค่าบัญชีผู้ใช้ของลูกค้า"
+        },
+        "customer_account_menu": {
+          "label": "เมนู"
+        }
+      }
     }
   },
   "sections": {
@@ -987,12 +998,11 @@
         "menu_color_scheme": {
           "label": "รูปแบบสีเมนู"
         },
-        "enable_customer_avatar": {
-          "label": "ตัวแทนบัญชีผู้ใช้ของลูกค้า",
-          "info": "แสดงผลเมื่อลูกค้าลงชื่อเข้าใช้ใน Shop เท่านั้น [จัดการบัญชีผู้ใช้ของลูกค้า](/admin/settings/customer_accounts)"
-        },
         "header__utilities": {
           "content": "สาธารณูปโภค"
+        },
+        "customer_account_menu": {
+          "content": "จัดการบัญชีผู้ใช้ของลูกค้าใน[การตั้งค่าธีม](/editor?context=theme&category=customer%20accounts)"
         }
       }
     },
@@ -3155,30 +3165,6 @@
         "name": "เนื้อหาที่ย่อได้"
       }
     },
-    "main-account": {
-      "name": "บัญชีผู้ใช้"
-    },
-    "main-activate-account": {
-      "name": "การเปิดใช้งานบัญชีผู้ใช้"
-    },
-    "main-addresses": {
-      "name": "ที่อยู่"
-    },
-    "main-login": {
-      "name": "เข้าสู่ระบบ",
-      "shop_login_button": {
-        "enable": "เปิดใช้การลงชื่อเข้าใช้ด้วย Shop"
-      }
-    },
-    "main-order": {
-      "name": "คำสั่งซื้อ"
-    },
-    "main-register": {
-      "name": "การลงทะเบียน"
-    },
-    "main-reset-password": {
-      "name": "รีเซ็ตรหัสผ่านแล้ว"
-    },
     "related-products": {
       "name": "สินค้าที่เกี่ยวข้อง",
       "settings": {
@@ -3395,6 +3381,20 @@
       },
       "presets": {
         "name": "รายการคำสั่งซื้อแบบด่วน"
+      }
+    },
+    "disclosures": {
+      "name": "การเปิดเผยข้อมูล",
+      "settings": {
+        "paragraph": {
+          "content": "คำเตือนด้านความปลอดภัยและข้อมูลตามระเบียบข้อบังคับที่ต้องเปิดเผยสำหรับสินค้านี้"
+        },
+        "heading": {
+          "label": "หัวเรื่อง"
+        },
+        "open_by_default": {
+          "label": "เปิดตามค่าเริ่มต้น"
+        }
       }
     }
   }

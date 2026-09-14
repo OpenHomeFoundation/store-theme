@@ -292,6 +292,8 @@
       "note": "Instructions spéciales concernant la commande",
       "checkout": "Procéder au paiement",
       "empty": "Votre panier est vide",
+      "product_disclosure": "Information sur le produit",
+      "product_disclosures": "Informations sur le produit",
       "cart_error": "Une erreur est survenue lors de l’actualisation de votre panier. Veuillez réessayer.",
       "cart_quantity_error_html": "Vous ne pouvez pas ajouter plus de {{ quantity }} de ce produit à votre panier.",
       "headings": {
@@ -403,7 +405,6 @@
       "view_addresses": "Voir les adresses",
       "return": "Retour aux détails du compte"
     },
-    "account_fallback": "Compte",
     "activate_account": {
       "title": "Activer le compte",
       "subtext": "Créez votre mot de passe pour activer le compte.",

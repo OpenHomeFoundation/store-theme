@@ -361,6 +361,17 @@
           }
         }
       }
+    },
+    "customer_accounts": {
+      "name": "Müşteri hesapları",
+      "settings": {
+        "paragraph": {
+          "content": "Müşteri hesabı ayarlarından [görünürlüğü yönetin](/admin/settings/customer_accounts)."
+        },
+        "customer_account_menu": {
+          "label": "Menü"
+        }
+      }
     }
   },
   "sections": {
@@ -987,12 +998,11 @@
         "menu_color_scheme": {
           "label": "Menü renk şeması"
         },
-        "enable_customer_avatar": {
-          "label": "Müşteri hesabı avatarı",
-          "info": "Yalnızca müşteriler Shop ile oturum açtığında görünür [Müşteri hesaplarını yönet](/admin/settings/customer_accounts)"
-        },
         "header__utilities": {
           "content": "Yardımcı araçlar"
+        },
+        "customer_account_menu": {
+          "content": "Müşteri hesaplarını [tema ayarlarından](/editor?context=theme&category=customer%20accounts) yönetin."
         }
       }
     },
@@ -3155,30 +3165,6 @@
         "name": "Daraltılabilir içerik"
       }
     },
-    "main-account": {
-      "name": "Hesap"
-    },
-    "main-activate-account": {
-      "name": "Hesap etkinleştirme"
-    },
-    "main-addresses": {
-      "name": "Adresler"
-    },
-    "main-login": {
-      "name": "Giriş bilgileri",
-      "shop_login_button": {
-        "enable": "Shop ile giriş yapmayı etkinleştirin"
-      }
-    },
-    "main-order": {
-      "name": "Sipariş"
-    },
-    "main-register": {
-      "name": "Kayıt"
-    },
-    "main-reset-password": {
-      "name": "Parola sıfırlama"
-    },
     "related-products": {
       "name": "Alakalı ürünler",
       "settings": {
@@ -3395,6 +3381,20 @@
       },
       "presets": {
         "name": "Hızlı sipariş listesi"
+      }
+    },
+    "disclosures": {
+      "name": "Bildirimler",
+      "settings": {
+        "paragraph": {
+          "content": "Bu ürün için zorunlu güvenlik uyarıları ve yasal bildirimler."
+        },
+        "heading": {
+          "label": "Başlık"
+        },
+        "open_by_default": {
+          "label": "Varsayılan olarak açık"
+        }
       }
     }
   }

@@ -282,6 +282,8 @@
       "note": "訂單特別指示",
       "checkout": "結帳",
       "empty": "您的購物車是空的",
+      "product_disclosure": "商品揭露資訊",
+      "product_disclosures": "商品揭露資訊",
       "cart_error": "更新購物車時發生錯誤。請再試一次。",
       "cart_quantity_error_html": "您只能將 {{ quantity }} 項商品加入您的購物車。",
       "headings": {
@@ -391,7 +393,6 @@
       "view_addresses": "查看地址",
       "return": "返回帳號詳細資訊"
     },
-    "account_fallback": "帳號",
     "activate_account": {
       "title": "啟用帳號",
       "subtext": "建立密碼以啟用帳戶。",

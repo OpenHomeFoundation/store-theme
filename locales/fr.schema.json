@@ -361,6 +361,17 @@
           }
         }
       }
+    },
+    "customer_accounts": {
+      "name": "Comptes clients",
+      "settings": {
+        "paragraph": {
+          "content": "[Gérer la visibilité](/admin/settings/customer_accounts) dans les paramètres des comptes clients."
+        },
+        "customer_account_menu": {
+          "label": "Menu"
+        }
+      }
     }
   },
   "sections": {
@@ -987,12 +998,11 @@
         "menu_color_scheme": {
           "label": "Nuancier de couleurs de menu"
         },
-        "enable_customer_avatar": {
-          "label": "Avatar de compte client",
-          "info": "Visible uniquement lorsque les clients sont connectés avec Shop. [Gérer les comptes clients](/admin/settings/customer_accounts)"
-        },
         "header__utilities": {
           "content": "Utilitaires"
+        },
+        "customer_account_menu": {
+          "content": "Gérer les comptes clients dans les [paramètres du thème](/editor?context=theme&category=customer%20accounts)."
         }
       }
     },
@@ -3155,30 +3165,6 @@
         "name": "Contenu réductible"
       }
     },
-    "main-account": {
-      "name": "Compte"
-    },
-    "main-activate-account": {
-      "name": "Activation du compte"
-    },
-    "main-addresses": {
-      "name": "Adresses"
-    },
-    "main-login": {
-      "name": "Se connecter",
-      "shop_login_button": {
-        "enable": "Activer la connexion avec Shop"
-      }
-    },
-    "main-order": {
-      "name": "Commande"
-    },
-    "main-register": {
-      "name": "Inscription"
-    },
-    "main-reset-password": {
-      "name": "Réinitialisation du mot de passe"
-    },
     "related-products": {
       "name": "Produits associés",
       "settings": {
@@ -3395,6 +3381,20 @@
       },
       "presets": {
         "name": "Liste rapide des commandes"
+      }
+    },
+    "disclosures": {
+      "name": "Divulgations",
+      "settings": {
+        "paragraph": {
+          "content": "Avertissements de sécurité obligatoires et informations réglementaires pour ce produit."
+        },
+        "heading": {
+          "label": "Titre"
+        },
+        "open_by_default": {
+          "label": "Ouvert par défaut"
+        }
       }
     }
   }

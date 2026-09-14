@@ -282,6 +282,8 @@
       "note": "Hướng dẫn đặc biệt của đơn hàng",
       "checkout": "Thanh toán",
       "empty": "Giỏ hàng của bạn đang trống",
+      "product_disclosure": "Thông tin công bố sản phẩm",
+      "product_disclosures": "Thông tin công bố sản phẩm",
       "cart_error": "Đã xảy ra lỗi khi cập nhật giỏ hàng. Vui lòng thử lại.",
       "cart_quantity_error_html": "Bạn chỉ có thể thêm {{ quantity }} mặt hàng này vào giỏ hàng.",
       "headings": {
@@ -391,7 +393,6 @@
       "view_addresses": "Xem địa chỉ",
       "return": "Quay lại Chi tiết tài khoản"
     },
-    "account_fallback": "Tài khoản",
     "activate_account": {
       "title": "Kích hoạt tài khoản",
       "subtext": "Tạo mật khẩu để kích hoạt tài khoản.",
