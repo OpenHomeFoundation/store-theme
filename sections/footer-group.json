@@ -42,7 +42,7 @@
         "enable_country_selector": true,
         "enable_language_selector": true,
         "payment_enable": true,
-        "show_policy": true,
+        "show_policy": false,
         "margin_top": 32,
         "padding_top": 32,
         "padding_bottom": 32
