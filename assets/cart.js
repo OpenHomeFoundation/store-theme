@@ -12,7 +12,7 @@ class CartRemoveButton extends HTMLElement {
 
 customElements.define('cart-remove-button', CartRemoveButton);
 
-class CartItems extends window.StandardEvents.createViewEventElement(HTMLElement) {
+class CartItems extends (window.StandardEvents?.createViewEventElement ? window.StandardEvents.createViewEventElement(HTMLElement) : HTMLElement) {
   constructor() {
     super();
     this.lineItemStatusElement =
