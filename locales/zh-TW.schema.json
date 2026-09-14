@@ -361,6 +361,17 @@
           }
         }
       }
+    },
+    "customer_accounts": {
+      "name": "顧客帳號",
+      "settings": {
+        "paragraph": {
+          "content": "在顧客帳號設定中[管理顯示狀態](/admin/settings/customer_accounts)。"
+        },
+        "customer_account_menu": {
+          "label": "選單"
+        }
+      }
     }
   },
   "sections": {
@@ -987,12 +998,11 @@
         "menu_color_scheme": {
           "label": "選單顏色配置"
         },
-        "enable_customer_avatar": {
-          "label": "顧客帳號大頭貼",
-          "info": "僅在顧客登入 Shop 時可見。[管理顧客帳號](/admin/settings/customer_accounts)"
-        },
         "header__utilities": {
           "content": "公用事業"
+        },
+        "customer_account_menu": {
+          "content": "在[佈景主題設定](/editor?context=theme&category=customer%20accounts)中管理顧客帳號。"
         }
       }
     },
@@ -3155,30 +3165,6 @@
         "name": "可摺疊的內容"
       }
     },
-    "main-account": {
-      "name": "帳號"
-    },
-    "main-activate-account": {
-      "name": "啟用帳號"
-    },
-    "main-addresses": {
-      "name": "地址"
-    },
-    "main-login": {
-      "name": "登入",
-      "shop_login_button": {
-        "enable": "啟用以 Shop 登入"
-      }
-    },
-    "main-order": {
-      "name": "訂單"
-    },
-    "main-register": {
-      "name": "註冊"
-    },
-    "main-reset-password": {
-      "name": "重設密碼"
-    },
     "related-products": {
       "name": "相關商品",
       "settings": {
@@ -3395,6 +3381,20 @@
       },
       "presets": {
         "name": "快速訂單清單"
+      }
+    },
+    "disclosures": {
+      "name": "資訊揭露",
+      "settings": {
+        "paragraph": {
+          "content": "此商品必備的安全警告與法規資訊揭露。"
+        },
+        "heading": {
+          "label": "標題"
+        },
+        "open_by_default": {
+          "label": "預設為開啟"
+        }
       }
     }
   }

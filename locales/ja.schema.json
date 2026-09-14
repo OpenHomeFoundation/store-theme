@@ -361,6 +361,17 @@
           }
         }
       }
+    },
+    "customer_accounts": {
+      "name": "お客様アカウント",
+      "settings": {
+        "paragraph": {
+          "content": "お客様アカウント設定で[表示を管理](/admin/settings/customer_accounts)します。"
+        },
+        "customer_account_menu": {
+          "label": "メニュー"
+        }
+      }
     }
   },
   "sections": {
@@ -987,12 +998,11 @@
         "menu_color_scheme": {
           "label": "メニューの配色"
         },
-        "enable_customer_avatar": {
-          "label": "お客様アカウントAvatar",
-          "info": "お客様がShopにサインインしている場合にのみ表示されます。お客様アカウントの管理](/admin/settings/customer_accounts)"
-        },
         "header__utilities": {
           "content": "ユーティリティー"
+        },
+        "customer_account_menu": {
+          "content": "[テーマ設定](/editor?context=theme&category=customer%20accounts)でお客様アカウントを管理します。"
         }
       }
     },
@@ -3155,30 +3165,6 @@
         "name": "折りたたみ可能なコンテンツ"
       }
     },
-    "main-account": {
-      "name": "アカウント"
-    },
-    "main-activate-account": {
-      "name": "アカウントの有効化"
-    },
-    "main-addresses": {
-      "name": "アドレス"
-    },
-    "main-login": {
-      "name": "ログイン",
-      "shop_login_button": {
-        "enable": "[Shopでログイン] を有効にする"
-      }
-    },
-    "main-order": {
-      "name": "注文"
-    },
-    "main-register": {
-      "name": "登録"
-    },
-    "main-reset-password": {
-      "name": "パスワードのリセット"
-    },
     "related-products": {
       "name": "関連商品",
       "settings": {
@@ -3395,6 +3381,20 @@
       },
       "presets": {
         "name": "迅速な注文リスト"
+      }
+    },
+    "disclosures": {
+      "name": "開示情報",
+      "settings": {
+        "paragraph": {
+          "content": "この商品に必要な安全に関する警告および規制に基づく開示情報です。"
+        },
+        "heading": {
+          "label": "見出し"
+        },
+        "open_by_default": {
+          "label": "デフォルトで開く"
+        }
       }
     }
   }

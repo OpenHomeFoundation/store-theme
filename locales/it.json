@@ -292,6 +292,8 @@
       "note": "Istruzioni speciali per l'ordine",
       "checkout": "Check-out",
       "empty": "Il tuo carrello è vuoto",
+      "product_disclosure": "Informativa sul prodotto",
+      "product_disclosures": "Informative sul prodotto",
       "cart_error": "Si è verificato un errore durante l'aggiornamento del carrello. Riprova più tardi.",
       "cart_quantity_error_html": "Puoi aggiungere soltanto {{ quantity }} di questo articolo al tuo carrello.",
       "headings": {
@@ -403,7 +405,6 @@
       "view_addresses": "Visualizza indirizzi",
       "return": "Ritorna ai dettagli dell'account"
     },
-    "account_fallback": "Account",
     "activate_account": {
       "title": "Attiva l'account",
       "subtext": "Crea una password per attivare il tuo account.",

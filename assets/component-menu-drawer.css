@@ -175,50 +175,9 @@ details[open].menu-opening > .menu-drawer__submenu {
   position: relative;
 }
 
+.header--has-localizations .menu-drawer__utility-links,
 .header--has-social .menu-drawer__utility-links {
   padding: 2rem 3rem;
-}
-
-@media screen and (max-width: 749px) {
-  .header--has-account:where(:not(.header--has-social):not(.header--has-localizations)) .menu-drawer__utility-links {
-    padding: 2rem 3rem;
-  }
-}
-
-@media screen and (max-width: 989px) {
-  .header--has-localizations:where(:not(.header--has-social)) .menu-drawer__utility-links {
-    padding: 2rem 3rem;
-  }
-}
-
-.menu-drawer__account {
-  display: inline-flex;
-  align-items: center;
-  text-decoration: none;
-  padding: 1rem 0;
-  font-size: 1.4rem;
-  color: rgb(var(--color-foreground));
-  margin-bottom: 0;
-}
-
-.menu-drawer__utility-links:has(.menu-drawer__localization) .menu-drawer__account {
-  margin: 0;
-}
-
-.menu-drawer__account account-icon > .svg-wrapper {
-  height: 2rem;
-  width: 2rem;
-  margin-right: 1rem;
-}
-
-.menu-drawer__account shop-user-avatar {
-  --shop-avatar-size: 2.4rem;
-  margin-right: 0.55rem;
-  margin-left: -0.45rem;
-}
-
-.menu-drawer__account:hover account-icon > .svg-wrapper {
-  transform: scale(1.07);
 }
 
 .menu-drawer .list-social {

@@ -282,6 +282,8 @@
       "note": "Siparişe özel talimatlar",
       "checkout": "Ödeme",
       "empty": "Sepetiniz boş",
+      "product_disclosure": "Ürün bildirimi",
+      "product_disclosures": "Ürün bildirimleri",
       "cart_error": "Sepetiniz güncellenirken bir hata oluştu. Lütfen tekrar deneyin.",
       "cart_quantity_error_html": "Sepetinize bu üründen yalnızca {{ quantity }} adet ekleyebilirsiniz.",
       "headings": {
@@ -391,7 +393,6 @@
       "view_addresses": "Adresi görüntüle",
       "return": "Hesap bilgilerine geri dön"
     },
-    "account_fallback": "Hesap",
     "activate_account": {
       "title": "Hesabı etkinleştirin",
       "subtext": "Hesabınızı etkinleştirmek için parolanızı oluşturun.",

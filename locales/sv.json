@@ -282,6 +282,8 @@
       "note": "Beställ särskilda instruktioner",
       "checkout": "Gå till kassan",
       "empty": "Din varukorg är tom",
+      "product_disclosure": "Produktupplysning",
+      "product_disclosures": "Produktupplysningar",
       "cart_error": "Ett fel uppstod när du uppdaterade din varukorg. Försök igen.",
       "cart_quantity_error_html": "Du kan endast lägga till {{ quantity }} av denna artikel i din varukorg.",
       "headings": {
@@ -391,7 +393,6 @@
       "view_addresses": "Visa adresser",
       "return": "Återgå till kontouppgifter"
     },
-    "account_fallback": "Konto",
     "activate_account": {
       "title": "Aktivera konto",
       "subtext": "Skapa ditt lösenord för att aktivera ditt konto.",

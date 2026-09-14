@@ -361,6 +361,17 @@
           }
         }
       }
+    },
+    "customer_accounts": {
+      "name": "Kundkonton",
+      "settings": {
+        "paragraph": {
+          "content": "[Hantera synlighet](/admin/settings/customer_accounts) i inställningar för kundkonto."
+        },
+        "customer_account_menu": {
+          "label": "Meny"
+        }
+      }
     }
   },
   "sections": {
@@ -987,12 +998,11 @@
         "menu_color_scheme": {
           "label": "Färgschema för meny"
         },
-        "enable_customer_avatar": {
-          "label": "Avatar för kundkonto",
-          "info": "Visas endast när kunder är inloggade med Shop. [Hantera kundkonton](/admin/settings/customer_accounts)"
-        },
         "header__utilities": {
           "content": "Verktyg"
+        },
+        "customer_account_menu": {
+          "content": "Hantera kundkonton i [temainställningar](/editor?context=theme&category=customer%20accounts)."
         }
       }
     },
@@ -3155,30 +3165,6 @@
         "name": "Innehåll som kan döljas"
       }
     },
-    "main-account": {
-      "name": "Konto"
-    },
-    "main-activate-account": {
-      "name": "Kontoaktivering"
-    },
-    "main-addresses": {
-      "name": "Adresser"
-    },
-    "main-login": {
-      "name": "Inloggning",
-      "shop_login_button": {
-        "enable": "Aktivera inloggning med Shop"
-      }
-    },
-    "main-order": {
-      "name": "Order"
-    },
-    "main-register": {
-      "name": "Registrering"
-    },
-    "main-reset-password": {
-      "name": "Lösenordsåterställning"
-    },
     "related-products": {
       "name": "Relaterade produkter",
       "settings": {
@@ -3395,6 +3381,20 @@
       },
       "presets": {
         "name": "Snabb orderlista"
+      }
+    },
+    "disclosures": {
+      "name": "Upplysningar",
+      "settings": {
+        "paragraph": {
+          "content": "Obligatoriska säkerhetsvarningar och lagstadgad information för denna produkt."
+        },
+        "heading": {
+          "label": "Rubrik"
+        },
+        "open_by_default": {
+          "label": "Öppen som standard"
+        }
       }
     }
   }

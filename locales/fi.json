@@ -282,6 +282,8 @@
       "note": "Tilauksen erityisohjeet",
       "checkout": "Kassa",
       "empty": "Ostoskorisi on tyhjä",
+      "product_disclosure": "Tuoteilmoitus",
+      "product_disclosures": "Tuoteilmoitukset",
       "cart_error": "Ostoskorisi päivityksessä tapahtui virhe. Yritä uudelleen.",
       "cart_quantity_error_html": "Voit lisätä ostoskoriisi vain {{ quantity }} kappaletta tätä tuotetta.",
       "headings": {
@@ -391,7 +393,6 @@
       "view_addresses": "Näytä osoitteet",
       "return": "Palaa tilin tietoihin"
     },
-    "account_fallback": "Tili",
     "activate_account": {
       "title": "Aktivoi tili",
       "subtext": "Aktivoi tili luomalla salasana.",

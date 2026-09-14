@@ -361,6 +361,17 @@
           }
         }
       }
+    },
+    "customer_accounts": {
+      "name": "Klantaccounts",
+      "settings": {
+        "paragraph": {
+          "content": "[Zichtbaarheid beheren](/admin/settings/customer_accounts) in de instellingen voor klantaccounts."
+        },
+        "customer_account_menu": {
+          "label": "Menu"
+        }
+      }
     }
   },
   "sections": {
@@ -987,12 +998,11 @@
         "menu_color_scheme": {
           "label": "Kleurschemamenu"
         },
-        "enable_customer_avatar": {
-          "label": "Avatar klantaccount",
-          "info": "Alleen zichtbaar als klanten zijn ingelogd met Shop. [Klantaccounts beheren](/admin/settings/customer_accounts)"
-        },
         "header__utilities": {
           "content": "Hulpprogramma's"
+        },
+        "customer_account_menu": {
+          "content": "Klantaccounts beheren in de [thema-instellingen](/editor?context=theme&category=customer%20accounts)."
         }
       }
     },
@@ -3155,30 +3165,6 @@
         "name": "Inklapbare content"
       }
     },
-    "main-account": {
-      "name": "Account"
-    },
-    "main-activate-account": {
-      "name": "Accountactivering"
-    },
-    "main-addresses": {
-      "name": "Adressen"
-    },
-    "main-login": {
-      "name": "Inloggen",
-      "shop_login_button": {
-        "enable": "Inloggen met Shop inschakelen"
-      }
-    },
-    "main-order": {
-      "name": "Bestelling"
-    },
-    "main-register": {
-      "name": "Registratie"
-    },
-    "main-reset-password": {
-      "name": "Wachtwoord opnieuw instellen"
-    },
     "related-products": {
       "name": "Gerelateerde producten",
       "settings": {
@@ -3395,6 +3381,20 @@
       },
       "presets": {
         "name": "Snelle lijst met bestellingen"
+      }
+    },
+    "disclosures": {
+      "name": "Toelichtingen",
+      "settings": {
+        "paragraph": {
+          "content": "Verplichte veiligheidswaarschuwingen en wettelijke vermeldingen voor dit product."
+        },
+        "heading": {
+          "label": "Opschrift"
+        },
+        "open_by_default": {
+          "label": "Standaard geopend"
+        }
       }
     }
   }

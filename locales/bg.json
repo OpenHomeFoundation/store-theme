@@ -281,6 +281,8 @@
       "remove_title": "Премахване на {{ title }}",
       "checkout": "Преминаване към плащане",
       "empty": "Количката ви е празна.",
+      "product_disclosure": "Оповестяване за продукта",
+      "product_disclosures": "Оповестявания за продукта",
       "cart_error": "При актуализирането на количката ви възникна грешка. Опитайте отново.",
       "cart_quantity_error_html": "Можете да добавите само {{ quantity }} броя от този артикул в количката си.",
       "headings": {
@@ -385,7 +387,6 @@
     "country_results_count": "Открити са {{ count }} страни/региона"
   },
   "customer": {
-    "account_fallback": "Профил",
     "activate_account": {
       "subtext": "Създайте парола, за да активирате профила си.",
       "password": "Парола",

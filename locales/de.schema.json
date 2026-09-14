@@ -361,6 +361,17 @@
           }
         }
       }
+    },
+    "customer_accounts": {
+      "name": "Kundenkonten",
+      "settings": {
+        "paragraph": {
+          "content": "[Sichtbarkeit verwalten](/admin/settings/customer_accounts) in den Kundenkonto-Einstellungen."
+        },
+        "customer_account_menu": {
+          "label": "Menü"
+        }
+      }
     }
   },
   "sections": {
@@ -987,12 +998,11 @@
         "menu_color_scheme": {
           "label": "Menü-Farbschema"
         },
-        "enable_customer_avatar": {
-          "label": "Avatar für Kundenkonto",
-          "info": "Nur sichtbar, wenn Kunden mit Shop angemeldet sind. [Kundenkonten verwalten](/admin/settings/customer_accounts)"
-        },
         "header__utilities": {
           "content": "Versorgungsunternehmen"
+        },
+        "customer_account_menu": {
+          "content": "Kundenkonten in den [Theme-Einstellungen](/editor?context=theme&category=customer%20accounts) verwalten."
         }
       }
     },
@@ -3155,30 +3165,6 @@
         "name": "Einklappbarer Inhalt"
       }
     },
-    "main-account": {
-      "name": "Konto"
-    },
-    "main-activate-account": {
-      "name": "Kontoaktivierung"
-    },
-    "main-addresses": {
-      "name": "Adressen"
-    },
-    "main-login": {
-      "name": "Login",
-      "shop_login_button": {
-        "enable": "Schaltfläche „Mit Shop anmelden“ aktivieren"
-      }
-    },
-    "main-order": {
-      "name": "Bestellung"
-    },
-    "main-register": {
-      "name": "Registrierung"
-    },
-    "main-reset-password": {
-      "name": "Passwort zurücksetzen"
-    },
     "related-products": {
       "name": "Ähnliche Produkte",
       "settings": {
@@ -3395,6 +3381,20 @@
       },
       "presets": {
         "name": "Schnelle Bestellliste"
+      }
+    },
+    "disclosures": {
+      "name": "Pflichtangaben",
+      "settings": {
+        "paragraph": {
+          "content": "Erforderliche Sicherheitshinweise und gesetzliche Pflichtangaben für dieses Produkt."
+        },
+        "heading": {
+          "label": "Überschrift"
+        },
+        "open_by_default": {
+          "label": "Standardmäßig geöffnet"
+        }
       }
     }
   }

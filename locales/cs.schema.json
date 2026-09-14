@@ -361,6 +361,17 @@
           }
         }
       }
+    },
+    "customer_accounts": {
+      "name": "Zákaznické účty",
+      "settings": {
+        "paragraph": {
+          "content": "[Spravovat viditelnost](/admin/settings/customer_accounts) v nastavení zákaznických účtů."
+        },
+        "customer_account_menu": {
+          "label": "Nabídka"
+        }
+      }
     }
   },
   "sections": {
@@ -987,12 +998,11 @@
         "menu_color_scheme": {
           "label": "Barevné schéma nabídky"
         },
-        "enable_customer_avatar": {
-          "label": "Avatar zákaznického účtu",
-          "info": "Viditelné pouze v případě, kdy jsou zákazníci přihlášeni přes Shop. [Spravovat zákaznické účty](/admin/settings/customer_accounts)"
-        },
         "header__utilities": {
           "content": "Veřejné služby"
+        },
+        "customer_account_menu": {
+          "content": "Zákaznické účty spravujte v [nastavení šablony](/editor?context=theme&category=customer%20accounts)."
         }
       }
     },
@@ -3155,30 +3165,6 @@
         "name": "Sbalitelný obsah"
       }
     },
-    "main-account": {
-      "name": "Účet"
-    },
-    "main-activate-account": {
-      "name": "Aktivace účtu"
-    },
-    "main-addresses": {
-      "name": "Adresy"
-    },
-    "main-login": {
-      "name": "Přihlášení",
-      "shop_login_button": {
-        "enable": "Povolit přihlášení přes Shop"
-      }
-    },
-    "main-order": {
-      "name": "Objednávka"
-    },
-    "main-register": {
-      "name": "Registrace"
-    },
-    "main-reset-password": {
-      "name": "Reset hesla"
-    },
     "related-products": {
       "name": "Související produkty",
       "settings": {
@@ -3395,6 +3381,20 @@
       },
       "presets": {
         "name": "Seznam pro rychlé objednávky"
+      }
+    },
+    "disclosures": {
+      "name": "Prohlášení",
+      "settings": {
+        "paragraph": {
+          "content": "Povinná bezpečnostní varování a zákonná prohlášení pro tento produkt."
+        },
+        "heading": {
+          "label": "Nadpis"
+        },
+        "open_by_default": {
+          "label": "Otevřeno ve výchozím stavu"
+        }
       }
     }
   }

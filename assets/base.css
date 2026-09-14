@@ -1,3 +1,8 @@
+product-component,
+collection-component {
+  display: block;
+}
+
 :root {
   --alpha-button-background: 1;
   --alpha-button-border: 1;
@@ -144,6 +149,16 @@ body:has(.section-header .drawer-menu) .announcement-bar-section .page-width {
 .isolate {
   position: relative;
   z-index: 0;
+}
+
+.content-for-layout {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.content-for-layout > .shopify-section:last-child {
+  flex-grow: 1;
 }
 
 .section + .section {
@@ -2575,20 +2590,12 @@ input[type='checkbox'] {
   background: rgba(var(--color-foreground), 0.5);
 }
 
-.header__icon--account shop-user-avatar {
-  --shop-avatar-size: 2.8rem;
-}
-
 details .header__icon-close {
   display: none;
 }
 
 details[open] .header__icon-close {
   display: inline-block;
-}
-
-account-icon {
-  display: flex;
 }
 
 /* Search */
@@ -2633,7 +2640,40 @@ menu-drawer + .header__search {
   }
 
   .header:not(.header--top-center) > .header__search,
-  .header--top-center * > .header__search {
+  .header--top-center * > .header__search,
+  .header--has-account > .header__search {
+    display: none;
+  }
+
+  .header--has-account .header__icons > .header__search {
+    display: inline-flex;
+  }
+}
+
+@media screen and (max-width: 989px) {
+  .header--has-account:not(.header--has-menu) > .header__search {
+    display: inline-flex;
+  }
+
+  .header--has-account.header--has-menu:is(.header--mobile-left, .header--has-app) > .header__search {
+    display: none;
+  }
+
+  .header--has-account.header--has-menu:not(.header--mobile-left):not(.header--has-app) {
+    grid-template-areas: 'left-icons search heading icons';
+    grid-template-columns: auto auto 1fr auto;
+  }
+
+  .header--has-account.header--has-menu:not(.header--mobile-left):not(.header--has-app) > .header__search {
+    display: inline-flex;
+    grid-area: search;
+    justify-self: start;
+    margin-left: 0;
+  }
+
+  .header--has-account.header--has-menu:not(.header--mobile-left):not(.header--has-app)
+    .header__icons
+    > .header__search {
     display: none;
   }
 }

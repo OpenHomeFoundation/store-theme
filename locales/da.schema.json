@@ -361,6 +361,17 @@
           }
         }
       }
+    },
+    "customer_accounts": {
+      "name": "Kundekonti",
+      "settings": {
+        "paragraph": {
+          "content": "[Administrer synlighed](/admin/settings/customer_accounts) i indstillingerne for kundekonti."
+        },
+        "customer_account_menu": {
+          "label": "Menu"
+        }
+      }
     }
   },
   "sections": {
@@ -987,12 +998,11 @@
         "menu_color_scheme": {
           "label": "Farveskema for menu"
         },
-        "enable_customer_avatar": {
-          "label": "Kundekontos avatar",
-          "info": "Kun synlig, når kunder er logget ind med Shop. [Administrer kundekonti](/admin/settings/customer_accounts)"
-        },
         "header__utilities": {
           "content": "Forsyning"
+        },
+        "customer_account_menu": {
+          "content": "Administrer kundekonti i [temaindstillinger](/editor?context=theme&category=customer%20accounts)."
         }
       }
     },
@@ -3155,30 +3165,6 @@
         "name": "Indhold, der kan skjules"
       }
     },
-    "main-account": {
-      "name": "Konto"
-    },
-    "main-activate-account": {
-      "name": "Aktivering af konto"
-    },
-    "main-addresses": {
-      "name": "Adresser"
-    },
-    "main-login": {
-      "name": "Login",
-      "shop_login_button": {
-        "enable": "Aktivér Log ind med shop"
-      }
-    },
-    "main-order": {
-      "name": "Ordre"
-    },
-    "main-register": {
-      "name": "Registrering"
-    },
-    "main-reset-password": {
-      "name": "Nulstilling af adgangskode"
-    },
     "related-products": {
       "name": "Relaterede produkter",
       "settings": {
@@ -3395,6 +3381,20 @@
       },
       "presets": {
         "name": "Hurtig ordreliste"
+      }
+    },
+    "disclosures": {
+      "name": "Oplysninger",
+      "settings": {
+        "paragraph": {
+          "content": "Obligatoriske sikkerhedsadvarsler og lovpligtige oplysninger for dette produkt."
+        },
+        "heading": {
+          "label": "Overskrift"
+        },
+        "open_by_default": {
+          "label": "Åben som standard"
+        }
       }
     }
   }

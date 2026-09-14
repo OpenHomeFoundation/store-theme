@@ -361,6 +361,17 @@
           }
         }
       }
+    },
+    "customer_accounts": {
+      "name": "Contas de clientes",
+      "settings": {
+        "paragraph": {
+          "content": "[Gerenciar visibilidade](/admin/settings/customer_accounts) nas configurações de contas de clientes."
+        },
+        "customer_account_menu": {
+          "label": "Menu"
+        }
+      }
     }
   },
   "sections": {
@@ -987,12 +998,11 @@
         "menu_color_scheme": {
           "label": "Esquema de cores do menu"
         },
-        "enable_customer_avatar": {
-          "label": "Avatar de conta de cliente",
-          "info": "Visível apenas quando os clientes fizerem login com o Shop. [Gerenciar contas de cliente](/admin/settings/customer_accounts)"
-        },
         "header__utilities": {
           "content": "Serviços públicos"
+        },
+        "customer_account_menu": {
+          "content": "Gerenciar contas de clientes nas [configurações do tema](/editor?context=theme&category=customer%20accounts)."
         }
       }
     },
@@ -3155,30 +3165,6 @@
         "name": "Conteúdo recolhível"
       }
     },
-    "main-account": {
-      "name": "Conta"
-    },
-    "main-activate-account": {
-      "name": "Ativação de conta"
-    },
-    "main-addresses": {
-      "name": "Endereços"
-    },
-    "main-login": {
-      "name": "Fazer login",
-      "shop_login_button": {
-        "enable": "Ativar a opção Fazer login com o Shop"
-      }
-    },
-    "main-order": {
-      "name": "Pedido"
-    },
-    "main-register": {
-      "name": "Registro"
-    },
-    "main-reset-password": {
-      "name": "Redefinição de senha"
-    },
     "related-products": {
       "name": "Produtos relacionados",
       "settings": {
@@ -3395,6 +3381,20 @@
       },
       "presets": {
         "name": "Lista de pedidos rápidos"
+      }
+    },
+    "disclosures": {
+      "name": "Divulgações",
+      "settings": {
+        "paragraph": {
+          "content": "Avisos de segurança e divulgações regulatórias obrigatórios para este produto."
+        },
+        "heading": {
+          "label": "Título"
+        },
+        "open_by_default": {
+          "label": "Aberto por padrão"
+        }
       }
     }
   }

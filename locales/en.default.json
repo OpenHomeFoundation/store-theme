@@ -292,6 +292,8 @@
       "note": "Order special instructions",
       "checkout": "Check out",
       "empty": "Your cart is empty",
+      "product_disclosure": "Product disclosure",
+      "product_disclosures": "Product disclosures",
       "cart_error": "There was an error while updating your cart. Please try again.",
       "cart_quantity_error_html": "You can only add {{ quantity }} of this item to your cart.",
       "duties_and_taxes_included_shipping_at_checkout_with_policy_html": "Duties and taxes included. Discounts and <a href=\"{{ link }}\">shipping</a> calculated at checkout.",
@@ -392,7 +394,6 @@
       "view_addresses": "View addresses",
       "return": "Return to Account details"
     },
-    "account_fallback": "Account",
     "activate_account": {
       "title": "Activate account",
       "subtext": "Create your password to activate your account.",

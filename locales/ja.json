@@ -282,6 +282,8 @@
       "note": "注文に関する特別な指示・備考",
       "checkout": "購入手続きに進む",
       "empty": "カートの中身が空です",
+      "product_disclosure": "商品の開示情報",
+      "product_disclosures": "商品の開示情報",
       "cart_error": "カートをアップデートするときにエラーが発生しました。もう一度お試しください。",
       "cart_quantity_error_html": "このアイテムは{{ quantity }}個しかカートに追加することができません。",
       "headings": {
@@ -391,7 +393,6 @@
       "view_addresses": "住所を確認",
       "return": "アカウントの詳細に戻る"
     },
-    "account_fallback": "アカウント",
     "activate_account": {
       "title": "アカウントを有効にする",
       "subtext": "パスワードを作成してアカウントを有効にしてください。",

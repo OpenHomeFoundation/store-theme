@@ -361,6 +361,17 @@
           }
         }
       }
+    },
+    "customer_accounts": {
+      "name": "客户账户",
+      "settings": {
+        "paragraph": {
+          "content": "在客户账户设置中[管理可见性](/admin/settings/customer_accounts)。"
+        },
+        "customer_account_menu": {
+          "label": "菜单"
+        }
+      }
     }
   },
   "sections": {
@@ -987,12 +998,11 @@
         "menu_color_scheme": {
           "label": "菜单配色方案"
         },
-        "enable_customer_avatar": {
-          "label": "﻿客户账户头像﻿﻿",
-          "info": "仅在客户使用 Shop 登录时显示。[管理客户账户](/admin/settings/customer_accounts)"
-        },
         "header__utilities": {
           "content": "公共设施"
+        },
+        "customer_account_menu": {
+          "content": "在[模板设置](/editor?context=theme&category=customer%20accounts)中管理客户账户。"
         }
       }
     },
@@ -3155,30 +3165,6 @@
         "name": "可折叠内容"
       }
     },
-    "main-account": {
-      "name": "账户"
-    },
-    "main-activate-account": {
-      "name": "账户激活"
-    },
-    "main-addresses": {
-      "name": "地址"
-    },
-    "main-login": {
-      "name": "登录",
-      "shop_login_button": {
-        "enable": "启用“使用 Shop 登录”"
-      }
-    },
-    "main-order": {
-      "name": "订单"
-    },
-    "main-register": {
-      "name": "注册"
-    },
-    "main-reset-password": {
-      "name": "密码重设"
-    },
     "related-products": {
       "name": "相关产品",
       "settings": {
@@ -3395,6 +3381,20 @@
       },
       "presets": {
         "name": "快速订单列表"
+      }
+    },
+    "disclosures": {
+      "name": "披露信息",
+      "settings": {
+        "paragraph": {
+          "content": "此产品所需的安全警告和监管披露信息。"
+        },
+        "heading": {
+          "label": "标题"
+        },
+        "open_by_default": {
+          "label": "默认展开"
+        }
       }
     }
   }

@@ -361,6 +361,17 @@
           }
         }
       }
+    },
+    "customer_accounts": {
+      "name": "Kundekontoer",
+      "settings": {
+        "paragraph": {
+          "content": "[Administrer synlighet](/admin/settings/customer_accounts) i innstillinger for kundekonto."
+        },
+        "customer_account_menu": {
+          "label": "Meny"
+        }
+      }
     }
   },
   "sections": {
@@ -987,12 +998,11 @@
         "menu_color_scheme": {
           "label": "Menyens fargepalett"
         },
-        "enable_customer_avatar": {
-          "label": "Avatar for kundekonto",
-          "info": "Kun synlig når kunder er logget inn med Shop. [Administrer kundekontoer](/admin/settings/customer_accounts)"
-        },
         "header__utilities": {
           "content": "Verktøy"
+        },
+        "customer_account_menu": {
+          "content": "Administrer kundekontoer i [temainnstillinger](/editor?context=theme&category=customer%20accounts)."
         }
       }
     },
@@ -3155,30 +3165,6 @@
         "name": "Sammenleggbart innhold"
       }
     },
-    "main-account": {
-      "name": "Konto"
-    },
-    "main-activate-account": {
-      "name": "Kontoaktivering"
-    },
-    "main-addresses": {
-      "name": "Adresser"
-    },
-    "main-login": {
-      "name": "Logg på",
-      "shop_login_button": {
-        "enable": "Aktiver Logg inn med Shop"
-      }
-    },
-    "main-order": {
-      "name": "Bestilling"
-    },
-    "main-register": {
-      "name": "Registrering"
-    },
-    "main-reset-password": {
-      "name": "Tilbakestill passord"
-    },
     "related-products": {
       "name": "Relaterte produkter",
       "settings": {
@@ -3395,6 +3381,20 @@
       },
       "presets": {
         "name": "Hurtigordreliste"
+      }
+    },
+    "disclosures": {
+      "name": "Opplysninger",
+      "settings": {
+        "paragraph": {
+          "content": "Obligatoriske sikkerhetsadvarsler og lovpålagte opplysninger for dette produktet."
+        },
+        "heading": {
+          "label": "Overskrift"
+        },
+        "open_by_default": {
+          "label": "Åpen som standard"
+        }
       }
     }
   }

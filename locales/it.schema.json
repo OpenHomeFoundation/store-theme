@@ -361,6 +361,17 @@
           }
         }
       }
+    },
+    "customer_accounts": {
+      "name": "Account clienti",
+      "settings": {
+        "paragraph": {
+          "content": "[Gestisci la visibilità](/admin/settings/customer_accounts) nelle impostazioni degli account cliente."
+        },
+        "customer_account_menu": {
+          "label": "Menu"
+        }
+      }
     }
   },
   "sections": {
@@ -987,12 +998,11 @@
         "menu_color_scheme": {
           "label": "Schema di colori del menu"
         },
-        "enable_customer_avatar": {
-          "label": "Avatar account cliente",
-          "info": "Visibile solo quando i clienti hanno effettuato l'accesso con Shop. [Gestisci account cliente](/admin/settings/customer_accounts)"
-        },
         "header__utilities": {
           "content": "Utility"
+        },
+        "customer_account_menu": {
+          "content": "Gestisci gli account clienti nelle [impostazioni del tema](/editor?context=theme&category=customer%20accounts)."
         }
       }
     },
@@ -3155,30 +3165,6 @@
         "name": "Contenuto comprimibile"
       }
     },
-    "main-account": {
-      "name": "Account"
-    },
-    "main-activate-account": {
-      "name": "Attivazione account"
-    },
-    "main-addresses": {
-      "name": "Indirizzi"
-    },
-    "main-login": {
-      "name": "Accedi",
-      "shop_login_button": {
-        "enable": "Abilita Accedi con Shop"
-      }
-    },
-    "main-order": {
-      "name": "Ordine"
-    },
-    "main-register": {
-      "name": "Registrazione"
-    },
-    "main-reset-password": {
-      "name": "Reimpostazione della password"
-    },
     "related-products": {
       "name": "Prodotti simili",
       "settings": {
@@ -3395,6 +3381,20 @@
       },
       "presets": {
         "name": "Elenco ordini rapido"
+      }
+    },
+    "disclosures": {
+      "name": "Informative",
+      "settings": {
+        "paragraph": {
+          "content": "Avvertenze di sicurezza e informative normative obbligatorie per questo prodotto."
+        },
+        "heading": {
+          "label": "Titolo"
+        },
+        "open_by_default": {
+          "label": "Aperto per impostazione predefinita"
+        }
       }
     }
   }

@@ -292,6 +292,8 @@
       "note": "Instrucțiuni speciale legate de comandă",
       "checkout": "Finalizați comanda",
       "empty": "Coșul dvs. este gol",
+      "product_disclosure": "Mențiune referitoare la produs",
+      "product_disclosures": "Mențiuni referitoare la produs",
       "cart_error": "A apărut o eroare în timpul actualizării coșului. Încercați din nou.",
       "cart_quantity_error_html": "Cantitatea maximă pe care o poți adăuga în coș din acest articol: {{ quantity }}.",
       "update": "Actualizați",
@@ -403,7 +405,6 @@
       "view_addresses": "Afișați adresele",
       "return": "Înapoi la detaliile contului"
     },
-    "account_fallback": "Cont",
     "log_in": "Conectați-vă",
     "log_out": "Deconectați-vă",
     "activate_account": {
