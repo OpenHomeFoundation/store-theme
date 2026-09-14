@@ -49,8 +49,8 @@
       "type": "featured-collection",
       "settings": {
         "collection": "all",
-        "products_to_show": 8,
-        "title": "Featured products",
+        "products_to_show": 25,
+        "title": "",
         "heading_size": "h2",
         "description": "",
         "show_description": false,
