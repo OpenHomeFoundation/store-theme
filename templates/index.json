@@ -18,10 +18,18 @@
             "heading": "Open Home Foundation Store",
             "heading_size": "h0"
           }
+        },
+        "text_GrQiXp": {
+          "type": "text",
+          "settings": {
+            "text": "Shopping here is an easy way of supporting the Open Home Foundation and our fight for the <a href=\"https://www.openhomefoundation.org/\"><span style=\"text-decoration:underline\">principles of privacy, choice, and sustainability</span></a> for smart homes. And of course, you’ll snag some quality swag along the way!",
+            "text_style": "body"
+          }
         }
       },
       "block_order": [
-        "heading"
+        "heading",
+        "text_GrQiXp"
       ],
       "settings": {
         "image": "shopify://shop_images/store-hero.jpg",
