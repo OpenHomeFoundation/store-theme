@@ -207,6 +207,21 @@
               {%- endif -%}
 
               {% render 'price', product: card_product, price_class: '', show_compare_at_price: true %}
+              
+              {% comment %} Custom Variant Color Swatches {% endcomment %}
+              {% assign keys = "Color,color,Colour,colour" | split: ',' %}
+              {% for key in keys %}
+                {% if card_product.options contains key %}
+                  <div class="card-swatches-container">
+                    {% for color_option in card_product.options_by_name[key].values %}
+                      <span class="swatch-bubble" data-color="{{ color_option | downcase }}" style="background-color: {{ color_option | replace: ' ', '' | downcase }};">
+                        <span class="visually-hidden">{{ color_option }}</span>
+                      </span>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              {% endfor %}
+
               {%- if card_product.quantity_price_breaks_configured? -%}
                 {% if card_product.variants_count == 1 and quick_add == 'bulk' %}
                   {% liquid
