@@ -1,0 +1,128 @@
+{% comment %}
+  Renders the colour swatch row for a product card.
+
+  Each swatch links to that colour's variant and, on hover or focus, previews that
+  colour's variant image over the card image (see card-color-swatches.js).
+
+  The swatch fill is resolved in three tiers, best first:
+    1. The native Shopify swatch set in the admin (colour or pattern image). This is
+       the same data the product page uses, so card and PDP can never disagree.
+    2. A centre crop of the colour's variant image, when no swatch is configured.
+    3. The colour name read as a CSS colour keyword — the legacy behaviour, which
+       only works for names like "Forest Green" and renders nothing for "Oatmeal".
+       Swatches that land here get a dashed border so they're easy to spot and fix.
+
+  Accepts:
+  - card_product: {Object} Product Liquid object
+  - option: {Object} the colour product_option object
+  - option_index: {Number} zero-based position of that option, for indexing variant.options
+  - shape: {String} swatch shape. Accepts 'square', defaults to circle (optional)
+  - max_swatches: {Number} how many swatches to show before collapsing to "+N" (optional)
+  - sizes: {String} sizes attribute matching the card image, used for the preview srcset (optional)
+
+  Usage:
+  {% render 'card-color-swatches',
+    card_product: card_product,
+    option: card_color_option,
+    option_index: card_color_option_index
+  %}
+{% endcomment %}
+
+{%- liquid
+  assign swatch_limit = max_swatches | default: 5
+  assign values_count = option.values.size
+-%}
+
+<card-color-swatches class="card__swatches">
+  {%- for value in option.values -%}
+    {%- if forloop.index0 >= swatch_limit -%}
+      {%- comment -%}
+        Decorative only: the card itself already links to the product, so this needs
+        no accessible name of its own and no new translation string.
+      {%- endcomment -%}
+      <span class="card__swatch-more" aria-hidden="true">
+        +{{ values_count | minus: swatch_limit }}
+      </span>
+      {%- break -%}
+    {%- endif -%}
+
+    {%- liquid
+      # value.variant resolves this value against the *currently selected* option values.
+      # A collection card has no selection state, so it falls back to the product's first
+      # available variant and hands back the same variant for every colour. Always check
+      # the variant it returns really is this colour before trusting it.
+      assign color_variant = null
+      if value.variant.options[option_index] == value.name
+        assign color_variant = value.variant
+      else
+        # Bounded so a product with a long variant list can't blow the render budget
+        # once this is multiplied by every colour on every card in a collection grid.
+        for product_variant in card_product.variants limit: 100
+          if product_variant.options[option_index] == value.name
+            assign color_variant = product_variant
+            break
+          endif
+        endfor
+      endif
+
+      assign color_media = color_variant.featured_media
+
+      # Every swatch gets a preview, including the colour that *is* the featured image.
+      # Skipping that one looks like a free saving but isn't: on hover the card is showing
+      # media[1] via Dawn's show_secondary_image effect, not the featured image, so a
+      # swatch with no preview of its own falls through to whatever colour media[1] is.
+      # Pointing the overlay at the featured image costs no request either — the card has
+      # already downloaded that exact srcset, so it's a cache hit.
+      assign preview_media = color_media | default: card_product.featured_media
+
+      assign swatch_url = value.product_url
+      if swatch_url == blank
+        if color_variant
+          assign swatch_url = card_product.url | append: '?variant=' | append: color_variant.id
+        else
+          assign swatch_url = card_product.url
+        endif
+      endif
+    -%}
+
+    {%- capture preview_srcset -%}
+      {%- if preview_media -%}
+        {%- if preview_media.width >= 165 -%}{{ preview_media | image_url: width: 165 }} 165w,{%- endif -%}
+        {%- if preview_media.width >= 360 -%}{{ preview_media | image_url: width: 360 }} 360w,{%- endif -%}
+        {%- if preview_media.width >= 533 -%}{{ preview_media | image_url: width: 533 }} 533w,{%- endif -%}
+        {%- if preview_media.width >= 720 -%}{{ preview_media | image_url: width: 720 }} 720w,{%- endif -%}
+        {%- if preview_media.width >= 940 -%}{{ preview_media | image_url: width: 940 }} 940w,{%- endif -%}
+        {%- if preview_media.width >= 1066 -%}{{ preview_media | image_url: width: 1066 }} 1066w,{%- endif -%}
+        {{ preview_media | image_url }} {{ preview_media.width }}w
+      {%- endif -%}
+    {%- endcapture -%}
+
+    <a
+      class="card__swatch{% if shape == 'square' %} card__swatch--square{% endif %}"
+      href="{{ swatch_url }}"
+      title="{{ value.name | escape }}"
+      {% unless value.available %}
+        data-unavailable
+      {% endunless %}
+      {% if preview_media %}
+        data-preview-src="{{ preview_media | image_url: width: 533 }}"
+        data-preview-srcset="{{ preview_srcset | strip }}"
+      {% endif %}
+    >
+      {%- if value.swatch -%}
+        {% render 'swatch', swatch: value.swatch, shape: shape %}
+      {%- elsif color_media -%}
+        <span
+          class="swatch{% if shape == 'square' %} swatch--square{% endif %}"
+          style="--swatch--background: url({{ color_media | image_url: width: 120, height: 120, crop: 'center' }});"
+        ></span>
+      {%- else -%}
+        <span
+          class="swatch swatch--unconfigured{% if shape == 'square' %} swatch--square{% endif %}"
+          style="--swatch--background: {{ value.name | strip | replace: ' ', '' | downcase | escape }};"
+        ></span>
+      {%- endif -%}
+      <span class="visually-hidden">{{ value.name }}</span>
+    </a>
+  {%- endfor -%}
+</card-color-swatches>
