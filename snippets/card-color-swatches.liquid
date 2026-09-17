@@ -47,17 +47,14 @@
     {%- endif -%}
 
     {%- liquid
-      # value.variant resolves this value against the *currently selected* option values.
-      # A collection card has no selection state, so it falls back to the product's first
-      # available variant and hands back the same variant for every colour. Always check
-      # the variant it returns really is this colour before trusting it.
+      # value.variant resolves this value against the other options' selected values, so
+      # check what it hands back really is this colour before trusting its image.
       assign color_variant = null
       if value.variant.options[option_index] == value.name
         assign color_variant = value.variant
       else
-        # Bounded so a product with a long variant list can't blow the render budget
-        # once this is multiplied by every colour on every card in a collection grid.
-        for product_variant in card_product.variants limit: 100
+        # Rare: a colour that exists only in a non-default size. Always breaks on a match.
+        for product_variant in card_product.variants
           if product_variant.options[option_index] == value.name
             assign color_variant = product_variant
             break
