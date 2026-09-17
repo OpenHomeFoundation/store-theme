@@ -174,7 +174,23 @@ function sampleGarment(img) {
 
 /* ---------------------------------------------------------------------- main */
 
-const products = (await (await fetch(`${origin}/products.json?limit=250`)).json()).products;
+// products.json caps at 250 per page, so walk pages until one comes back short. The
+// seen-ids check is a belt-and-braces stop for a host that ignores ?page and would
+// otherwise serve the same full page forever.
+async function fetchAllProducts() {
+  const all = [];
+  const seen = new Set();
+  for (let page = 1; ; page++) {
+    const { products } = await (await fetch(`${origin}/products.json?limit=250&page=${page}`)).json();
+    const fresh = products.filter((p) => !seen.has(p.id));
+    fresh.forEach((p) => seen.add(p.id));
+    all.push(...fresh);
+    if (products.length < 250 || fresh.length === 0) break;
+  }
+  return all;
+}
+
+const products = await fetchAllProducts();
 
 // What the store is showing today. The configured swatch lives in a metaobject, not in
 // products.json, so read it back off a rendered collection page instead.
