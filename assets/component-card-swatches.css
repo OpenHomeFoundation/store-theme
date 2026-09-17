@@ -1,0 +1,112 @@
+/* Colour swatches on product cards, plus the variant image preview they reveal on hover. */
+
+.card__swatches {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 1rem;
+  /* .card__heading a::after covers the whole card at z-index 1 to make it clickable;
+     the swatches have to sit above it to be hoverable and clickable in their own right. */
+  position: relative;
+  z-index: 2;
+}
+
+.card__swatch {
+  /* .swatch declares --swatch--size on itself from --swatch-input--size, so an
+     inherited --swatch--size would be overridden. Set the input-level token instead. */
+  --swatch-input--size: 1.8rem;
+  display: block;
+  border-radius: 50%;
+  outline: 0.1rem solid transparent;
+  outline-offset: 0.2rem;
+  transition: outline-color var(--duration-short) ease, transform var(--duration-short) ease;
+}
+
+.card__swatch--square {
+  --swatch-input--border-radius: 0.2rem;
+  border-radius: 0.2rem;
+}
+
+/* A firmer edge than the shared swatch default, so white, cream and ecru stay visible
+   against a light card background. */
+.card__swatch .swatch {
+  border-color: rgba(var(--color-foreground), 0.35);
+  box-shadow: inset 0 0 0.2rem rgba(var(--color-foreground), 0.1);
+}
+
+.card__swatch:hover,
+.card__swatch:focus-visible {
+  outline-color: rgb(var(--color-foreground));
+  transform: scale(1.1);
+}
+
+.card__swatch:focus-visible {
+  outline-width: 0.2rem;
+}
+
+.card__swatch[data-unavailable] .swatch {
+  opacity: 0.4;
+}
+
+/* No swatch configured in the admin and no variant image to crop, so the fill is a
+   guess at the colour name as a CSS keyword. Dashed = "needs setting up". */
+.card__swatch .swatch--unconfigured {
+  border-style: dashed;
+  border-color: rgba(var(--color-foreground), 0.5);
+}
+
+.card__swatch-more {
+  font-size: 1.2rem;
+  line-height: 1;
+  color: rgba(var(--color-foreground), 0.7);
+}
+
+/* Variant image preview.
+   One <img> per card, layered over .media inside .card__media (which is already
+   positioned and clips overflow). Its src is filled in by JS on first hover. */
+.card__color-preview {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
+  transition: opacity var(--duration-default) ease;
+}
+
+.card__color-preview.is-active {
+  opacity: 1;
+}
+
+@media screen and (min-width: 990px) {
+  /* Match the scale the card image itself takes on hover, so the preview doesn't
+     read as a differently sized image sliding in over the top. */
+  .card__color-preview {
+    transition: opacity var(--duration-default) ease, transform var(--duration-long) ease;
+  }
+
+  .card-wrapper:hover .card__color-preview.is-active {
+    transform: scale(1.03);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card__swatch,
+  .card__color-preview {
+    transition: none;
+  }
+
+  .card__swatch:hover,
+  .card__swatch:focus-visible {
+    transform: none;
+  }
+
+  .card-wrapper:hover .card__color-preview.is-active {
+    transform: none;
+  }
+}
