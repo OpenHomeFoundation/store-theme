@@ -27,6 +27,9 @@
   {{ 'component-price.css' | asset_url | stylesheet_tag }}
   {{ 'quick-order-list.css' | asset_url | stylesheet_tag }}
   {{ 'quantity-popover.css' | asset_url | stylesheet_tag }}
+
+  {{ 'component-swatch.css' | asset_url | stylesheet_tag }}
+  {{ 'component-card-swatches.css' | asset_url | stylesheet_tag }}
 {%- endunless -%}
 {%- if card_product and card_product != empty -%}
   {%- liquid
@@ -39,6 +42,20 @@
     if ratio == 0 or ratio == null
       assign ratio = 1
     endif
+
+    assign card_color_option = null
+    assign card_color_option_index = 0
+    for card_option in card_product.options_with_values
+      assign card_option_name = card_option.name | downcase
+      if card_option_name == 'color' or card_option_name == 'colour'
+        assign card_color_option = card_option
+        assign card_color_option_index = forloop.index0
+        break
+      endif
+    endfor
+
+    assign card_image_column_width = settings.page_width | minus: 130 | divided_by: 4
+    assign card_image_sizes = '(min-width: ' | append: settings.page_width | append: 'px) ' | append: card_image_column_width | append: 'px, (min-width: 990px) calc((100vw - 130px) / 4), (min-width: 750px) calc((100vw - 120px) / 3), calc((100vw - 35px) / 2)'
   -%}
 
   <product-component view-event-payload="{{ card_product | standard_event_data: 'view', context: product_view_context | escape }}">
@@ -106,6 +123,25 @@
                   >
                 {%- endif -%}
               </div>
+
+              {%- if card_color_option -%}
+                {% comment %}
+                  Colour preview layer. Deliberately has no src: card-color-swatches.js
+                  fills it in the first time a shopper hovers a swatch, so a collection
+                  page loads no extra images until someone actually explores a card.
+                {% endcomment %}
+                {% comment %}theme-check-disable ImgLazyLoading{% endcomment %}
+                <img
+                  class="card__color-preview"
+                  data-color-preview
+                  sizes="{{ card_image_sizes }}"
+                  alt=""
+                  aria-hidden="true"
+                  width="{{ card_product.featured_media.width }}"
+                  height="{{ card_product.featured_media.height }}"
+                >
+                {% comment %}theme-check-enable ImgLazyLoading{% endcomment %}
+              {%- endif -%}
             </div>
           {%- endif -%}
           <div class="card__content">
@@ -208,19 +244,14 @@
 
               {% render 'price', product: card_product, price_class: '', show_compare_at_price: true %}
               
-              {% comment %} Custom Variant Color Swatches {% endcomment %}
-              {% assign keys = "Color,color,Colour,colour" | split: ',' %}
-              {% for key in keys %}
-                {% if card_product.options contains key %}
-                  <div class="card-swatches-container">
-                    {% for color_option in card_product.options_by_name[key].values %}
-                      <span class="swatch-bubble" data-color="{{ color_option | downcase }}" style="background-color: {{ color_option | replace: ' ', '' | downcase }};">
-                        <span class="visually-hidden">{{ color_option }}</span>
-                      </span>
-                    {% endfor %}
-                  </div>
-                {% endif %}
-              {% endfor %}
+              {%- if card_color_option -%}
+                {% render 'card-color-swatches',
+                  card_product: card_product,
+                  option: card_color_option,
+                  option_index: card_color_option_index,
+                  shape: settings.card_swatch_shape
+                %}
+              {%- endif -%}
 
               {%- if card_product.quantity_price_breaks_configured? -%}
                 {% if card_product.variants_count == 1 and quick_add == 'bulk' %}
