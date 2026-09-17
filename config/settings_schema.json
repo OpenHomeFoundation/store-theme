@@ -618,10 +618,6 @@
         "default": 0
       },
       {
-        "type": "header",
-        "content": "Colour swatches"
-      },
-      {
         "type": "select",
         "id": "card_swatch_shape",
         "label": "Swatch shape",
@@ -636,15 +632,6 @@
           }
         ],
         "default": "circle"
-      },
-      {
-        "type": "range",
-        "id": "card_swatch_max",
-        "label": "Swatches shown before “+N”",
-        "min": 2,
-        "max": 10,
-        "step": 1,
-        "default": 5
       }
     ]
   },
