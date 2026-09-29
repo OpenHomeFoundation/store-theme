@@ -54,7 +54,7 @@
           "settings": {
             "heading": "Core build",
             "icon": "none",
-            "content": "{{ block.settings.page.metafields.custom.core_build | metafield_tag }}",
+            "content": "{{ product.metafields.custom.core_build | metafield_tag }}",
             "page": ""
           }
         },
