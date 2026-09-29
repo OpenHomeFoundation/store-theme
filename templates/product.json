@@ -49,15 +49,6 @@
           "type": "description",
           "settings": {}
         },
-        "collapsible_tab_JqqJRK": {
-          "type": "collapsible_tab",
-          "settings": {
-            "heading": "Core build",
-            "icon": "none",
-            "content": "{{ product.metafields.custom.core_build | metafield_tag }}",
-            "page": ""
-          }
-        },
         "share": {
           "type": "share",
           "settings": {
@@ -73,7 +64,6 @@
         "quantity_selector",
         "buy_buttons",
         "description",
-        "collapsible_tab_JqqJRK",
         "share"
       ],
       "settings": {
