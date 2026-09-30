@@ -45,10 +45,6 @@
             "show_gift_card_recipient": true
           }
         },
-        "description": {
-          "type": "description",
-          "settings": {}
-        },
         "collapsible_tab_kzGJmP": {
           "type": "collapsible_tab",
           "settings": {
@@ -76,14 +72,9 @@
             "page": ""
           }
         },
-        "collapsible_tab_HgLHkT": {
-          "type": "collapsible_tab",
-          "settings": {
-            "heading": "Size guide",
-            "icon": "none",
-            "content": "",
-            "page": ""
-          }
+        "description": {
+          "type": "description",
+          "settings": {}
         },
         "share": {
           "type": "share",
@@ -99,11 +90,10 @@
         "variant_picker",
         "quantity_selector",
         "buy_buttons",
-        "description",
         "collapsible_tab_kzGJmP",
         "collapsible_tab_aJijqg",
         "collapsible_tab_7g4RcW",
-        "collapsible_tab_HgLHkT",
+        "description",
         "share"
       ],
       "settings": {
