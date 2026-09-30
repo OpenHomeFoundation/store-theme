@@ -54,7 +54,34 @@
           "settings": {
             "heading": "Core build",
             "icon": "none",
-            "content": "{{ product.metafields.custom.core_build | metafield_tag }}",
+            "content": "<p>{{ product.metafields.custom.core_build | metafield_tag }}</p>",
+            "page": ""
+          }
+        },
+        "collapsible_tab_aJijqg": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Source integrity",
+            "icon": "none",
+            "content": "{{ product.metafields.custom.source_integrity | metafield_tag }}",
+            "page": ""
+          }
+        },
+        "collapsible_tab_7g4RcW": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Eco-credentials",
+            "icon": "none",
+            "content": "{{ product.metafields.custom.eco_credentials | metafield_tag }}",
+            "page": ""
+          }
+        },
+        "collapsible_tab_HgLHkT": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Size guide",
+            "icon": "none",
+            "content": "",
             "page": ""
           }
         },
@@ -74,6 +101,9 @@
         "buy_buttons",
         "description",
         "collapsible_tab_kzGJmP",
+        "collapsible_tab_aJijqg",
+        "collapsible_tab_7g4RcW",
+        "collapsible_tab_HgLHkT",
         "share"
       ],
       "settings": {
