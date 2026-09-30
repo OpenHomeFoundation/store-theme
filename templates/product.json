@@ -45,33 +45,6 @@
             "show_gift_card_recipient": true
           }
         },
-        "collapsible_tab_kzGJmP": {
-          "type": "collapsible_tab",
-          "settings": {
-            "heading": "Core build",
-            "icon": "none",
-            "content": "<p>{{ product.metafields.custom.core_build | metafield_tag }}</p>",
-            "page": ""
-          }
-        },
-        "collapsible_tab_aJijqg": {
-          "type": "collapsible_tab",
-          "settings": {
-            "heading": "Source integrity",
-            "icon": "none",
-            "content": "{{ product.metafields.custom.source_integrity | metafield_tag }}",
-            "page": ""
-          }
-        },
-        "collapsible_tab_7g4RcW": {
-          "type": "collapsible_tab",
-          "settings": {
-            "heading": "Eco-credentials",
-            "icon": "none",
-            "content": "{{ product.metafields.custom.eco_credentials | metafield_tag }}",
-            "page": ""
-          }
-        },
         "description": {
           "type": "description",
           "settings": {}
@@ -90,9 +63,6 @@
         "variant_picker",
         "quantity_selector",
         "buy_buttons",
-        "collapsible_tab_kzGJmP",
-        "collapsible_tab_aJijqg",
-        "collapsible_tab_7g4RcW",
         "description",
         "share"
       ],
