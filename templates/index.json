@@ -32,9 +32,9 @@
         "text_GrQiXp"
       ],
       "settings": {
-        "image": "shopify://shop_images/hero1.webp",
+        "image": "shopify://shop_images/hero3.webp",
         "image_overlay_opacity": 60,
-        "image_height": "small",
+        "image_height": "medium",
         "image_behavior": "none",
         "desktop_content_position": "middle-center",
         "desktop_content_alignment": "center",
