@@ -1,0 +1,322 @@
+{%- comment -%}
+  Cost breakdown ("Where your money goes") chart.
+
+  Defaults live in the theme editor: each "Segment" block has a label, colour and default percentage.
+  Per-product overrides use product metafields in the `cost_breakdown` namespace:
+    - cost_breakdown.<segment key>  (Decimal)  e.g. cost_breakdown.manufacturing = 25
+    - cost_breakdown.hide           (True/false) hides the section for that product
+  A blank metafield falls back to the segment's default.
+{%- endcomment -%}
+
+{%- liquid
+  assign hidden = false
+  if product == blank or product.metafields.cost_breakdown.hide.value == true
+    assign hidden = true
+  endif
+
+  assign total_pct = 0
+-%}
+
+{%- unless hidden or section.blocks.size == 0 -%}
+  {%- style -%}
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+    }
+
+    @media screen and (min-width: 750px) {
+      .section-{{ section.id }}-padding {
+        padding-top: {{ section.settings.padding_top }}px;
+        padding-bottom: {{ section.settings.padding_bottom }}px;
+      }
+    }
+
+    .cost-breakdown { width: 75%; margin: 20px auto; }
+    .cost-breakdown__heading { text-align: center; }
+    .cost-breakdown__intro {
+      text-align: center;
+      font-size: 13px;
+      color: #777;
+      margin: 0 auto 32px;
+      max-width: 640px;
+    }
+    .cost-breakdown__body {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 30px;
+    }
+    .cost-breakdown__chart { flex-basis: 300px; flex-grow: 1; max-width: 400px; position: relative; }
+    .cost-breakdown__legend { flex-basis: 250px; flex-grow: 1; list-style: none; padding: 0; margin: 0; }
+    .cost-breakdown__row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    .cost-breakdown__row:nth-child(odd) { background-color: #f4f5f7; }
+    .cost-breakdown__label { display: flex; align-items: center; }
+    .cost-breakdown__swatch {
+      flex-shrink: 0;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+    .cost-breakdown__pct { font-weight: 500; }
+    .cost-breakdown__warning {
+      margin-top: 16px;
+      padding: 10px 14px;
+      border-radius: 6px;
+      background: #fff4e5;
+      color: #8a4b00;
+      font-size: 13px;
+      text-align: center;
+    }
+    @media screen and (max-width: 749px) {
+      .cost-breakdown { width: 100%; }
+    }
+  {%- endstyle -%}
+
+  {%- capture segments_json -%}[{%- endcapture -%}
+  {%- capture legend_html -%}{%- endcapture -%}
+  {%- for block in section.blocks -%}
+    {%- liquid
+      assign pct = block.settings.percentage | default: 0
+      assign key = block.settings.key | strip | handleize | replace: '-', '_'
+      if key != blank
+        assign override = product.metafields.cost_breakdown[key].value
+        if override != blank
+          assign pct = override
+        endif
+      endif
+      assign total_pct = total_pct | plus: pct
+      assign pct_display = pct | round: 1 | append: '' | remove: '.0'
+    -%}
+    {%- capture segments_json -%}
+      {{- segments_json -}}
+      {%- unless forloop.first -%},{%- endunless -%}
+      {"label":{{ block.settings.label | json }},"pct":{{ pct | json }},"color":{{ block.settings.color | json }}}
+    {%- endcapture -%}
+    {%- capture legend_html -%}
+      {{- legend_html -}}
+      <li class="cost-breakdown__row" {{ block.shopify_attributes }}>
+        <span class="cost-breakdown__label">
+          <span class="cost-breakdown__swatch" style="background-color: {{ block.settings.color }};"></span>
+          {{ block.settings.label | escape }}
+        </span>
+        <span class="cost-breakdown__pct">{{ pct_display }}%</span>
+      </li>
+    {%- endcapture -%}
+  {%- endfor -%}
+  {%- assign segments_json = segments_json | append: ']' -%}
+  {%- assign total_pct = total_pct | round: 2 -%}
+
+  <div class="color-{{ section.settings.color_scheme }} gradient">
+    <div class="page-width section-{{ section.id }}-padding">
+      <div class="cost-breakdown" id="CostBreakdown-{{ section.id }}">
+        {%- if section.settings.heading != blank -%}
+          <h3 class="cost-breakdown__heading">{{ section.settings.heading }}</h3>
+        {%- endif -%}
+        {%- if section.settings.intro != blank -%}
+          <div class="cost-breakdown__intro">{{ section.settings.intro }}</div>
+        {%- endif -%}
+
+        <div class="cost-breakdown__body">
+          <div class="cost-breakdown__chart">
+            <canvas aria-label="{{ section.settings.heading | escape }}" role="img"></canvas>
+          </div>
+          <ul class="cost-breakdown__legend">
+            {{ legend_html }}
+          </ul>
+        </div>
+
+        {%- if request.design_mode and total_pct != 100 -%}
+          <p class="cost-breakdown__warning">
+            Segments add up to {{ total_pct }}% for this product, not 100%. Check the section
+            defaults or this product's cost_breakdown metafields. (Only visible in the theme editor.)
+          </p>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+
+  <script type="application/json" id="CostBreakdownData-{{ section.id }}">
+    {
+      "price": {{ product.selected_or_first_available_variant.price | default: 0 }},
+      "currency": {{ cart.currency.iso_code | json }},
+      "locale": {{ request.locale.iso_code | json }},
+      "segments": {{ segments_json }}
+    }
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" defer></script>
+  <script>
+    (function () {
+      const sectionId = {{ section.id | json }};
+
+      function init() {
+        const root = document.getElementById('CostBreakdown-' + sectionId);
+        const dataEl = document.getElementById('CostBreakdownData-' + sectionId);
+        const canvas = root && root.querySelector('canvas');
+        if (!canvas || !dataEl || typeof Chart === 'undefined') return;
+
+        const config = JSON.parse(dataEl.textContent);
+        const fmt = new Intl.NumberFormat(config.locale, { style: 'currency', currency: config.currency });
+        const amounts = (priceCents) => config.segments.map((s) => (priceCents / 100) * (s.pct / 100));
+
+        const existing = Chart.getChart(canvas);
+        if (existing) existing.destroy();
+
+        const chart = new Chart(canvas.getContext('2d'), {
+          type: 'doughnut',
+          data: {
+            labels: config.segments.map((s) => s.label),
+            datasets: [
+              {
+                data: amounts(config.price),
+                backgroundColor: config.segments.map((s) => s.color),
+                borderWidth: 0,
+                hoverOffset: 4,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            cutout: '70%',
+            plugins: {
+              legend: { display: false },
+              tooltip: { callbacks: { label: (c) => `${c.label}: ${fmt.format(c.raw)}` } },
+            },
+          },
+        });
+
+        // Keep tooltip amounts in sync with the selected variant's price.
+        window.costBreakdownUnsubscribers = window.costBreakdownUnsubscribers || {};
+        if (window.costBreakdownUnsubscribers[sectionId]) window.costBreakdownUnsubscribers[sectionId]();
+        if (typeof subscribe === 'function' && typeof PUB_SUB_EVENTS !== 'undefined') {
+          window.costBreakdownUnsubscribers[sectionId] = subscribe(PUB_SUB_EVENTS.variantChange, (event) => {
+            const variant = event && event.data && event.data.variant;
+            if (!variant || typeof variant.price !== 'number') return;
+            chart.data.datasets[0].data = amounts(variant.price);
+            chart.update();
+          });
+        }
+      }
+
+      if (document.readyState === 'complete') {
+        init();
+      } else {
+        window.addEventListener('load', init);
+      }
+      document.addEventListener('shopify:section:load', (e) => {
+        if (e.detail && e.detail.sectionId === sectionId) init();
+      });
+    })();
+  </script>
+{%- endunless -%}
+
+{% schema %}
+{
+  "name": "Cost breakdown",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "These are the default segments for every product. To override a segment for one product, set the product metafield cost_breakdown.<segment key> (Decimal, e.g. 25 for 25%). Leave it blank to use the default. Set cost_breakdown.hide (True/false) to hide this section for a product."
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Where your money goes"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Intro text",
+      "default": "<p>A proportion of each purchase supports our mission: the breakdown below is based on the most recent price update. Percentages may vary between updates, which means it’s possible your contribution could be moderately higher or lower than shown.</p>"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 52
+    }
+  ],
+  "blocks": [
+    {
+      "type": "segment",
+      "name": "Segment",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Segment"
+        },
+        {
+          "type": "text",
+          "id": "key",
+          "label": "Override key",
+          "info": "Product metafield key used to override this segment, e.g. 'manufacturing' reads cost_breakdown.manufacturing. Lowercase, underscores only."
+        },
+        {
+          "type": "number",
+          "id": "percentage",
+          "label": "Default percentage",
+          "default": 0
+        },
+        {
+          "type": "color",
+          "id": "color",
+          "label": "Colour",
+          "default": "#5A6675"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Cost breakdown",
+      "blocks": [
+        { "type": "segment", "settings": { "label": "Manufacturing", "key": "manufacturing", "percentage": 27, "color": "#5A6675" } },
+        { "type": "segment", "settings": { "label": "Warehousing & Logistics", "key": "logistics", "percentage": 15, "color": "#09293B" } },
+        { "type": "segment", "settings": { "label": "Operational costs", "key": "operational", "percentage": 6, "color": "#A2AAB6" } },
+        { "type": "segment", "settings": { "label": "VAT (country dependant)", "key": "vat", "percentage": 22, "color": "#7A8594" } },
+        { "type": "segment", "settings": { "label": "Contribution to the Open Home Foundation", "key": "contribution", "percentage": 30, "color": "#18BCF2" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
