@@ -1,0 +1,23 @@
+{
+  "name": "store-emails",
+  "version": "0.2.0",
+  "private": true,
+  "description": "OHF-branded Shopify notification emails: Shopify's default templates, reskinned.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "node scripts/build.mjs --watch",
+    "import": "node scripts/import.mjs",
+    "compare": "node scripts/compare.mjs",
+    "compare:png": "node scripts/compare.mjs --png",
+    "copy": "node scripts/copy.mjs",
+    "assets": "node scripts/fetch-brand-assets.mjs"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.49.1",
+    "sharp": "^0.33.5"
+  }
+}

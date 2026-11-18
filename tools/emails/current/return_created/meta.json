@@ -1,0 +1,8 @@
+{
+  "handle": "return_created",
+  "displayName": "Return created",
+  "group": "return",
+  "subject": "Complete your return for Order {{ order.name }}",
+  "hasDefaultBody": true,
+  "hasDefaultTitle": true
+}

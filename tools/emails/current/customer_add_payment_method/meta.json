@@ -1,0 +1,8 @@
+{
+  "handle": "customer_add_payment_method",
+  "displayName": "Customer payment method add request",
+  "group": "customer",
+  "subject": "Add a payment method for {{ shop.name }}",
+  "hasDefaultBody": true,
+  "hasDefaultTitle": true
+}

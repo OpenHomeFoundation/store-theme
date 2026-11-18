@@ -1,0 +1,8 @@
+{
+  "handle": "order_invoice",
+  "displayName": "Order invoice",
+  "group": "order_exception",
+  "subject": "Invoice {{name}}",
+  "hasDefaultBody": true,
+  "hasDefaultTitle": true
+}

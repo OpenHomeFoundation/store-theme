@@ -1,0 +1,8 @@
+{
+  "handle": "pending_payment_success",
+  "displayName": "Pending payment success",
+  "group": "payment",
+  "subject": "[{{ shop.name }}] Payment for {{ name }} has been received",
+  "hasDefaultBody": true,
+  "hasDefaultTitle": true
+}

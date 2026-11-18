@@ -1,0 +1,8 @@
+{
+  "handle": "return_declined",
+  "displayName": "Return request declined",
+  "group": "return",
+  "subject": "Return request declined for order {{ order.name }}",
+  "hasDefaultBody": true,
+  "hasDefaultTitle": true
+}

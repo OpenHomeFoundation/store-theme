@@ -1,0 +1,8 @@
+{
+  "handle": "customer_account_reset",
+  "displayName": "Customer account password reset",
+  "group": "customer",
+  "subject": "Customer account password reset",
+  "hasDefaultBody": true,
+  "hasDefaultTitle": true
+}

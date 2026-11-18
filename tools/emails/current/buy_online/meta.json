@@ -1,0 +1,8 @@
+{
+  "handle": "buy_online",
+  "displayName": "POS abandoned checkout",
+  "group": "point_of_sale",
+  "subject": "Buy online from {{ shop_name }} when you're ready!",
+  "hasDefaultBody": true,
+  "hasDefaultTitle": true
+}

@@ -1,0 +1,38 @@
+{% assign buyer_email_rtl = false %}{% if locale_direction == 'rtl' %}{% assign buyer_email_rtl = true %}{% endif %}{% if buyer_email_rtl %}<div dir="rtl" style="direction: rtl; text-align: right;">{% endif %}<p>{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ service_name }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %},</p>
+<br>
+<p>Please fulfill order {% if buyer_email_rtl == true %}<span dir="ltr" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ name }}{% if buyer_email_rtl == true %}</span>{% endif %}.</p>
+<p>Total number of items: {% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ fulfillment.item_count }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</p>
+<p>Unique items: {% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ fulfillment.fulfillment_line_items.size }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</p>
+<br>
+<p><strong>Items to fulfill:</strong></p>
+{% for line in fulfillment.fulfillment_line_items %}
+  <p>Variant Title: {% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ line.line_item.title }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</p>
+  <p>SKU: {% if buyer_email_rtl == true %}<span dir="ltr" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ line.line_item.sku }}{% if buyer_email_rtl == true %}</span>{% endif %}</p>
+  <p>Quantity: {% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ line.quantity }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</p>
+  <p>Grams: {% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ line.line_item.grams }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</p>
+  <p>Vendor: {% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ line.line_item.vendor }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</p>
+{% endfor %}
+{% if shipping_address %}
+<br>
+<p><strong>Shipping Address:</strong></p>
+<p>{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ shipping_address.name }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}{% if shipping_address.company %}
+  {% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ shipping_address.company }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}{% endif %}</p>
+<p>{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ shipping_address.address1 }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</p>
+<p>{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ shipping_address.address2 }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</p>
+<p>{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ shipping_address.city }}, {{ shipping_address.province }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</p>
+<p>{% if buyer_email_rtl == true %}<span dir="ltr" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ shipping_address.zip }}{% if buyer_email_rtl == true %}</span>{% endif %}</p>
+<p>{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ shipping_address.country }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</p>
+{% if shipping_address.phone %}<p>Phone: {% if buyer_email_rtl == true %}<span dir="ltr" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ shipping_address.phone }}{% if buyer_email_rtl == true %}</span>{% endif %}</p>{% endif %}
+{% endif %}
+<br>
+<p><strong>Shipping Method:</strong></p>
+<p>{% if shipping_method %}{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ shipping_method.title }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}{% else %}None{% endif %}</p>
+<br>
+<p><strong>Tracking Number:</strong></p>
+<p>{% if fulfillment.tracking_number %}{% if buyer_email_rtl == true %}<span dir="ltr" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ fulfillment.tracking_number }}{% if buyer_email_rtl == true %}</span>{% endif %}{% else %}None{% endif %}</p>
+<br>
+<p><strong>Customer Email:</strong></p>
+<p>{% if buyer_email_rtl == true %}<span dir="ltr" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ email }}{% if buyer_email_rtl == true %}</span>{% endif %}</p>
+<br>
+<p>Thank you,</p>
+<p>{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ shop_name }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</p>{% if buyer_email_rtl %}</div>{% endif %}

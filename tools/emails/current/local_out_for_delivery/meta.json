@@ -1,0 +1,8 @@
+{
+  "handle": "local_out_for_delivery",
+  "displayName": "Order out for local delivery",
+  "group": "local_delivery",
+  "subject": "Order {{ name }} is out for delivery",
+  "hasDefaultBody": true,
+  "hasDefaultTitle": true
+}

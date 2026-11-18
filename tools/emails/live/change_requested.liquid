@@ -1,0 +1,321 @@
+{% assign buyer_email_rtl = false %}{% if locale_direction == 'rtl' %}{% assign buyer_email_rtl = true %}{% endif %}<!DOCTYPE html>
+<html lang="en"{% if buyer_email_rtl %} dir="rtl"{% endif %}>
+{%- assign order_details_url = order.order_status_url -%}
+<head>
+  <title>{{ email_title }}</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" type="text/css" href="/assets/notifications/styles.css">
+  <style>
+    .button__cell { background: {{ shop.email_accent_color }}; }
+    .actions-buttons .button__cell--primary { background-color: {{ shop.email_accent_color }}; }
+    .actions-buttons .button__cell--outlined .button__text { color: {{ shop.email_accent_color }}; }
+    a, a:hover, a:active, a:visited { color: {{ shop.email_accent_color }}; }
+  </style>
+</head>
+
+<body>
+  <table class="body{% if buyer_email_rtl %} buyer-email-rtl{% endif %}"{% if buyer_email_rtl %} dir="rtl"{% endif %}>
+    <tr>
+      <td>
+        <table class="header row">
+  <tr>
+    <td class="header__cell">
+      <center>
+
+        <table class="container"{% if buyer_email_rtl == true %} dir="rtl"{% endif %}>
+          <tr>
+            <td>
+
+              <table class="row">
+                <tr>
+                  <td class="shop-name__cell"{% if buyer_email_rtl == true %} align="right"{% endif %}>
+                    {%- if shop.email_logo_url %}
+                      <img src="{{shop.email_logo_url}}" alt="{{ shop.name }}" width="{{ shop.email_logo_width }}">
+                    {%- else %}
+                      <h1 class="shop-name__text">
+                        <a href="{{shop.url}}">{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ shop.name }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</a>
+                      </h1>
+                    {%- endif %}
+                  </td>
+
+                    <td{% if buyer_email_rtl == true %} class="order-po-number__cell"{% endif %}>
+                      <table class="order-po-number__container">
+                        <tr>
+                          <td class="order-number__cell"{% if buyer_email_rtl == true %} align="left"{% endif %}>
+                            <span class="order-number__text">
+                              Order {% if buyer_email_rtl == true %}<span dir="ltr" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ order.name }}{% if buyer_email_rtl == true %}</span>{% endif %}
+                            </span>
+                          </td>
+                        </tr>
+                        {%- if po_number %}
+                            <tr>
+                              <td class="po-number__cell"{% if buyer_email_rtl == true %} align="left"{% endif %}>
+                                <span class="po-number__text">
+                                  PO number {% if buyer_email_rtl == true %}<span dir="ltr" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}#{{ po_number }}{% if buyer_email_rtl == true %}</span>{% endif %}
+                                </span>
+                              </td>
+                            </tr>
+                        {%- endif %}
+                      </table>
+                    </td>
+                </tr>
+              </table>
+
+            </td>
+          </tr>
+        </table>
+
+      </center>
+    </td>
+  </tr>
+</table>
+
+
+        <table class="row content">
+  <tr>
+    <td class="content__cell">
+      <center>
+        <table class="container"{% if buyer_email_rtl == true %} dir="rtl"{% endif %}>
+          <tr>
+            <td>
+              
+          {% if requested_edit and return %}
+            <h2>Your request was sent</h2>
+            <p class="return-requested__body">Your request was sent and is being reviewed. You'll get a separate email for each request as it's completed.</p>
+          {% elsif requested_edit %}
+            <h2>Your cancellation request was sent</h2>
+            <p class="return-requested__body">Your cancellation request was sent and is being reviewed. We'll email you once it's been completed.</p>
+          {% else %}
+            <h2>Your return request was sent</h2>
+            <p class="return-requested__body">Your return request was sent and is being reviewed. We'll email you once it's been completed.</p>
+          {% endif %}
+
+          <table class="row actions">
+  <tr>
+    <td class="empty-line">&nbsp;</td>
+  </tr>
+  <tr>
+    <td class="actions__cell">
+      <table class="button main-action-cell">
+        <tr>
+          <td class="button__cell"><a href="{{ order_details_url }}" class="button__text">View your order</a></td>
+        </tr>
+      </table>
+        <table class="link secondary-action-cell">
+          <tr>
+            <td class="link__cell">or <a href="{{ shop.url }}">Visit our store</a></td>
+          </tr>
+        </table>
+    </td>
+  </tr>
+</table>
+
+
+            </td>
+          </tr>
+        </table>
+      </center>
+    </td>
+  </tr>
+</table>
+
+        {% if requested_edit %}
+        <table class="row section">
+  <tr>
+    <td class="section__cell">
+      <center>
+        <table class="container">
+          <tr>
+            <td>
+              <h3>Cancellation request summary</h3>
+            </td>
+          </tr>
+        </table>
+        <table class="container">
+          <tr>
+            <td>
+              
+          
+<table class="row">
+  {% for line_item in requested_edit.line_items %}
+  <tr class="order-list__item">
+    <td class="order-list__item__cell">
+      <table>
+        <td>
+          {% if line_item.image %}
+            <img src="{{ line_item | img_url: 'compact_cropped' }}" align="{% if buyer_email_rtl == true %}right{% else %}left{% endif %}" width="60" height="60" class="order-list__product-image"/>
+          {% endif %}
+        </td>
+        <td class="order-list__product-description-cell">
+          <span class="order-list__item-title">{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ line_item.title_without_variant }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}&nbsp;&times;&nbsp;{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ line_item.quantity }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</span><br/>
+
+          {% if line_item.variant and line_item.variant.title != 'Default Title' %}
+            <span class="order-list__item-variant">{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ line_item.variant.title }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</span><br/>
+          {% endif %}
+
+          {% if line_item.discount_allocations %}
+            {% for discount_allocation in line_item.discount_allocations %}
+              {% if discount_allocation.amount > 0 %}
+              <p>
+                <span class="order-list__item-discount-allocation">
+                  <img src="{{ 'notifications/discounttag.png' | shopify_asset_url }}" width="18" height="18" class="discount-tag-icon" />
+                  <span>
+                    {% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ discount_allocation.discount_application.title | upcase }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}
+                    {% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}(-{{ discount_allocation.amount | money }}){% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}
+                  </span>
+                </span>
+              </p>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        </td>
+
+        <td class="order-list__price-cell">
+          {% if line_item.original_line_price != line_item.final_line_price %}
+            <del class="order-list__item-original-price">{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit; text-decoration: line-through;">{% endif %}{{ line_item.original_line_price | money }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</del>
+          {% endif %}
+          <p class="order-list__item-price">
+            {% if line_item.final_line_price > 0 %}
+              {% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ line_item.final_line_price | money }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}
+            {% else %}
+              Free
+            {% endif %}
+          </p>
+        </td>
+      </table>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+
+            </td>
+          </tr>
+        </table>
+      </center>
+    </td>
+  </tr>
+</table>
+        {% endif %}
+
+        {% if return %}
+        <table class="row section">
+  <tr>
+    <td class="section__cell">
+      <center>
+        <table class="container">
+          <tr>
+            <td>
+              <h3>Return request summary</h3>
+            </td>
+          </tr>
+        </table>
+        <table class="container">
+          <tr>
+            <td>
+              
+          
+<table class="row">
+  {% for line_item in return.line_items %}
+  <tr class="order-list__item">
+    <td class="order-list__item__cell">
+      <table>
+        <td>
+          {% if line_item.image %}
+            <img src="{{ line_item | img_url: 'compact_cropped' }}" align="{% if buyer_email_rtl == true %}right{% else %}left{% endif %}" width="60" height="60" class="order-list__product-image"/>
+          {% endif %}
+        </td>
+        <td class="order-list__product-description-cell">
+          {% assign line_display = line_item.quantity  %}
+
+          <span class="order-list__item-title">{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ line_item.title_without_variant }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}&nbsp;&times;&nbsp;{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ line_display }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</span><br/>
+
+          {% if line_item.variant and line_item.variant.title != 'Default Title' %}
+            <span class="order-list__item-variant">{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ line_item.variant.title }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</span><br/>
+          {% endif %}
+
+          {% for group in line_item.groups %}
+            {% if group.deliverable? %}
+              <span class="order-list__item-variant">For: {% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ group.display_title }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</span>
+            {% else %}
+              <span class="order-list__item-variant">Part of: {% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ group.display_title }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</span>
+            {% endif %}
+            <br/>
+          {% endfor %}
+
+          {% if line_item.discount_allocations %}
+            {% for discount_allocation in line_item.discount_allocations %}
+              {% if discount_allocation.amount > 0 %}
+              <p>
+                <span class="order-list__item-discount-allocation">
+                  <img src="{{ 'notifications/discounttag.png' | shopify_asset_url }}" width="18" height="18" class="discount-tag-icon" />
+                  <span>
+                    {% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ discount_allocation.discount_application.title | upcase }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}
+                    {% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}(-{{ discount_allocation.amount | money }}){% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}
+                  </span>
+                </span>
+              </p>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        </td>
+
+        <td class="order-list__price-cell">
+          {% if line_item.original_line_price != line_item.final_line_price %}
+            <del class="order-list__item-original-price">{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit; text-decoration: line-through;">{% endif %}{{ line_item.original_line_price | money }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</del>
+          {% endif %}
+          <p class="order-list__item-price">
+            {% if line_item.final_line_price > 0 %}
+              {% capture final_line_price %}
+                  {% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ line_item.final_line_price | money }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}
+              {% endcapture %}
+              {{ final_line_price }}
+              {% if line_item.unit_price_measurement %}
+  <div class="order-list__unit-price">{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{- line_item.unit_price | unit_price_with_measurement: line_item.unit_price_measurement -}}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</div>
+{% endif %}
+            {% else %}
+              Free
+            {% endif %}
+          </p>
+        </td>
+      </table>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+
+            </td>
+          </tr>
+        </table>
+      </center>
+    </td>
+  </tr>
+</table>
+        {% endif %}
+
+        <table class="row footer">
+  <tr>
+    <td class="footer__cell">
+      <center>
+        <table class="container"{% if buyer_email_rtl == true %} dir="rtl"{% endif %}>
+          <tr>
+            <td>
+              
+              <p class="disclaimer__subtext">If you have any questions, reply to this email or contact us at <a href="mailto:{{ shop.email }}">{% if buyer_email_rtl == true %}<span dir="ltr" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ shop.email }}{% if buyer_email_rtl == true %}</span>{% endif %}</a>.<!-- shopify-managed-taxes-footer --></p>
+            </td>
+          </tr>
+        </table>
+      </center>
+    </td>
+  </tr>
+</table>
+
+<img src="{{ 'notifications/spacer.png' | shopify_asset_url }}" class="spacer" height="1" />
+
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

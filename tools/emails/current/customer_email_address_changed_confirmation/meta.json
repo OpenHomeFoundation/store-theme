@@ -1,0 +1,8 @@
+{
+  "handle": "customer_email_address_changed_confirmation",
+  "displayName": "Customer email address change confirmation",
+  "group": "customer",
+  "subject": "Your email address has been changed",
+  "hasDefaultBody": true,
+  "hasDefaultTitle": true
+}

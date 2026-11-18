@@ -1,0 +1,8 @@
+{
+  "handle": "payment_reminder",
+  "displayName": "Payment reminder",
+  "group": "payment",
+  "subject": "Payment reminder for order {{ name }}",
+  "hasDefaultBody": true,
+  "hasDefaultTitle": true
+}

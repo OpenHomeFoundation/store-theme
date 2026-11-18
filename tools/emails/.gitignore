@@ -1,0 +1,5 @@
+node_modules/
+dist/
+renders/
+compare/
+.DS_Store

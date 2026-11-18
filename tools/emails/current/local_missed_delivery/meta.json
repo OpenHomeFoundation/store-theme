@@ -1,0 +1,8 @@
+{
+  "handle": "local_missed_delivery",
+  "displayName": "Order missed local delivery",
+  "group": "local_delivery",
+  "subject": "Delivery from order {{ name }} has been missed",
+  "hasDefaultBody": true,
+  "hasDefaultTitle": true
+}

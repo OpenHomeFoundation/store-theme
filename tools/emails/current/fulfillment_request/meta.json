@@ -1,0 +1,8 @@
+{
+  "handle": "fulfillment_request",
+  "displayName": "Fulfillment request notification",
+  "group": "fulfillment",
+  "subject": "Order fulfillment request for {{ shop_name }}",
+  "hasDefaultBody": true,
+  "hasDefaultTitle": true
+}

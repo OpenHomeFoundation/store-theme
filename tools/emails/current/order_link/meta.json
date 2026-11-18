@@ -1,0 +1,8 @@
+{
+  "handle": "order_link",
+  "displayName": "Order link",
+  "group": "order_exception",
+  "subject": "Link to order {{ order_name }}",
+  "hasDefaultBody": true,
+  "hasDefaultTitle": true
+}

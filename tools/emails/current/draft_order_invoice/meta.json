@@ -1,0 +1,8 @@
+{
+  "handle": "draft_order_invoice",
+  "displayName": "Draft order invoice",
+  "group": "order",
+  "subject": "Invoice {{name}}",
+  "hasDefaultBody": true,
+  "hasDefaultTitle": true
+}

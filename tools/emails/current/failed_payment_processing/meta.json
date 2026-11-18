@@ -1,0 +1,8 @@
+{
+  "handle": "failed_payment_processing",
+  "displayName": "Payment error",
+  "group": "payment",
+  "subject": "[{{shop.name}}] Payment couldn’t be processed",
+  "hasDefaultBody": true,
+  "hasDefaultTitle": true
+}

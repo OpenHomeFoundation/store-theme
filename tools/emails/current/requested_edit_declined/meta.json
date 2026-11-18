@@ -1,0 +1,8 @@
+{
+  "handle": "requested_edit_declined",
+  "displayName": "Cancellation request declined",
+  "group": "return",
+  "subject": "Cancellation request declined for order {{ order.name }}",
+  "hasDefaultBody": true,
+  "hasDefaultTitle": true
+}

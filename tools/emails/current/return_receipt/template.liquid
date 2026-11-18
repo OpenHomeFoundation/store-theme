@@ -1,0 +1,587 @@
+{% assign buyer_email_rtl = false %}{% if locale_direction == 'rtl' %}{% assign buyer_email_rtl = true %}{% endif %}{% capture email_title %}Items {% if return.exchange_line_items.size > 0 %}exchanged{% else %}returned{% endif %} {% endcapture %}
+
+<!DOCTYPE html>
+<html lang="en"{% if buyer_email_rtl %} dir="rtl"{% endif %}>
+  <head>
+  <title>{{ email_title }}</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" type="text/css" href="/assets/notifications/styles.css">
+  <style>
+    .button__cell { background: {{ shop.email_accent_color }}; }
+    .actions-buttons .button__cell--primary { background-color: {{ shop.email_accent_color }}; }
+    .actions-buttons .button__cell--outlined .button__text { color: {{ shop.email_accent_color }}; }
+    a, a:hover, a:active, a:visited { color: {{ shop.email_accent_color }}; }
+  </style>
+</head>
+
+  <body>
+    <table class="body{% if buyer_email_rtl %} buyer-email-rtl{% endif %}"{% if buyer_email_rtl %} dir="rtl"{% endif %}>
+      <tr>
+        <td>
+          <table class="header row">
+  <tr>
+    <td class="header__cell">
+      <center>
+
+        <table class="container"{% if buyer_email_rtl == true %} dir="rtl"{% endif %}>
+          <tr>
+            <td>
+
+              <table class="row">
+                <tr>
+                  <td class="shop-name__cell"{% if buyer_email_rtl == true %} align="right"{% endif %}>
+                    {%- if shop.email_logo_url %}
+                      <img src="{{shop.email_logo_url}}" alt="{{ shop.name }}" width="{{ shop.email_logo_width }}">
+                    {%- else %}
+                      <h1 class="shop-name__text">
+                        <a href="{{shop.url}}">{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ shop.name }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</a>
+                      </h1>
+                    {%- endif %}
+                  </td>
+
+                    <td{% if buyer_email_rtl == true %} class="order-po-number__cell"{% endif %}>
+                      <table class="order-po-number__container">
+                        <tr>
+                          <td class="order-number__cell"{% if buyer_email_rtl == true %} align="left"{% endif %}>
+                            <span class="order-number__text">
+                              Order {% if buyer_email_rtl == true %}<span dir="ltr" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ order.name }}{% if buyer_email_rtl == true %}</span>{% endif %}
+                            </span>
+                          </td>
+                        </tr>
+                        {%- if po_number %}
+                            <tr>
+                              <td class="po-number__cell"{% if buyer_email_rtl == true %} align="left"{% endif %}>
+                                <span class="po-number__text">
+                                  PO number {% if buyer_email_rtl == true %}<span dir="ltr" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}#{{ po_number }}{% if buyer_email_rtl == true %}</span>{% endif %}
+                                </span>
+                              </td>
+                            </tr>
+                        {%- endif %}
+                      </table>
+                    </td>
+                </tr>
+              </table>
+
+            </td>
+          </tr>
+        </table>
+
+      </center>
+    </td>
+  </tr>
+</table>
+
+          <table class="row content">
+  <tr>
+    <td class="content__cell">
+      <center>
+        <table class="container"{% if buyer_email_rtl == true %} dir="rtl"{% endif %}>
+          <tr>
+            <td>
+              
+            <h2>{{ email_title }}</h2>
+            {% if return.hosted_receipt_url %}
+  {% capture hosted_receipt_label %}{% if receipt_terminology == "confirmation" %}View confirmation{% else %}View receipt{% endif %}{% endcapture %}
+  <table class="row actions">
+    <tr>
+      <td class="actions__cell">
+        <table class="actions-buttons actions-buttons--content-width" cellpadding="0" cellspacing="0" border="0" style="table-layout: auto; width: auto;">
+          <tr>
+            {% if shop.url %}
+              <td class="button__cell button__cell--primary"><a href="{{ shop.url }}" class="button__text">Visit our store</a></td>
+              <td class="button__cell--separator"></td>
+              <td class="button__cell button__cell--outlined"><a href="{{ return.hosted_receipt_url }}" class="button__text">{{ hosted_receipt_label }}</a></td>
+            {% else %}
+              <td class="button__cell button__cell--primary"><a href="{{ return.hosted_receipt_url }}" class="button__text">{{ hosted_receipt_label }}</a></td>
+            {% endif %}
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+{% else %}
+  {% if shop.url %}
+    <table class="row actions">
+      <tr>
+        <td class="actions__cell">
+          <table class="button main-action-cell">
+            <tr>
+              <td class="button__cell"><a href="{{ shop.url }}" class="button__text">Visit our store</a></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+{% endif %}
+
+{% endif %}
+
+
+            </td>
+          </tr>
+        </table>
+      </center>
+    </td>
+  </tr>
+</table>
+
+          <table class="row section">
+  <tr>
+    <td class="section__cell">
+      <center>
+        <table class="container">
+          <tr>
+            <td>
+              <h3>Items returned</h3>
+            </td>
+          </tr>
+        </table>
+        <table class="container">
+          <tr>
+            <td>
+              
+            
+<table class="row">
+  {% for line in return.line_items %}
+  <tr class="order-list__item">
+    <td class="order-list__item__cell">
+      <table>
+        <td>
+          {% if line.image %}
+            <img src="{{ line | img_url: 'compact_cropped' }}" align="{% if buyer_email_rtl == true %}right{% else %}left{% endif %}" width="60" height="60" class="order-list__product-image"/>
+          {% endif %}
+        </td>
+        <td class="order-list__product-description-cell">
+          {% if line.product.title %}
+            {% assign line_title = line.product.title %}
+          {% else %}
+            {% assign line_title = line.title %}
+          {% endif %}
+
+          {% if line.quantity < line.quantity %}
+            {% capture line_display %}
+              {{ line.quantity }} of {{ line.quantity }}
+            {% endcapture %}
+          {% else %}
+            {% assign line_display = line.quantity  %}
+          {% endif %}
+
+          <span class="order-list__item-title">{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ line_title }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}&nbsp;&times;&nbsp;{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ line_display }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</span><br/>
+
+          {% if line.variant.title != 'Default Title' %}
+            <span class="order-list__item-variant">{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ line.variant.title }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</span><br/>
+          {% endif %}
+
+          {% if line.selling_plan_allocation %}
+            <span class="order-list__item-variant">{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ line.selling_plan_allocation.selling_plan.name }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</span><br/>
+          {% endif %}
+
+          {% if true %}
+            <span class="order-list__item-refunded">Returned</span>
+          {% elsif false %}
+            <span class="order-list__item-added">Added</span>
+          {% endif %}
+
+          {% if line.discount_allocations %}
+            {% for discount_allocation in line.discount_allocations %}
+              {% if discount_allocation.discount_application.target_selection != 'all' %}
+                <span class="order-list__item-discount-allocation">
+                  <img src="{{ 'notifications/discounttag.png' | shopify_asset_url }}" width="18" height="18" class="discount-tag-icon" />
+                  <span>
+                    {% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ discount_allocation.discount_application.title | upcase }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}
+                    {% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}(-{{ discount_allocation.amount | money }}){% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}
+                  </span>
+                </span>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        </td>
+          <td class="order-list__price-cell">
+            {% if line.original_line_price != line.final_line_price %}
+              <del class="order-list__item-original-price">
+                {% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit; text-decoration: line-through;">{% endif %}-
+                {{ line.original_line_price | money }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}
+              </del>
+            {% endif %}
+            <p class="order-list__item-price">
+              {% if line.final_line_price != 0 %}
+                {% if true %}
+                  {% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}-{{ line.final_line_price | abs | money }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}
+                {% else %}
+                  {% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ line.final_line_price | money }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}
+                {% endif %}
+                {% if line.unit_price_measurement %}
+  <div class="order-list__unit-price">{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{- line.unit_price | unit_price_with_measurement: line.unit_price_measurement -}}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</div>
+{% endif %}
+              {% else %}
+                Free
+              {% endif %}
+            </p>
+          </td>
+      </table>
+    </td>
+  </tr>{% endfor %}
+</table>
+
+            {% assign subtotal = return.return_line_item_subtotal_price %}
+{% assign tax_total = return.return_line_item_tax_price %}
+{% assign total = return.return_total_price %}
+
+<table class="row subtotal-lines" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #e5e5e5">
+  <tr>
+    <td class="subtotal-spacer"></td>
+    <td style="padding-bottom: 40px">
+      <table class="row subtotal-table">
+        
+
+<tr class="subtotal-line">
+  <td class="subtotal-line__title">
+    <p>
+      <span>Subtotal</span>
+    </p>
+  </td>
+  <td class="subtotal-line__value">
+      <strong>{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}-{{ subtotal | abs | money_with_currency }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</strong>
+  </td>
+</tr>
+
+        
+
+<tr class="subtotal-line">
+  <td class="subtotal-line__title">
+    <p>
+      <span>Taxes</span>
+    </p>
+  </td>
+  <td class="subtotal-line__value">
+      <strong>{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}-{{ tax_total | abs | money_with_currency }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</strong>
+  </td>
+</tr>
+
+      </table>
+      <table class="row subtotal-table subtotal-table--total">
+        
+
+<tr class="subtotal-line">
+  <td class="subtotal-line__title">
+    <p>
+      <span>Return items total</span>
+    </p>
+  </td>
+  <td class="subtotal-line__value">
+      <strong>{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}-{{ total | abs | money_with_currency }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</strong>
+  </td>
+</tr>
+
+      </table>
+        {% assign refund_transactions = return.refund_transactions | default: empty %}
+        {% if refund_transactions.size > 1 %}
+          <table class="row subtotal-table">
+            <tr><td colspan="2" class="subtotal-table__line"></td></tr>
+            <tr><td colspan="2" class="subtotal-table__small-space"></td></tr>
+
+            {% for transaction in refund_transactions %}
+              {% assign amount_rounding = 0 %}
+              {% if transaction.amount_rounding != 0 %}
+                {% assign amount_rounding = transaction.amount_rounding %}
+              {% endif %}
+              {% if transaction.payment_details.gift_card_last_four_digits %}
+                {% capture refund_method_subtitle %}{{ transaction.payment_details.type | replace: '_', ' ' | capitalize }}{% endcapture %}
+              {% elsif transaction.payment_details.local_payment? %}
+                {% capture refund_method_subtitle %}{{ transaction.payment_details.payment_method_display_name | default: transaction.payment_details.payment_method_name }}{% endcapture %}
+              {% elsif transaction.payment_details.credit_card_company %}
+                {% capture refund_method_subtitle %}{{ transaction.payment_details.credit_card_company }}{% endcapture %}
+              {% else %}
+                {% capture refund_method_subtitle %}{{ transaction.gateway_display_name | replace: '_', ' ' | capitalize }}{% endcapture %}
+              {% endif %}
+
+              {% if transaction.manually_recorded_refund? %}
+                
+
+<tr class="subtotal-line">
+  <td class="subtotal-line__title">
+    <p>
+      <span>Refund</span>
+    </p>
+  </td>
+  <td class="subtotal-line__value">
+      <strong>{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}-{{ transaction.amount | plus: amount_rounding | abs | money_with_currency }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</strong>
+  </td>
+</tr>
+
+              {% elsif transaction.gateway == 'shopify_store_credit' %}
+                {% assign link_url = routes.account_profile_url %}
+                {% capture link_text %}View{% endcapture %}
+
+                
+
+<tr class="subtotal-line">
+  <td class="subtotal-line__title">
+    <p>
+      <span>Refund</span>
+        <br>
+        <small>{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ refund_method_subtitle }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</small>
+          &nbsp;&nbsp;<a href="{{ link_url }}" class="small">{{ link_text }}</a>
+    </p>
+  </td>
+  <td class="subtotal-line__value">
+      <strong>{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}-{{ transaction.amount | plus: amount_rounding | abs | money_with_currency }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</strong>
+  </td>
+</tr>
+
+              {% else %}
+                
+
+<tr class="subtotal-line">
+  <td class="subtotal-line__title">
+    <p>
+      <span>Refund</span>
+        <br>
+        <small>{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ refund_method_subtitle }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</small>
+    </p>
+  </td>
+  <td class="subtotal-line__value">
+      <strong>{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}-{{ transaction.amount | plus: amount_rounding | abs | money_with_currency }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</strong>
+  </td>
+</tr>
+
+              {% endif %}
+            {% endfor %}
+          </table>
+        {% endif %}
+    </td>
+  </tr>
+</table>
+
+
+            </td>
+          </tr>
+        </table>
+      </center>
+    </td>
+  </tr>
+</table>
+
+          {% if return.exchange_line_items.size > 0 %}
+            <table class="row section">
+  <tr>
+    <td class="section__cell">
+      <center>
+        <table class="container">
+          <tr>
+            <td>
+              <h3>Items exchanged</h3>
+            </td>
+          </tr>
+        </table>
+        <table class="container">
+          <tr>
+            <td>
+              
+              
+<table class="row">
+  {% for line in return.exchange_line_items %}
+  <tr class="order-list__item">
+    <td class="order-list__item__cell">
+      <table>
+        <td>
+          {% if line.image %}
+            <img src="{{ line | img_url: 'compact_cropped' }}" align="{% if buyer_email_rtl == true %}right{% else %}left{% endif %}" width="60" height="60" class="order-list__product-image"/>
+          {% endif %}
+        </td>
+        <td class="order-list__product-description-cell">
+          {% if line.product.title %}
+            {% assign line_title = line.product.title %}
+          {% else %}
+            {% assign line_title = line.title %}
+          {% endif %}
+
+          {% if line.quantity < line.quantity %}
+            {% capture line_display %}
+              {{ line.quantity }} of {{ line.quantity }}
+            {% endcapture %}
+          {% else %}
+            {% assign line_display = line.quantity  %}
+          {% endif %}
+
+          <span class="order-list__item-title">{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ line_title }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}&nbsp;&times;&nbsp;{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ line_display }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</span><br/>
+
+          {% if line.variant.title != 'Default Title' %}
+            <span class="order-list__item-variant">{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ line.variant.title }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</span><br/>
+          {% endif %}
+
+          {% if line.selling_plan_allocation %}
+            <span class="order-list__item-variant">{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ line.selling_plan_allocation.selling_plan.name }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</span><br/>
+          {% endif %}
+
+          {% if false %}
+            <span class="order-list__item-refunded">Returned</span>
+          {% elsif true %}
+            <span class="order-list__item-added">Added</span>
+          {% endif %}
+
+          {% if line.discount_allocations %}
+            {% for discount_allocation in line.discount_allocations %}
+              {% if discount_allocation.discount_application.target_selection != 'all' %}
+                <span class="order-list__item-discount-allocation">
+                  <img src="{{ 'notifications/discounttag.png' | shopify_asset_url }}" width="18" height="18" class="discount-tag-icon" />
+                  <span>
+                    {% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ discount_allocation.discount_application.title | upcase }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}
+                    {% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}(-{{ discount_allocation.amount | money }}){% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}
+                  </span>
+                </span>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        </td>
+          <td class="order-list__price-cell">
+            {% if line.original_line_price != line.final_line_price %}
+              <del class="order-list__item-original-price">
+                {% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit; text-decoration: line-through;">{% endif %}
+                {{ line.original_line_price | money }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}
+              </del>
+            {% endif %}
+            <p class="order-list__item-price">
+              {% if line.final_line_price != 0 %}
+                {% if false %}
+                  {% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}-{{ line.final_line_price | abs | money }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}
+                {% else %}
+                  {% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ line.final_line_price | money }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}
+                {% endif %}
+                {% if line.unit_price_measurement %}
+  <div class="order-list__unit-price">{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{- line.unit_price | unit_price_with_measurement: line.unit_price_measurement -}}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</div>
+{% endif %}
+              {% else %}
+                Free
+              {% endif %}
+            </p>
+          </td>
+      </table>
+    </td>
+  </tr>{% endfor %}
+</table>
+
+              {% assign subtotal = return.exchange_line_item_subtotal_price %}
+{% assign tax_total = return.exchange_line_item_tax_price %}
+{% assign total = return.exchange_total_price %}
+
+<table class="row subtotal-lines" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #e5e5e5">
+  <tr>
+    <td class="subtotal-spacer"></td>
+    <td style="padding-bottom: 40px">
+      <table class="row subtotal-table">
+        
+
+<tr class="subtotal-line">
+  <td class="subtotal-line__title">
+    <p>
+      <span>Subtotal</span>
+    </p>
+  </td>
+  <td class="subtotal-line__value">
+      <strong>{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ subtotal | money_with_currency }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</strong>
+  </td>
+</tr>
+
+        
+
+<tr class="subtotal-line">
+  <td class="subtotal-line__title">
+    <p>
+      <span>Taxes</span>
+    </p>
+  </td>
+  <td class="subtotal-line__value">
+      <strong>{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ tax_total| money_with_currency }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</strong>
+  </td>
+</tr>
+
+      </table>
+      <table class="row subtotal-table subtotal-table--total">
+        
+
+<tr class="subtotal-line">
+  <td class="subtotal-line__title">
+    <p>
+      <span>New items total</span>
+    </p>
+  </td>
+  <td class="subtotal-line__value">
+      <strong>{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ total | money_with_currency }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</strong>
+  </td>
+</tr>
+
+      </table>
+    </td>
+  </tr>
+</table>
+
+
+            </td>
+          </tr>
+        </table>
+      </center>
+    </td>
+  </tr>
+</table>
+
+            <table class="row section">
+  <tr>
+    <td class="section__cell">
+      <center>
+        <table class="container">
+          <tr>
+            <td>
+              <h3></h3>
+            </td>
+          </tr>
+        </table>
+        <table class="container">
+          <tr>
+            <td>
+              
+              <tr>
+                <td>
+                  <p>
+                    <span style="font-size: 24px;">Exchange total</span>
+                  </p>
+                </td>
+                <td align="{% if buyer_email_rtl %}left{% else %}right{% endif %}">
+                  <strong style="font-size: 24px;">{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ return.total_price | money_with_currency }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</strong>
+                </td>
+              </tr>
+
+            </td>
+          </tr>
+        </table>
+      </center>
+    </td>
+  </tr>
+</table>
+          {% endif %}
+
+          <table class="row footer">
+  <tr>
+    <td class="footer__cell">
+      <center>
+        <table class="container"{% if buyer_email_rtl == true %} dir="rtl"{% endif %}>
+          <tr>
+            <td>
+              
+              <p class="disclaimer__subtext">If you have any questions, reply to this email or contact us at <a href="mailto:{{ shop.email }}">{% if buyer_email_rtl == true %}<span dir="ltr" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ shop.email }}{% if buyer_email_rtl == true %}</span>{% endif %}</a>.<!-- shopify-managed-taxes-footer --></p>
+            </td>
+          </tr>
+        </table>
+      </center>
+    </td>
+  </tr>
+</table>
+
+<img src="{{ 'notifications/spacer.png' | shopify_asset_url }}" class="spacer" height="1" />
+
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

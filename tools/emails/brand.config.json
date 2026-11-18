@@ -1,0 +1,24 @@
+{
+  "name": "Open Home Foundation",
+  "logo": {
+    "src": "https://cdn.shopify.com/s/files/1/0974/5157/3583/files/ohf-lockup-email_2x_58ba959a-1b5a-41dd-ba2f-b039678208ee.png?v=1794330366",
+    "api": "https://brands.openhomefoundation.org/api/open-home-foundation/logo/screen/lockup/main/color/light/svg",
+    "lockupWidth": 180,
+    "pad": 10,
+    "radius": 8,
+    "width": 200,
+    "height": 60,
+    "alt": "Open Home Foundation"
+  },
+  "color": {
+    "brand": "#18BCF2",
+    "button": "#0A77A8",
+    "ink": "#09202E",
+    "inkMuted": "#51606B",
+    "paper": "#FFFFFF",
+    "line": "#DDE3EC"
+  },
+  "font": {
+    "stack": "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+  }
+}

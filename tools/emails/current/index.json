@@ -1,0 +1,382 @@
+{
+  "exportedAt": "2026-11-16T10:53:09.073Z",
+  "store": "open-home-foundation-merch-store",
+  "templates": [
+    {
+      "handle": "order_confirmation",
+      "displayName": "Order confirmation",
+      "group": "order",
+      "subject": "Order {{name}} confirmed",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "draft_order_invoice",
+      "displayName": "Draft order invoice",
+      "group": "order",
+      "subject": "Invoice {{name}}",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "shipping_confirmation",
+      "displayName": "Shipping confirmation",
+      "group": "order",
+      "subject": "A shipment from order {{ name }} is on the way",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "ready_for_pickup",
+      "displayName": "Ready for local pickup",
+      "group": "pickup",
+      "subject": "A package from order {{ name }} is ready for pickup",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "pickup_receipt",
+      "displayName": "Picked up by customer",
+      "group": "pickup",
+      "subject": "Your order has been picked up ({{ name }})",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "local_out_for_delivery",
+      "displayName": "Order out for local delivery",
+      "group": "local_delivery",
+      "subject": "Order {{ name }} is out for delivery",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "local_delivered",
+      "displayName": "Order locally delivered",
+      "group": "local_delivery",
+      "subject": "Order {{ name }} has been delivered",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "local_missed_delivery",
+      "displayName": "Order missed local delivery",
+      "group": "local_delivery",
+      "subject": "Delivery from order {{ name }} has been missed",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "gift_card_notification",
+      "displayName": "New gift card",
+      "group": "gift_card",
+      "subject": "{{ shop.name }} {{ gift_card.initial_value | money_without_trailing_zeros }} gift card{% if gift_card.recipient and gift_card.customer %} from {% if gift_card.customer.name != blank %}{{ gift_card.customer.name }}{% elsif gift_card.customer.email != blank %}{{ gift_card.customer.email }}{% else %}{{ gift_card.customer.phone }}{% endif %}{% endif %}",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "gift_card_confirmation",
+      "displayName": "Gift card receipt",
+      "group": "gift_card",
+      "subject": "{{ shop.name }} {{ gift_card.initial_value | money_without_trailing_zeros }} gift card{% if gift_card.recipient %} for {% if gift_card.recipient.nickname != blank %}{{ gift_card.recipient.nickname }}{% elsif gift_card.recipient.name != blank %}{{ gift_card.recipient.name }}{% else %}{{ gift_card.recipient.email }}{% endif %}{% endif %}",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "store_credit_issued",
+      "displayName": "Store credit issued",
+      "group": "store_credit",
+      "subject": "{{ shop.name }} {{ issued_store_credit.amount | money_without_trailing_zeros }} store credit",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "order_invoice",
+      "displayName": "Order invoice",
+      "group": "order_exception",
+      "subject": "Invoice {{name}}",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "order_edited",
+      "displayName": "Order edited",
+      "group": "order_exception",
+      "subject": "Order {{name}} updated",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "order_cancelled",
+      "displayName": "Order canceled",
+      "group": "order_exception",
+      "subject": "Order {{ name }} has been canceled",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "order_payment_receipt",
+      "displayName": "Order payment receipt",
+      "group": "order_exception",
+      "subject": "[{{ shop.name }}] Payment receipt for order {{ name }}",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "refund_notification",
+      "displayName": "Order refund",
+      "group": "order_exception",
+      "subject": "Refund notification",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "order_link",
+      "displayName": "Order link",
+      "group": "order_exception",
+      "subject": "Link to order {{ order_name }}",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "failed_payment_processing",
+      "displayName": "Payment error",
+      "group": "payment",
+      "subject": "[{{shop.name}}] Payment couldn’t be processed",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "pending_payment_failure",
+      "displayName": "Pending payment error",
+      "group": "payment",
+      "subject": "[{{shop.name}}] Payment couldn’t be processed for order {{ name }}",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "pending_payment_success",
+      "displayName": "Pending payment success",
+      "group": "payment",
+      "subject": "[{{ shop.name }}] Payment for {{ name }} has been received",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "payment_reminder",
+      "displayName": "Payment reminder",
+      "group": "payment",
+      "subject": "Payment reminder for order {{ name }}",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "buy_online",
+      "displayName": "POS abandoned checkout",
+      "group": "point_of_sale",
+      "subject": "Buy online from {{ shop_name }} when you're ready!",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "pos_send_cart",
+      "displayName": "POS email to customer",
+      "group": "point_of_sale",
+      "subject": "Buy online from {{ shop_name }} when you're ready!",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "store_receipt",
+      "displayName": "POS and mobile receipt",
+      "group": "point_of_sale",
+      "subject": "Receipt for order {{name}}",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "pos_exchange_v2_receipt",
+      "displayName": "POS exchange receipt",
+      "group": "point_of_sale",
+      "subject": "Exchange receipt from {{ shop.name }}",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "fulfillment_request",
+      "displayName": "Fulfillment request notification",
+      "group": "fulfillment",
+      "subject": "Order fulfillment request for {{ shop_name }}",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "shipping_update",
+      "displayName": "Shipping update",
+      "group": "shipping",
+      "subject": "Shipping update for order {{ name }}",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "shipment_out_for_delivery",
+      "displayName": "Out for delivery",
+      "group": "shipping",
+      "subject": "A shipment from order {{ name }} is out for delivery",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "shipment_delivered",
+      "displayName": "Delivered",
+      "group": "shipping",
+      "subject": "A shipment from order {{ name }} has been delivered",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "return_created",
+      "displayName": "Return created",
+      "group": "return",
+      "subject": "Complete your return for Order {{ order.name }}",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "return_receipt",
+      "displayName": "Return receipt",
+      "group": "point_of_sale",
+      "subject": "{% if return.exchange_line_items.size > 0 %}Exchange{% else %}Return{% endif %} receipt from {{ shop.name }}",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "return_label_notification",
+      "displayName": "Order-level return label created",
+      "group": "return",
+      "subject": "Return label for order {{ order.name }}",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "return_approved",
+      "displayName": "Return request approved",
+      "group": "return",
+      "subject": "Return approved for order {{ order.name }}",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "return_declined",
+      "displayName": "Return request declined",
+      "group": "return",
+      "subject": "Return request declined for order {{ order.name }}",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "change_requested",
+      "displayName": "Request received",
+      "group": "return",
+      "subject": "{% if requested_edit and return %}Change requested for order {{ order.name }}{% elsif requested_edit %}Cancellation requested for order {{ order.name }}{% else %}Return requested for order {{ order.name }}{% endif %}",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "requested_edit_declined",
+      "displayName": "Cancellation request declined",
+      "group": "return",
+      "subject": "Cancellation request declined for order {{ order.name }}",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "customer_account_activate",
+      "displayName": "Customer account invite",
+      "group": "customer",
+      "subject": "Customer account activation",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "customer_account_welcome",
+      "displayName": "Customer account welcome",
+      "group": "customer",
+      "subject": "Customer account confirmation",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "customer_account_reset",
+      "displayName": "Customer account password reset",
+      "group": "customer",
+      "subject": "Customer account password reset",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "customer_add_payment_method",
+      "displayName": "Customer payment method add request",
+      "group": "customer",
+      "subject": "Add a payment method for {{ shop.name }}",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "customer_update_payment_method",
+      "displayName": "Customer payment method update request",
+      "group": "customer",
+      "subject": "Update your payment method for {{ shop.name }}",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "customer_restore_payment_method",
+      "displayName": "Customer payment method restore request",
+      "group": "customer",
+      "subject": "Verify your payment information for {{ shop.name }}",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "company_contact_welcome_email",
+      "displayName": "B2B access email",
+      "group": "customer",
+      "subject": "Welcome to B2B ordering with {{shop.name}}",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "company_location_update_payment_method",
+      "displayName": "B2B location update payment method",
+      "group": "customer",
+      "subject": "Update your payment method for {{ shop.name }}'s {{ location_name }} location",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "contact_buyer",
+      "displayName": "Contact customer",
+      "group": "customer",
+      "subject": "Message from {{ shop.name }}",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "customer_marketing_confirmation",
+      "displayName": "Customer marketing confirmation",
+      "group": "customer",
+      "subject": "Confirm you want to receive email marketing",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    },
+    {
+      "handle": "customer_email_address_changed_confirmation",
+      "displayName": "Customer email address change confirmation",
+      "group": "customer",
+      "subject": "Your email address has been changed",
+      "hasDefaultBody": true,
+      "hasDefaultTitle": true
+    }
+  ]
+}

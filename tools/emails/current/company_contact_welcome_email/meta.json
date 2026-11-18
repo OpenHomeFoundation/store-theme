@@ -1,0 +1,8 @@
+{
+  "handle": "company_contact_welcome_email",
+  "displayName": "B2B access email",
+  "group": "customer",
+  "subject": "Welcome to B2B ordering with {{shop.name}}",
+  "hasDefaultBody": true,
+  "hasDefaultTitle": true
+}

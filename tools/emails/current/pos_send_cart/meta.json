@@ -1,0 +1,8 @@
+{
+  "handle": "pos_send_cart",
+  "displayName": "POS email to customer",
+  "group": "point_of_sale",
+  "subject": "Buy online from {{ shop_name }} when you're ready!",
+  "hasDefaultBody": true,
+  "hasDefaultTitle": true
+}

@@ -1,0 +1,8 @@
+{
+  "handle": "shipping_confirmation",
+  "displayName": "Shipping confirmation",
+  "group": "order",
+  "subject": "A shipment from order {{ name }} is on the way",
+  "hasDefaultBody": true,
+  "hasDefaultTitle": true
+}
