@@ -1,0 +1,82 @@
+/*
+  OHF brand layer for Shopify's default notification templates.
+
+  Deliberately minimal: Shopify's own layout, spacing and responsive rules are
+  left alone, because that's what has been proven in the Gmail and Outlook apps
+  (including their forced dark modes). This layer changes colour, type weight,
+  the buttons and the header; never structure.
+
+  Shopify inlines its base stylesheet (/assets/notifications/styles.css) plus
+  this block at send time; rules here win by coming later in the cascade, so
+  selectors match Shopify's own (mostly a single class). Rules Shopify can't
+  inline (:hover, @media) stay in the email's <style> block.
+
+  Double-square-bracket tokens come from brand.config.json.
+*/
+
+/* ---- Header -------------------------------------------------------------- */
+.shop-name__cell { vertical-align: middle; }
+.order-number__cell { color: [[color.inkMuted]]; font-size: 13px; font-weight: 600; letter-spacing: 0.06em; white-space: nowrap; vertical-align: middle; padding-left: 16px; }
+.order-number__text { font-size: 13px; color: [[color.inkMuted]]; }
+.po-number__cell { color: [[color.inkMuted]]; font-size: 13px; white-space: nowrap; }
+
+/* ---- Type ---------------------------------------------------------------- */
+h2 { color: [[color.ink]]; font-weight: 700; letter-spacing: -0.01em; }
+h3 { color: [[color.ink]]; font-weight: 700; margin-bottom: 16px; }
+h4 { color: [[color.ink]]; font-weight: 600; }
+p { color: [[color.inkMuted]]; }
+strong { color: [[color.ink]]; }
+
+/* ---- Links + buttons ----------------------------------------------------- */
+/* Same selectors as Shopify's own accent-colour block, which the build removes.
+   White on the deeper brand blue: 4.98:1 (WCAG AA). Gmail's dark mode leaves
+   white text on a mid-dark blue alone; dark text on the light brand blue gets
+   flipped to white and becomes unreadable. */
+a, a:hover, a:active, a:visited { color: [[color.ink]]; }
+.button__cell { background: [[color.button]]; border-radius: 8px; }
+.actions-buttons .button__cell--primary { background-color: [[color.button]]; border-radius: 8px; }
+.actions-buttons .button__cell--outlined .button__text { color: [[color.ink]]; }
+.button__text { color: #FFFFFF; font-weight: 600; }
+.button__text:hover, .button__text:active, .button__text:visited { color: #FFFFFF; }
+.link__cell a, p a, .small { color: [[color.ink]]; text-decoration: underline; }
+
+/* ---- Order lists + totals (colour only) ----------------------------------- */
+.order-list__item { border-top-color: [[color.line]]; }
+.order-list__item-title { color: [[color.ink]]; }
+.order-list__item-variant { color: [[color.inkMuted]]; }
+.order-list__item-price { color: [[color.ink]]; white-space: nowrap; }
+.order-list__item-original-price { color: [[color.inkMuted]]; }
+.order-list__item-discount-allocation { color: [[color.inkMuted]]; }
+.order-list__product-image { border-color: [[color.line]]; }
+.order-list__no-image-cell { border-color: [[color.line]]; }
+.order-list__delivery-method-type { color: [[color.ink]]; }
+.order-list__delivery-method-type-separator { border-color: [[color.line]]; }
+.order-list__estimated-delivery { color: [[color.inkMuted]]; }
+
+/* Totals: right-aligned beside Shopify's 40% spacer on desktop, full width on
+   mobile. The build tags the cell holding them (.subtotal-content) so its width
+   is explicit; otherwise the Gmail app shrinks each totals table to its content
+   and the charges and the total don't line up. */
+.subtotal-content { width: 60%; }
+.subtotal-table { width: 100%; }
+.subtotal-line__value { white-space: nowrap; }
+.subtotal-lines { border-top-color: [[color.line]]; }
+.subtotal-table--total { border-top-color: [[color.line]]; }
+.subtotal-table__line { border-bottom-color: [[color.line]]; }
+.total-discount { color: [[color.inkMuted]]; }
+.total-discount--amount { color: [[color.ink]]; }
+
+.vertical-line__content, .parent-vertical-line__content, .curved-line-cell-container__top-spacer-cell--show-border { border-left-color: [[color.line]]; }
+.curved-line-cell-container__curvedLine-cell__curvedLine { border-left-color: [[color.line]]; border-bottom-color: [[color.line]]; }
+
+/* ---- Customer info + footer ---------------------------------------------- */
+.customer-info__item-content { color: [[color.inkMuted]]; }
+.footer { border-top-color: [[color.line]]; }
+.disclaimer__subtext { color: [[color.inkMuted]]; }
+
+/* ---- Mobile -------------------------------------------------------------- */
+@media (max-width: 600px) {
+  .subtotal-spacer { display: none !important; width: 0 !important; }
+  .subtotal-content { width: 100% !important; }
+  .subtotal-table { width: 100% !important; }
+}

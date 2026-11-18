@@ -1,0 +1,8 @@
+{
+  "handle": "order_confirmation",
+  "displayName": "Order confirmation",
+  "group": "order",
+  "subject": "Order {{name}} confirmed",
+  "hasDefaultBody": false,
+  "hasDefaultTitle": true
+}

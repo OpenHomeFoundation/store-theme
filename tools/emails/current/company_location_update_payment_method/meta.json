@@ -1,0 +1,8 @@
+{
+  "handle": "company_location_update_payment_method",
+  "displayName": "B2B location update payment method",
+  "group": "customer",
+  "subject": "Update your payment method for {{ shop.name }}'s {{ location_name }} location",
+  "hasDefaultBody": true,
+  "hasDefaultTitle": true
+}

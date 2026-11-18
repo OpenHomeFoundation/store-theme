@@ -1,0 +1,8 @@
+{
+  "handle": "pickup_receipt",
+  "displayName": "Picked up by customer",
+  "group": "pickup",
+  "subject": "Your order has been picked up ({{ name }})",
+  "hasDefaultBody": true,
+  "hasDefaultTitle": true
+}

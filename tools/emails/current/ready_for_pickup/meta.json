@@ -1,0 +1,8 @@
+{
+  "handle": "ready_for_pickup",
+  "displayName": "Ready for local pickup",
+  "group": "pickup",
+  "subject": "A package from order {{ name }} is ready for pickup",
+  "hasDefaultBody": true,
+  "hasDefaultTitle": true
+}

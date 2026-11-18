@@ -1,0 +1,8 @@
+{
+  "handle": "customer_marketing_confirmation",
+  "displayName": "Customer marketing confirmation",
+  "group": "customer",
+  "subject": "Confirm you want to receive email marketing",
+  "hasDefaultBody": false,
+  "hasDefaultTitle": true
+}

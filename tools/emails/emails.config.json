@@ -1,0 +1,28 @@
+{
+  "templates": [
+    "order_confirmation",
+    "order_edited",
+    "order_invoice",
+    "draft_order_invoice",
+    "order_cancelled",
+    "order_payment_receipt",
+    "refund_notification",
+    "order_link",
+    "failed_payment_processing",
+    "shipping_confirmation",
+    "shipping_update",
+    "shipment_out_for_delivery",
+    "shipment_delivered",
+    "return_created",
+    "return_approved",
+    "return_declined",
+    "change_requested",
+    "requested_edit_declined",
+    "customer_account_activate",
+    "customer_account_welcome",
+    "customer_account_reset",
+    "customer_email_address_changed_confirmation",
+    "customer_marketing_confirmation",
+    "contact_buyer"
+  ]
+}

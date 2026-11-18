@@ -1,0 +1,8 @@
+{
+  "handle": "return_label_notification",
+  "displayName": "Order-level return label created",
+  "group": "return",
+  "subject": "Return label for order {{ order.name }}",
+  "hasDefaultBody": true,
+  "hasDefaultTitle": true
+}

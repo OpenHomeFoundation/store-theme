@@ -1,0 +1,8 @@
+{
+  "handle": "order_edited",
+  "displayName": "Order edited",
+  "group": "order_exception",
+  "subject": "Order {{name}} updated",
+  "hasDefaultBody": false,
+  "hasDefaultTitle": true
+}

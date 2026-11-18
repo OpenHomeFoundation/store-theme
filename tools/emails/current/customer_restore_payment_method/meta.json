@@ -1,0 +1,8 @@
+{
+  "handle": "customer_restore_payment_method",
+  "displayName": "Customer payment method restore request",
+  "group": "customer",
+  "subject": "Verify your payment information for {{ shop.name }}",
+  "hasDefaultBody": true,
+  "hasDefaultTitle": true
+}

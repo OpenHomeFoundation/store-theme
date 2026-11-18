@@ -1,0 +1,8 @@
+{
+  "handle": "customer_account_welcome",
+  "displayName": "Customer account welcome",
+  "group": "customer",
+  "subject": "Customer account confirmation",
+  "hasDefaultBody": false,
+  "hasDefaultTitle": true
+}

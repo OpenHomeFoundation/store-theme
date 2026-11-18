@@ -1,0 +1,8 @@
+{
+  "handle": "return_receipt",
+  "displayName": "Return receipt",
+  "group": "point_of_sale",
+  "subject": "{% if return.exchange_line_items.size > 0 %}Exchange{% else %}Return{% endif %} receipt from {{ shop.name }}",
+  "hasDefaultBody": true,
+  "hasDefaultTitle": true
+}

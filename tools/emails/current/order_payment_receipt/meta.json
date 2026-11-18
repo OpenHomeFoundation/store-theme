@@ -1,0 +1,8 @@
+{
+  "handle": "order_payment_receipt",
+  "displayName": "Order payment receipt",
+  "group": "order_exception",
+  "subject": "[{{ shop.name }}] Payment receipt for order {{ name }}",
+  "hasDefaultBody": false,
+  "hasDefaultTitle": true
+}

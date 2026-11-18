@@ -1,0 +1,184 @@
+{% assign buyer_email_rtl = false %}{% if locale_direction == 'rtl' %}{% assign buyer_email_rtl = true %}{% endif %}{% if gift_card.recipient %}
+  {% if gift_card.recipient.nickname != blank %}
+    {% assign recipient_name = gift_card.recipient.nickname %}
+  {% elsif gift_card.recipient.name != blank %}
+    {% assign recipient_name = gift_card.recipient.name %}
+  {% else %}
+    {% assign recipient_name = gift_card.recipient.email %}
+  {% endif %}
+  {% capture email_title %}
+    {% if gift_card.send_on != blank %}
+      Here's your gift card that will be sent to {{ recipient_name }} on {{ gift_card.send_on | date: '%B %e, %Y' }}.
+    {% else %}
+      Here's your gift card that was sent to {{ recipient_name }}.
+    {% endif %}
+  {% endcapture %}{% capture email_heading %}
+    {% if gift_card.send_on != blank %}
+      Here's your gift card that will be sent to {% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ recipient_name }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %} on {% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ gift_card.send_on | date: '%B %e, %Y' }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}.
+    {% else %}
+      Here's your gift card that was sent to {% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ recipient_name }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}.
+    {% endif %}
+  {% endcapture %}
+{% endif %}
+
+<!DOCTYPE html>
+<html lang="en"{% if buyer_email_rtl %} dir="rtl"{% endif %}>
+  <head>
+  <title>{{ email_title }}</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" type="text/css" href="/assets/notifications/styles.css">
+  <style>
+    .button__cell { background: {{ shop.email_accent_color }}; }
+    .actions-buttons .button__cell--primary { background-color: {{ shop.email_accent_color }}; }
+    .actions-buttons .button__cell--outlined .button__text { color: {{ shop.email_accent_color }}; }
+    a, a:hover, a:active, a:visited { color: {{ shop.email_accent_color }}; }
+  </style>
+</head>
+
+  <body>
+    <table align="center" class="body giftcard__body{% if buyer_email_rtl %} buyer-email-rtl{% endif %}"{% if buyer_email_rtl %} dir="rtl"{% endif %}>
+      <tr>
+        <td class="empty-line">&nbsp;</td>
+      </tr>
+      <tr>
+        <td class="empty-line">&nbsp;</td>
+      </tr>
+      <tr>
+        <td>
+          <table class="row content">
+  <tr>
+    <td class="content__cell">
+      <center>
+        <table class="container"{% if buyer_email_rtl == true %} dir="rtl"{% endif %}>
+          <tr>
+            <td>
+              
+            
+{% if shop.email_logo_url %}
+  <table align="center" class="giftcard__doubletopmargin">
+    <tr>
+      <td>
+        <img src="{{shop.email_logo_url}}" alt="{{ shop.name }}" class="giftcard__logosize" width="{{ shop.email_logo_width }}">
+      </td>
+    </tr>
+  </table>
+{% endif %}
+
+  <table align="center" class="row giftcard__topmargin">
+    <tr>
+      <td class="giftcard__title">{{ email_heading }}</td>
+    </tr>
+  </table>
+
+{% if gift_card.recipient and gift_card.message != blank %}
+  <table align="center" class="row giftcard__topmargin">
+    <tr>
+      <td class="giftcard__message">
+        "{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ gift_card.message }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}"
+      </td>
+    </tr>
+  </table>
+{% endif %}
+
+<table align="center" class="giftcard__topmargin">
+  <tr>
+    <td class="giftcard__balance">{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ gift_card.initial_value | money_with_currency }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</td>
+  </tr>
+  {% if gift_card.expires_on %}
+    <tr>
+      <td class="giftcard__smalltext">
+        Expires {% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ gift_card.expires_on | date: '%B %e, %Y' }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}
+      </td>
+    </tr>
+  {% endif %}
+</table>
+
+<table align="center" class="giftcard__doubletopmargin">
+  <tr>
+    <td>
+      <img src="{{ 'gift-card/card.jpg' | shopify_asset_url }}" alt="Gift card image" width="240" height="160">
+    </td>
+  </tr>
+</table>
+
+<table align="center" class="row giftcard__topmargin">
+  <tr>
+    <td class="giftcard__shop_name">{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ shop.name }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</td>
+  </tr>
+</table>
+
+<table align="center" class="row giftcard__topmargin">
+  <tr>
+    <td class="giftcard__smalltext">
+      Use the gift card code online
+    </td>
+  </tr>
+  <tr>
+    <td class="giftcard__code">
+      {% if buyer_email_rtl == true %}<span dir="ltr" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ gift_card.code | format_code }}{% if buyer_email_rtl == true %}</span>{% endif %}
+    </td>
+  </tr>
+</table>
+
+<table class="row actions">
+  <tr>
+    <td class="actions__cell">
+      <table align="center" class="button">
+        <tr>
+          <td class="button__cell"><a href="{{ shop.url }}" class="button__text">Visit online store</a></td>
+        </tr>
+      </table>
+      <table align="center" class="button">
+        <tr>
+          <td class="link__cell"><a href="{{ gift_card.url }}" class="link__text">View gift card balance</a></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+{% if gift_card.pass_url %}
+  <table align="center" class="row">
+    <tr>
+      <td class="giftcard__textcenter">
+        <a href="{{ gift_card.pass_url }}" class="apple-wallet-button">
+          <img src="{{ 'gift-card/add-to-apple-wallet.png' | shopify_asset_url }}" alt="Add to Apple Wallet" width="120" height="40">
+        </a>
+      </td>
+    </tr>
+  </table>
+{% endif %}
+
+
+            </td>
+          </tr>
+        </table>
+      </center>
+    </td>
+  </tr>
+</table>
+          <table class="row footer">
+  <tr>
+    <td class="footer__cell">
+      <center>
+        <table class="container"{% if buyer_email_rtl == true %} dir="rtl"{% endif %}>
+          <tr>
+            <td>
+              
+              <p class="disclaimer__subtext">If you have any questions, reply to this email or contact us at <a href="mailto:{{ shop.email }}">{% if buyer_email_rtl == true %}<span dir="ltr" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ shop.email }}{% if buyer_email_rtl == true %}</span>{% endif %}</a>.<!-- shopify-managed-taxes-footer --></p>
+            </td>
+          </tr>
+        </table>
+      </center>
+    </td>
+  </tr>
+</table>
+
+<img src="{{ 'notifications/spacer.png' | shopify_asset_url }}" class="spacer" height="1" />
+
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

@@ -1,0 +1,8 @@
+{
+  "handle": "pending_payment_failure",
+  "displayName": "Pending payment error",
+  "group": "payment",
+  "subject": "[{{shop.name}}] Payment couldn’t be processed for order {{ name }}",
+  "hasDefaultBody": true,
+  "hasDefaultTitle": true
+}

@@ -1,0 +1,8 @@
+{
+  "handle": "store_credit_issued",
+  "displayName": "Store credit issued",
+  "group": "store_credit",
+  "subject": "{{ shop.name }} {{ issued_store_credit.amount | money_without_trailing_zeros }} store credit",
+  "hasDefaultBody": true,
+  "hasDefaultTitle": true
+}

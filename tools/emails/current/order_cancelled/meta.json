@@ -1,0 +1,8 @@
+{
+  "handle": "order_cancelled",
+  "displayName": "Order canceled",
+  "group": "order_exception",
+  "subject": "Order {{ name }} has been canceled",
+  "hasDefaultBody": false,
+  "hasDefaultTitle": true
+}

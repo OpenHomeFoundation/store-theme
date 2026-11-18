@@ -1,0 +1,8 @@
+{
+  "handle": "pos_exchange_v2_receipt",
+  "displayName": "POS exchange receipt",
+  "group": "point_of_sale",
+  "subject": "Exchange receipt from {{ shop.name }}",
+  "hasDefaultBody": true,
+  "hasDefaultTitle": true
+}

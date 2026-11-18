@@ -1,0 +1,8 @@
+{
+  "handle": "local_delivered",
+  "displayName": "Order locally delivered",
+  "group": "local_delivery",
+  "subject": "Order {{ name }} has been delivered",
+  "hasDefaultBody": true,
+  "hasDefaultTitle": true
+}

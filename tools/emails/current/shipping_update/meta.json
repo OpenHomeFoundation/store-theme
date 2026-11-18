@@ -1,0 +1,8 @@
+{
+  "handle": "shipping_update",
+  "displayName": "Shipping update",
+  "group": "shipping",
+  "subject": "Shipping update for order {{ name }}",
+  "hasDefaultBody": false,
+  "hasDefaultTitle": true
+}

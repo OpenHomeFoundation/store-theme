@@ -1,0 +1,8 @@
+{
+  "handle": "gift_card_confirmation",
+  "displayName": "Gift card receipt",
+  "group": "gift_card",
+  "subject": "{{ shop.name }} {{ gift_card.initial_value | money_without_trailing_zeros }} gift card{% if gift_card.recipient %} for {% if gift_card.recipient.nickname != blank %}{{ gift_card.recipient.nickname }}{% elsif gift_card.recipient.name != blank %}{{ gift_card.recipient.name }}{% else %}{{ gift_card.recipient.email }}{% endif %}{% endif %}",
+  "hasDefaultBody": true,
+  "hasDefaultTitle": true
+}

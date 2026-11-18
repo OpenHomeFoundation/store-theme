@@ -1,0 +1,284 @@
+{% assign buyer_email_rtl = false %}{% if locale_direction == 'rtl' %}{% assign buyer_email_rtl = true %}{% endif %}<!DOCTYPE html>
+<html lang="en"{% if buyer_email_rtl %} dir="rtl"{% endif %}>
+  <head>
+  <title>{{ email_title }}</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" type="text/css" href="/assets/notifications/styles.css">
+  
+<meta name="color-scheme" content="light">
+<meta name="supported-color-schemes" content="light">
+<style>
+.shop-name__cell { vertical-align: middle; }
+.order-number__cell { color: #51606B; font-size: 13px; font-weight: 600; letter-spacing: 0.06em; white-space: nowrap; vertical-align: middle; padding-left: 16px; }
+.order-number__text { font-size: 13px; color: #51606B; }
+.po-number__cell { color: #51606B; font-size: 13px; white-space: nowrap; }
+
+h2 { color: #09202E; font-weight: 700; letter-spacing: -0.01em; }
+h3 { color: #09202E; font-weight: 700; margin-bottom: 16px; }
+h4 { color: #09202E; font-weight: 600; }
+p { color: #51606B; }
+strong { color: #09202E; }
+
+a, a:hover, a:active, a:visited { color: #09202E; }
+.button__cell { background: #0A77A8; border-radius: 8px; }
+.actions-buttons .button__cell--primary { background-color: #0A77A8; border-radius: 8px; }
+.actions-buttons .button__cell--outlined .button__text { color: #09202E; }
+.button__text { color: #FFFFFF; font-weight: 600; }
+.button__text:hover, .button__text:active, .button__text:visited { color: #FFFFFF; }
+.link__cell a, p a, .small { color: #09202E; text-decoration: underline; }
+
+.order-list__item { border-top-color: #DDE3EC; }
+.order-list__item-title { color: #09202E; }
+.order-list__item-variant { color: #51606B; }
+.order-list__item-price { color: #09202E; white-space: nowrap; }
+.order-list__item-original-price { color: #51606B; }
+.order-list__item-discount-allocation { color: #51606B; }
+.order-list__product-image { border-color: #DDE3EC; }
+.order-list__no-image-cell { border-color: #DDE3EC; }
+.order-list__delivery-method-type { color: #09202E; }
+.order-list__delivery-method-type-separator { border-color: #DDE3EC; }
+.order-list__estimated-delivery { color: #51606B; }
+
+.subtotal-content { width: 60%; }
+.subtotal-table { width: 100%; }
+.subtotal-line__value { white-space: nowrap; }
+.subtotal-lines { border-top-color: #DDE3EC; }
+.subtotal-table--total { border-top-color: #DDE3EC; }
+.subtotal-table__line { border-bottom-color: #DDE3EC; }
+.total-discount { color: #51606B; }
+.total-discount--amount { color: #09202E; }
+
+.vertical-line__content, .parent-vertical-line__content, .curved-line-cell-container__top-spacer-cell--show-border { border-left-color: #DDE3EC; }
+.curved-line-cell-container__curvedLine-cell__curvedLine { border-left-color: #DDE3EC; border-bottom-color: #DDE3EC; }
+
+.customer-info__item-content { color: #51606B; }
+.footer { border-top-color: #DDE3EC; }
+.disclaimer__subtext { color: #51606B; }
+
+@media (max-width: 600px) {
+  .subtotal-spacer { display: none !important; width: 0 !important; }
+  .subtotal-content { width: 100% !important; }
+  .subtotal-table { width: 100% !important; }
+}
+</style>
+</head>
+
+  <body>
+    <table class="body{% if buyer_email_rtl %} buyer-email-rtl{% endif %}"{% if buyer_email_rtl %} dir="rtl"{% endif %}>
+      <tr>
+        <td>
+          <table class="header row">
+  <tr>
+    <td class="header__cell">
+      <center>
+
+        <table class="container"{% if buyer_email_rtl == true %} dir="rtl"{% endif %}>
+          <tr>
+            <td>
+
+              <table class="row">
+                <tr>
+                  <td class="shop-name__cell"{% if buyer_email_rtl == true %} align="right"{% endif %}>
+                    <a href="{{ shop.url }}" class="ohf-logo__link" style="display:inline-block;text-decoration:none;border:0;"><img class="ohf-logo" src="https://cdn.shopify.com/s/files/1/0974/5157/3583/files/ohf-lockup-email_2x_58ba959a-1b5a-41dd-ba2f-b039678208ee.png?v=1794330366" alt="Open Home Foundation" width="200" height="60" style="display:block;width:200px;height:auto;border:0;outline:none;margin-left:-10px;"></a>
+                  </td>
+
+                    <td{% if buyer_email_rtl == true %} class="order-po-number__cell"{% endif %}>
+                      <table class="order-po-number__container">
+                        <tr>
+                          <td class="order-number__cell"{% if buyer_email_rtl == true %} align="left"{% endif %}>
+                            <span class="order-number__text">
+                              Order {% if buyer_email_rtl == true %}<span dir="ltr" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ order_name }}{% if buyer_email_rtl == true %}</span>{% endif %}
+                            </span>
+                          </td>
+                        </tr>
+                        {%- if po_number %}
+                            <tr>
+                              <td class="po-number__cell"{% if buyer_email_rtl == true %} align="left"{% endif %}>
+                                <span class="po-number__text">
+                                  PO number {% if buyer_email_rtl == true %}<span dir="ltr" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}#{{ po_number }}{% if buyer_email_rtl == true %}</span>{% endif %}
+                                </span>
+                              </td>
+                            </tr>
+                        {%- endif %}
+                      </table>
+                    </td>
+                </tr>
+              </table>
+
+            </td>
+          </tr>
+        </table>
+
+      </center>
+    </td>
+  </tr>
+</table>
+
+          <table class="row content">
+  <tr>
+    <td class="content__cell">
+      <center>
+        <table class="container"{% if buyer_email_rtl == true %} dir="rtl"{% endif %}>
+          <tr>
+            <td>
+              
+            <h2>Your payment has been processed</h2>
+            <p>
+              {% for transaction in transactions %}
+                {% if transaction.id == transaction_id %}
+                  You have been charged <b>{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ transaction.amount | money_with_currency }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</b> for your order {% if buyer_email_rtl == true %}<span dir="ltr" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ order_name }}{% if buyer_email_rtl == true %}</span>{% endif %}.
+                {% endif %}
+              {% endfor %}
+            </p>
+            {% if order_status_url %}
+              <table class="row actions">
+  <tr>
+    <td class="empty-line">&nbsp;</td>
+  </tr>
+  <tr>
+    <td class="actions__cell">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td valign="middle">
+            <table class="button main-action-cell">
+              <tr>
+                <td class="button__cell"><a href="{{ order_status_url }}" class="button__text">View your order</a></td>
+              </tr>
+            </table>
+          </td>
+          <td valign="middle" style="{% if buyer_email_rtl == true %}padding-right: 15px; padding-left: 0;{% else %}padding-left: 15px;{% endif %} vertical-align: middle;">
+            {% if shop.url %}
+    <table class="link secondary-action-cell" style="margin-top: 0; vertical-align: middle;">
+      <tr>
+        <td class="link__cell">or <a href="{{ shop.url }}">Visit our store</a></td>
+      </tr>
+    </table>
+{% endif %}
+
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+            {% else %}
+              {% if shop.url %}
+    <table class="row actions">
+      <tr>
+        <td class="actions__cell">
+          <table class="button main-action-cell">
+            <tr>
+              <td class="button__cell"><a href="{{ shop.url }}" class="button__text">Visit our store</a></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+{% endif %}
+
+            {% endif %}
+
+            </td>
+          </tr>
+        </table>
+      </center>
+    </td>
+  </tr>
+</table>
+          <table class="row section">
+  <tr>
+    <td class="section__cell">
+      <center>
+        <table class="container">
+          <tr>
+            <td>
+              <h3>Customer information</h3>
+            </td>
+          </tr>
+        </table>
+        <table class="container">
+          <tr>
+            <td>
+              
+            <table class="row">
+              <tr>
+                <td class="customer-info__item">
+                  <h4>Billing Address</h4>
+                  {% if buyer_email_rtl %}<div dir="auto" style="unicode-bidi: isolate;">{% endif %}{{ address | format_address }}{% if buyer_email_rtl %}</div>{% endif %}
+                </td>
+
+                {% assign transaction_count = transactions | size %}
+                {% if transaction_count > 0 %}
+                <td class="customer-info__item" valign="top">
+                  <h4>Payment</h4>
+                  {% for transaction in transactions %}
+                    {% if transaction.id == transaction_id %}
+                      {% if transaction.status == "success" or transaction.status == "pending" %}
+                        {% if transaction.kind == "capture" or transaction.kind == "sale" %}
+                          {% if transaction.payment_details.type == "card" %}
+                            <p class="customer-info__item-content">
+                              <img src="{{ transaction.payment_details.credit_card_company | downcase | replace: ' ', '-'  | payment_type_img_url }}" class="customer-info__item-credit" height="24">
+                              <span>ending with {% if buyer_email_rtl == true %}<span dir="ltr" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ transaction.payment_details.credit_card_last_four_digits }}{% if buyer_email_rtl == true %}</span>{% endif %} &mdash; <strong>{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ transaction.amount | money }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</strong></span>
+                            </p>
+                          {% elsif transaction.payment_details.local_payment? %}
+                            <p class="customer-info__item-content">
+                              <img src="{{ transaction.payment_details.payment_icon_source | payment_type_img_url }}" class="customer-info__item-credit" height="24">
+                              <span>{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ transaction.payment_details.payment_method_display_name }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %} &mdash; <strong>{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ transaction.amount | money }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</strong></span>
+                            </p>
+                          {% else %}
+                            <p class="customer-info__item-content">
+                            {% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ transaction.gateway_display_name }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %} &mdash; <strong>{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ transaction.amount | money }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</strong>
+                            </p>
+                          {% endif %}
+                        {% endif %}
+                      {% endif %}
+                    {% endif %}
+                  {% endfor %}
+                </td>
+                {% endif %}
+              </tr>
+            </table>
+            {% if company_location %}
+              <table class="row">
+                <tr>
+                  <td class="customer-info__item">
+                    <h4>Location</h4>
+                      <p>{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ company_location.name }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</p>
+                  </td>
+                </tr>
+              </table>
+            {% endif %}
+
+            </td>
+          </tr>
+        </table>
+      </center>
+    </td>
+  </tr>
+</table>
+          <table class="row footer">
+  <tr>
+    <td class="footer__cell">
+      <center>
+        <table class="container"{% if buyer_email_rtl == true %} dir="rtl"{% endif %}>
+          <tr>
+            <td>
+              
+              <p class="disclaimer__subtext">If you have any questions, reply to this email or contact us at <a href="mailto:{{ shop.email }}">{% if buyer_email_rtl == true %}<span dir="ltr" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ shop.email }}{% if buyer_email_rtl == true %}</span>{% endif %}</a>.<!-- shopify-managed-taxes-footer --></p>
+            </td>
+          </tr>
+        </table>
+      </center>
+    </td>
+  </tr>
+</table>
+
+<img src="{{ 'notifications/spacer.png' | shopify_asset_url }}" class="spacer" height="1" />
+
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

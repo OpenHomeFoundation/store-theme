@@ -1,0 +1,8 @@
+{
+  "handle": "store_receipt",
+  "displayName": "POS and mobile receipt",
+  "group": "point_of_sale",
+  "subject": "Receipt for order {{name}}",
+  "hasDefaultBody": true,
+  "hasDefaultTitle": true
+}

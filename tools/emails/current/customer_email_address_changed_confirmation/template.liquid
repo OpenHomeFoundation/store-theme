@@ -1,0 +1,128 @@
+{% assign buyer_email_rtl = false %}{% if locale_direction == 'rtl' %}{% assign buyer_email_rtl = true %}{% endif %}{% capture email_title %}Your email address has been changed{% endcapture %}
+{% capture email_body %}The email address associated with your account has been changed.{% endcapture %}
+
+<!DOCTYPE html>
+<html lang="en"{% if buyer_email_rtl %} dir="rtl"{% endif %}>
+  <head>
+  <title>{{ email_title }}</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" type="text/css" href="/assets/notifications/styles.css">
+  <style>
+    .button__cell { background: {{ shop.email_accent_color }}; }
+    .actions-buttons .button__cell--primary { background-color: {{ shop.email_accent_color }}; }
+    .actions-buttons .button__cell--outlined .button__text { color: {{ shop.email_accent_color }}; }
+    a, a:hover, a:active, a:visited { color: {{ shop.email_accent_color }}; }
+  </style>
+</head>
+
+  <style>
+    body {
+      color: #212529;
+      background-color: #ffffff;
+    }
+    
+    p, td, th, div, span {
+      color: #212529;
+    }
+    
+    strong, b {
+      color: #000000;
+    }
+    
+    a {
+      color: #0056b3;
+      text-decoration: none;
+    }
+    
+    a:hover,
+    a:focus {
+      color: #004085;
+      text-decoration: underline;
+    }{% if buyer_email_rtl %}
+
+    .buyer-email-rtl a span {
+      color: inherit;
+    }{% endif %}
+  </style>
+  <body>
+    <table class="body{% if buyer_email_rtl %} buyer-email-rtl{% endif %}"{% if buyer_email_rtl %} dir="rtl"{% endif %}>
+      <tr>
+        <td>
+          <table class="header row">
+  <tr>
+    <td class="header__cell">
+      <center>
+
+        <table class="container"{% if buyer_email_rtl == true %} dir="rtl"{% endif %}>
+          <tr>
+            <td>
+
+              <table class="row">
+                <tr>
+                  <td class="shop-name__cell"{% if buyer_email_rtl == true %} align="right"{% endif %}>
+                    {%- if shop.email_logo_url %}
+                      <img src="{{shop.email_logo_url}}" alt="{{ shop.name }}" width="{{ shop.email_logo_width }}">
+                    {%- else %}
+                      <h1 class="shop-name__text">
+                        <a href="{{shop.url}}">{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ shop.name }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</a>
+                      </h1>
+                    {%- endif %}
+                  </td>
+
+                </tr>
+              </table>
+
+            </td>
+          </tr>
+        </table>
+
+      </center>
+    </td>
+  </tr>
+</table>
+
+          <table class="row content">
+  <tr>
+    <td class="content__cell">
+      <center>
+        <table class="container"{% if buyer_email_rtl == true %} dir="rtl"{% endif %}>
+          <tr>
+            <td>
+              
+            <p>{{ email_body }}</p>
+          <p><strong>Previous email address:</strong> {% if buyer_email_rtl == true %}<span dir="ltr" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ previous_email }}{% if buyer_email_rtl == true %}</span>{% endif %}</p>
+          <p><strong>New email address:</strong> {% if buyer_email_rtl == true %}<span dir="ltr" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ new_email }}{% if buyer_email_rtl == true %}</span>{% endif %}</p>
+          <p>If you did not make these changes, please <a href="mailto:{{ email }}">contact us</a> immediately.</p>
+
+            </td>
+          </tr>
+        </table>
+      </center>
+    </td>
+  </tr>
+</table>
+          <table class="row footer">
+  <tr>
+    <td class="footer__cell">
+      <center>
+        <table class="container"{% if buyer_email_rtl == true %} dir="rtl"{% endif %}>
+          <tr>
+            <td>
+              
+              <p class="disclaimer__subtext">If you have any questions, reply to this email or contact us at <a href="mailto:{{ shop.email }}">{% if buyer_email_rtl == true %}<span dir="ltr" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ shop.email }}{% if buyer_email_rtl == true %}</span>{% endif %}</a>.<!-- shopify-managed-taxes-footer --></p>
+            </td>
+          </tr>
+        </table>
+      </center>
+    </td>
+  </tr>
+</table>
+
+<img src="{{ 'notifications/spacer.png' | shopify_asset_url }}" class="spacer" height="1" />
+
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

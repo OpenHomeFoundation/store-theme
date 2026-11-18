@@ -1,0 +1,8 @@
+{
+  "handle": "customer_update_payment_method",
+  "displayName": "Customer payment method update request",
+  "group": "customer",
+  "subject": "Update your payment method for {{ shop.name }}",
+  "hasDefaultBody": true,
+  "hasDefaultTitle": true
+}

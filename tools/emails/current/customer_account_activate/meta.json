@@ -1,0 +1,8 @@
+{
+  "handle": "customer_account_activate",
+  "displayName": "Customer account invite",
+  "group": "customer",
+  "subject": "Customer account activation",
+  "hasDefaultBody": false,
+  "hasDefaultTitle": true
+}
