@@ -3,6 +3,6 @@
   "displayName": "Draft order invoice",
   "group": "order",
   "subject": "Invoice {{name}}",
-  "hasDefaultBody": true,
+  "hasDefaultBody": false,
   "hasDefaultTitle": true
 }

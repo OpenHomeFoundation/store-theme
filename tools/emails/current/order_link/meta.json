@@ -3,6 +3,6 @@
   "displayName": "Order link",
   "group": "order_exception",
   "subject": "Link to order {{ order_name }}",
-  "hasDefaultBody": true,
+  "hasDefaultBody": false,
   "hasDefaultTitle": true
 }

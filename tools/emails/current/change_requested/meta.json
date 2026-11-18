@@ -3,6 +3,6 @@
   "displayName": "Request received",
   "group": "return",
   "subject": "{% if requested_edit and return %}Change requested for order {{ order.name }}{% elsif requested_edit %}Cancellation requested for order {{ order.name }}{% else %}Return requested for order {{ order.name }}{% endif %}",
-  "hasDefaultBody": true,
+  "hasDefaultBody": false,
   "hasDefaultTitle": true
 }

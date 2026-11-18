@@ -3,6 +3,6 @@
   "displayName": "Customer account password reset",
   "group": "customer",
   "subject": "Customer account password reset",
-  "hasDefaultBody": true,
+  "hasDefaultBody": false,
   "hasDefaultTitle": true
 }

@@ -3,6 +3,6 @@
   "displayName": "Order refund",
   "group": "order_exception",
   "subject": "Refund notification",
-  "hasDefaultBody": true,
+  "hasDefaultBody": false,
   "hasDefaultTitle": true
 }

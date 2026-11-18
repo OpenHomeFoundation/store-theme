@@ -3,6 +3,6 @@
   "displayName": "Customer account invite",
   "group": "customer",
   "subject": "Customer account activation",
-  "hasDefaultBody": true,
+  "hasDefaultBody": false,
   "hasDefaultTitle": true
 }

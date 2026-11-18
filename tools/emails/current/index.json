@@ -7,7 +7,7 @@
       "displayName": "Order confirmation",
       "group": "order",
       "subject": "Order {{name}} confirmed",
-      "hasDefaultBody": true,
+      "hasDefaultBody": false,
       "hasDefaultTitle": true
     },
     {
@@ -15,7 +15,7 @@
       "displayName": "Draft order invoice",
       "group": "order",
       "subject": "Invoice {{name}}",
-      "hasDefaultBody": true,
+      "hasDefaultBody": false,
       "hasDefaultTitle": true
     },
     {
@@ -23,7 +23,7 @@
       "displayName": "Shipping confirmation",
       "group": "order",
       "subject": "A shipment from order {{ name }} is on the way",
-      "hasDefaultBody": true,
+      "hasDefaultBody": false,
       "hasDefaultTitle": true
     },
     {
@@ -95,7 +95,7 @@
       "displayName": "Order invoice",
       "group": "order_exception",
       "subject": "Invoice {{name}}",
-      "hasDefaultBody": true,
+      "hasDefaultBody": false,
       "hasDefaultTitle": true
     },
     {
@@ -103,7 +103,7 @@
       "displayName": "Order edited",
       "group": "order_exception",
       "subject": "Order {{name}} updated",
-      "hasDefaultBody": true,
+      "hasDefaultBody": false,
       "hasDefaultTitle": true
     },
     {
@@ -111,7 +111,7 @@
       "displayName": "Order canceled",
       "group": "order_exception",
       "subject": "Order {{ name }} has been canceled",
-      "hasDefaultBody": true,
+      "hasDefaultBody": false,
       "hasDefaultTitle": true
     },
     {
@@ -119,7 +119,7 @@
       "displayName": "Order payment receipt",
       "group": "order_exception",
       "subject": "[{{ shop.name }}] Payment receipt for order {{ name }}",
-      "hasDefaultBody": true,
+      "hasDefaultBody": false,
       "hasDefaultTitle": true
     },
     {
@@ -127,7 +127,7 @@
       "displayName": "Order refund",
       "group": "order_exception",
       "subject": "Refund notification",
-      "hasDefaultBody": true,
+      "hasDefaultBody": false,
       "hasDefaultTitle": true
     },
     {
@@ -135,7 +135,7 @@
       "displayName": "Order link",
       "group": "order_exception",
       "subject": "Link to order {{ order_name }}",
-      "hasDefaultBody": true,
+      "hasDefaultBody": false,
       "hasDefaultTitle": true
     },
     {
@@ -143,7 +143,7 @@
       "displayName": "Payment error",
       "group": "payment",
       "subject": "[{{shop.name}}] Payment couldn’t be processed",
-      "hasDefaultBody": true,
+      "hasDefaultBody": false,
       "hasDefaultTitle": true
     },
     {
@@ -215,7 +215,7 @@
       "displayName": "Shipping update",
       "group": "shipping",
       "subject": "Shipping update for order {{ name }}",
-      "hasDefaultBody": true,
+      "hasDefaultBody": false,
       "hasDefaultTitle": true
     },
     {
@@ -223,7 +223,7 @@
       "displayName": "Out for delivery",
       "group": "shipping",
       "subject": "A shipment from order {{ name }} is out for delivery",
-      "hasDefaultBody": true,
+      "hasDefaultBody": false,
       "hasDefaultTitle": true
     },
     {
@@ -231,7 +231,7 @@
       "displayName": "Delivered",
       "group": "shipping",
       "subject": "A shipment from order {{ name }} has been delivered",
-      "hasDefaultBody": true,
+      "hasDefaultBody": false,
       "hasDefaultTitle": true
     },
     {
@@ -239,7 +239,7 @@
       "displayName": "Return created",
       "group": "return",
       "subject": "Complete your return for Order {{ order.name }}",
-      "hasDefaultBody": true,
+      "hasDefaultBody": false,
       "hasDefaultTitle": true
     },
     {
@@ -263,7 +263,7 @@
       "displayName": "Return request approved",
       "group": "return",
       "subject": "Return approved for order {{ order.name }}",
-      "hasDefaultBody": true,
+      "hasDefaultBody": false,
       "hasDefaultTitle": true
     },
     {
@@ -271,7 +271,7 @@
       "displayName": "Return request declined",
       "group": "return",
       "subject": "Return request declined for order {{ order.name }}",
-      "hasDefaultBody": true,
+      "hasDefaultBody": false,
       "hasDefaultTitle": true
     },
     {
@@ -279,7 +279,7 @@
       "displayName": "Request received",
       "group": "return",
       "subject": "{% if requested_edit and return %}Change requested for order {{ order.name }}{% elsif requested_edit %}Cancellation requested for order {{ order.name }}{% else %}Return requested for order {{ order.name }}{% endif %}",
-      "hasDefaultBody": true,
+      "hasDefaultBody": false,
       "hasDefaultTitle": true
     },
     {
@@ -287,7 +287,7 @@
       "displayName": "Cancellation request declined",
       "group": "return",
       "subject": "Cancellation request declined for order {{ order.name }}",
-      "hasDefaultBody": true,
+      "hasDefaultBody": false,
       "hasDefaultTitle": true
     },
     {
@@ -295,7 +295,7 @@
       "displayName": "Customer account invite",
       "group": "customer",
       "subject": "Customer account activation",
-      "hasDefaultBody": true,
+      "hasDefaultBody": false,
       "hasDefaultTitle": true
     },
     {
@@ -303,7 +303,7 @@
       "displayName": "Customer account welcome",
       "group": "customer",
       "subject": "Customer account confirmation",
-      "hasDefaultBody": true,
+      "hasDefaultBody": false,
       "hasDefaultTitle": true
     },
     {
@@ -311,7 +311,7 @@
       "displayName": "Customer account password reset",
       "group": "customer",
       "subject": "Customer account password reset",
-      "hasDefaultBody": true,
+      "hasDefaultBody": false,
       "hasDefaultTitle": true
     },
     {
@@ -359,7 +359,7 @@
       "displayName": "Contact customer",
       "group": "customer",
       "subject": "Message from {{ shop.name }}",
-      "hasDefaultBody": true,
+      "hasDefaultBody": false,
       "hasDefaultTitle": true
     },
     {
@@ -367,7 +367,7 @@
       "displayName": "Customer marketing confirmation",
       "group": "customer",
       "subject": "Confirm you want to receive email marketing",
-      "hasDefaultBody": true,
+      "hasDefaultBody": false,
       "hasDefaultTitle": true
     },
     {
@@ -375,7 +375,7 @@
       "displayName": "Customer email address change confirmation",
       "group": "customer",
       "subject": "Your email address has been changed",
-      "hasDefaultBody": true,
+      "hasDefaultBody": false,
       "hasDefaultTitle": true
     }
   ]

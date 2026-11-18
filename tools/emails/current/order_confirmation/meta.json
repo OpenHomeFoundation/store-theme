@@ -3,6 +3,6 @@
   "displayName": "Order confirmation",
   "group": "order",
   "subject": "Order {{name}} confirmed",
-  "hasDefaultBody": true,
+  "hasDefaultBody": false,
   "hasDefaultTitle": true
 }

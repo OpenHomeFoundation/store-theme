@@ -3,6 +3,6 @@
   "displayName": "Delivered",
   "group": "shipping",
   "subject": "A shipment from order {{ name }} has been delivered",
-  "hasDefaultBody": true,
+  "hasDefaultBody": false,
   "hasDefaultTitle": true
 }

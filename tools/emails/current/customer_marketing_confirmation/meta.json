@@ -3,6 +3,6 @@
   "displayName": "Customer marketing confirmation",
   "group": "customer",
   "subject": "Confirm you want to receive email marketing",
-  "hasDefaultBody": true,
+  "hasDefaultBody": false,
   "hasDefaultTitle": true
 }

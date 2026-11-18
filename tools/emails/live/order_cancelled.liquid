@@ -55,12 +55,63 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width">
   <link rel="stylesheet" type="text/css" href="/assets/notifications/styles.css">
-  <style>
-    .button__cell { background: {{ shop.email_accent_color }}; }
-    .actions-buttons .button__cell--primary { background-color: {{ shop.email_accent_color }}; }
-    .actions-buttons .button__cell--outlined .button__text { color: {{ shop.email_accent_color }}; }
-    a, a:hover, a:active, a:visited { color: {{ shop.email_accent_color }}; }
-  </style>
+  
+<meta name="color-scheme" content="light">
+<meta name="supported-color-schemes" content="light">
+<style>
+.shop-name__cell { vertical-align: middle; }
+.order-number__cell { color: #51606B; font-size: 13px; font-weight: 600; letter-spacing: 0.06em; white-space: nowrap; vertical-align: middle; padding-left: 16px; }
+.order-number__text { font-size: 13px; color: #51606B; }
+.po-number__cell { color: #51606B; font-size: 13px; white-space: nowrap; }
+
+h2 { color: #09202E; font-weight: 700; letter-spacing: -0.01em; }
+h3 { color: #09202E; font-weight: 700; margin-bottom: 16px; }
+h4 { color: #09202E; font-weight: 600; }
+p { color: #51606B; }
+strong { color: #09202E; }
+
+a, a:hover, a:active, a:visited { color: #09202E; }
+.button__cell { background: #0A77A8; border-radius: 8px; }
+.actions-buttons .button__cell--primary { background-color: #0A77A8; border-radius: 8px; }
+.actions-buttons .button__cell--outlined .button__text { color: #09202E; }
+.button__text { color: #FFFFFF; font-weight: 600; }
+.button__text:hover, .button__text:active, .button__text:visited { color: #FFFFFF; }
+.link__cell a, p a, .small { color: #09202E; text-decoration: underline; }
+
+.order-list__item { border-top-color: #DDE3EC; }
+.order-list__item-title { color: #09202E; }
+.order-list__item-variant { color: #51606B; }
+.order-list__item-price { color: #09202E; white-space: nowrap; }
+.order-list__item-original-price { color: #51606B; }
+.order-list__item-discount-allocation { color: #51606B; }
+.order-list__product-image { border-color: #DDE3EC; }
+.order-list__no-image-cell { border-color: #DDE3EC; }
+.order-list__delivery-method-type { color: #09202E; }
+.order-list__delivery-method-type-separator { border-color: #DDE3EC; }
+.order-list__estimated-delivery { color: #51606B; }
+
+.subtotal-content { width: 60%; }
+.subtotal-table { width: 100%; }
+.subtotal-line__value { white-space: nowrap; }
+.subtotal-lines { border-top-color: #DDE3EC; }
+.subtotal-table--total { border-top-color: #DDE3EC; }
+.subtotal-table__line { border-bottom-color: #DDE3EC; }
+.total-discount { color: #51606B; }
+.total-discount--amount { color: #09202E; }
+
+.vertical-line__content, .parent-vertical-line__content, .curved-line-cell-container__top-spacer-cell--show-border { border-left-color: #DDE3EC; }
+.curved-line-cell-container__curvedLine-cell__curvedLine { border-left-color: #DDE3EC; border-bottom-color: #DDE3EC; }
+
+.customer-info__item-content { color: #51606B; }
+.footer { border-top-color: #DDE3EC; }
+.disclaimer__subtext { color: #51606B; }
+
+@media (max-width: 600px) {
+  .subtotal-spacer { display: none !important; width: 0 !important; }
+  .subtotal-content { width: 100% !important; }
+  .subtotal-table { width: 100% !important; }
+}
+</style>
 </head>
 
   <body>
@@ -79,13 +130,7 @@
               <table class="row">
                 <tr>
                   <td class="shop-name__cell"{% if buyer_email_rtl == true %} align="right"{% endif %}>
-                    {%- if shop.email_logo_url %}
-                      <img src="{{shop.email_logo_url}}" alt="{{ shop.name }}" width="{{ shop.email_logo_width }}">
-                    {%- else %}
-                      <h1 class="shop-name__text">
-                        <a href="{{shop.url}}">{% if buyer_email_rtl == true %}&rlm;&lrm;<span dir="auto" style="display: inline-block; unicode-bidi: isolate; font-size: inherit;">{% endif %}{{ shop.name }}{% if buyer_email_rtl == true %}</span>&lrm;&rlm;{% endif %}</a>
-                      </h1>
-                    {%- endif %}
+                    <a href="{{ shop.url }}" class="ohf-logo__link" style="display:inline-block;text-decoration:none;border:0;"><img class="ohf-logo" src="https://cdn.shopify.com/s/files/1/0974/5157/3583/files/ohf-lockup-email_2x_58ba959a-1b5a-41dd-ba2f-b039678208ee.png?v=1794330366" alt="Open Home Foundation" width="200" height="60" style="display:block;width:200px;height:auto;border:0;outline:none;margin-left:-10px;"></a>
                   </td>
 
                     <td{% if buyer_email_rtl == true %} class="order-po-number__cell"{% endif %}>
@@ -475,7 +520,7 @@
             <table class="row subtotal-lines">
   <tr>
     <td class="subtotal-spacer"></td>
-    <td>
+    <td class="subtotal-content">
       <table class="row subtotal-table">
 
         

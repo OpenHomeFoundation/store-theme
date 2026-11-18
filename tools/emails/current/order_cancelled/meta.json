@@ -3,6 +3,6 @@
   "displayName": "Order canceled",
   "group": "order_exception",
   "subject": "Order {{ name }} has been canceled",
-  "hasDefaultBody": true,
+  "hasDefaultBody": false,
   "hasDefaultTitle": true
 }

@@ -3,6 +3,6 @@
   "displayName": "Order invoice",
   "group": "order_exception",
   "subject": "Invoice {{name}}",
-  "hasDefaultBody": true,
+  "hasDefaultBody": false,
   "hasDefaultTitle": true
 }

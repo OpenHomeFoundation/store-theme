@@ -3,6 +3,6 @@
   "displayName": "Out for delivery",
   "group": "shipping",
   "subject": "A shipment from order {{ name }} is out for delivery",
-  "hasDefaultBody": true,
+  "hasDefaultBody": false,
   "hasDefaultTitle": true
 }

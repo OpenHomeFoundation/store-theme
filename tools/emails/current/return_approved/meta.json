@@ -3,6 +3,6 @@
   "displayName": "Return request approved",
   "group": "return",
   "subject": "Return approved for order {{ order.name }}",
-  "hasDefaultBody": true,
+  "hasDefaultBody": false,
   "hasDefaultTitle": true
 }

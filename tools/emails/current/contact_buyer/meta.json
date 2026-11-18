@@ -3,6 +3,6 @@
   "displayName": "Contact customer",
   "group": "customer",
   "subject": "Message from {{ shop.name }}",
-  "hasDefaultBody": true,
+  "hasDefaultBody": false,
   "hasDefaultTitle": true
 }

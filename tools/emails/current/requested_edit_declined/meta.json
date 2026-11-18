@@ -3,6 +3,6 @@
   "displayName": "Cancellation request declined",
   "group": "return",
   "subject": "Cancellation request declined for order {{ order.name }}",
-  "hasDefaultBody": true,
+  "hasDefaultBody": false,
   "hasDefaultTitle": true
 }

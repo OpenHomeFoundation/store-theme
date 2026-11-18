@@ -3,6 +3,6 @@
   "displayName": "Return created",
   "group": "return",
   "subject": "Complete your return for Order {{ order.name }}",
-  "hasDefaultBody": true,
+  "hasDefaultBody": false,
   "hasDefaultTitle": true
 }

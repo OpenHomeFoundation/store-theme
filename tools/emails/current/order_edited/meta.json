@@ -3,6 +3,6 @@
   "displayName": "Order edited",
   "group": "order_exception",
   "subject": "Order {{name}} updated",
-  "hasDefaultBody": true,
+  "hasDefaultBody": false,
   "hasDefaultTitle": true
 }

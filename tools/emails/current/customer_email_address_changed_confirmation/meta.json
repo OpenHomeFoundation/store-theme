@@ -3,6 +3,6 @@
   "displayName": "Customer email address change confirmation",
   "group": "customer",
   "subject": "Your email address has been changed",
-  "hasDefaultBody": true,
+  "hasDefaultBody": false,
   "hasDefaultTitle": true
 }

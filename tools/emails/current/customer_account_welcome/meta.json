@@ -3,6 +3,6 @@
   "displayName": "Customer account welcome",
   "group": "customer",
   "subject": "Customer account confirmation",
-  "hasDefaultBody": true,
+  "hasDefaultBody": false,
   "hasDefaultTitle": true
 }
