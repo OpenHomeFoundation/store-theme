@@ -578,6 +578,11 @@
   display: none;
 }
 
+/* Dawn's base.css hides every empty div (div:empty), and the scrim is one; this outranks it */
+.ohf-scrim:not([hidden]) {
+  display: block;
+}
+
 /* Dawn's add-to-cart pop-up, hanging under the right of the nav card */
 .ohf-nav cart-notification {
   pointer-events: auto;
