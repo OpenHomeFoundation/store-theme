@@ -298,6 +298,12 @@
     {{ 'base.css' | asset_url | stylesheet_tag }}
     {{ 'ohf-tokens.css' | asset_url | stylesheet_tag }}
     {{ 'ohf-base.css' | asset_url | stylesheet_tag }}
+    {%- comment -%}
+      Colour swatches on cards: OHF sections render cards with skip_styles, so the swatch styles load here,
+      before ohf-card.css so its overrides win.
+    {%- endcomment -%}
+    {{ 'component-swatch.css' | asset_url | stylesheet_tag }}
+    {{ 'component-card-swatches.css' | asset_url | stylesheet_tag }}
     {{ 'ohf-card.css' | asset_url | stylesheet_tag }}
     <script src="{{ 'ohf-lights.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'ohf-motion.js' | asset_url }}" defer="defer"></script>
