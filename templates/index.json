@@ -115,6 +115,14 @@
         "kicker": "Shop by project",
         "heading": "Shop any project, support them all"
       }
+    },
+    "ohf_community": {
+      "type": "ohf-community",
+      "settings": {
+        "kicker": "Community favorites",
+        "heading": "Spotted in the community",
+        "text": "At meetups, hackathons, and halfway across the world: we love seeing your support for our projects."
+      }
     }
   },
   "order": [
@@ -122,6 +130,7 @@
     "ohf_new_collection",
     "ohf_projects",
     "ohf_best_sellers",
+    "ohf_community",
     "ohf_join"
   ]
 }

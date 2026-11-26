@@ -6,7 +6,9 @@
   Each Project block:
   - Link: the project's collection when one is chosen; otherwise all products filtered by the project's tag
     (/collections/all/home-assistant), which works without a dedicated collection (decision: projects from tags).
-  - Preview photo: the block's own photo, else the collection's image, else the first product with that tag.
+  - Preview photo (decided 26 Nov): with "Random community photos" on, each fresh hover shows a random Community photo
+    entry featuring one of that project's products (people wearing the merch, as in the concept). Otherwise, or when
+    there are none yet: the block's own photo, else the collection's image, else the first product with that tag.
 {%- endcomment -%}
 {%- liquid
   assign projects = section.blocks | where: 'type', 'project'
@@ -44,6 +46,27 @@
               endif
             endfor
           endif
+
+          # Community photos showing this project's merch: "url|url|…"
+          assign worn = ''
+          assign worn_first = blank
+          if block.settings.random_community
+            for entry in shop.metaobjects.community_photo.values
+              for wp in entry.products.value
+                if wp.tags contains name
+                  assign worn_url = entry.photo.value | image_url: width: 400
+                  assign worn = worn | append: worn_url | append: '|'
+                  if worn_first == blank
+                    assign worn_first = entry.photo.value
+                  endif
+                  break
+                endif
+              endfor
+            endfor
+          endif
+          if worn_first != blank
+            assign preview = worn_first
+          endif
         -%}
         <li {{ block.shopify_attributes }}>
           <a class="ohf-prow" href="{{ url }}" data-preview="{{ block.id }}">
@@ -62,7 +85,7 @@
         {%- capture preview_cards -%}
           {{ preview_cards }}
           {%- if preview != blank -%}
-            <div class="ohf-ppreview__card" data-for="{{ block.id }}">
+            <div class="ohf-ppreview__card" data-for="{{ block.id }}"{% if worn != blank %} data-photos="{{ worn | escape }}"{% endif %}>
               {{
                 preview
                 | image_url: width: 400
@@ -311,8 +334,21 @@
             this.cx = this.x;
             this.cy = this.y;
           }
+          if (id && id !== this.shown) this.pickPhoto(id);
           this.shown = id;
           this.querySelectorAll('.ohf-ppreview__card').forEach((c) => c.classList.toggle('is-on', c.dataset.for === id));
+        }
+
+        // A fresh hover on a project with community photos shows a random one (never the same twice in a row)
+        pickPhoto(id) {
+          const card = this.querySelector(`.ohf-ppreview__card[data-for="${id}"]`);
+          const photos = (card?.dataset.photos || '').split('|').filter(Boolean);
+          if (photos.length < 2) return;
+          const img = card.querySelector('img');
+          const options = photos.filter((u) => !img.src.endsWith(u.replace(/^https?:/, '')) && img.src !== u);
+          if (!options.length) return;
+          img.removeAttribute('srcset');
+          img.src = options[Math.floor(Math.random() * options.length)];
         }
 
         // The card trails the pointer slightly (eased), or follows it exactly with reduced motion
@@ -391,6 +427,13 @@
           "id": "image",
           "label": "Hover photo",
           "info": "Optional. Ideally someone wearing the project's merch. Falls back to the collection image, then the first product with the tag."
+        },
+        {
+          "type": "checkbox",
+          "id": "random_community",
+          "default": true,
+          "label": "Random community photos",
+          "info": "When Community photo entries feature this project's products, each hover shows a random one of them instead of the hover photo."
         }
       ]
     }
