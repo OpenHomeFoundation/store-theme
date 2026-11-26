@@ -10,10 +10,6 @@
   background: var(--bg);
 }
 
-:root[data-lights='off'] .ohf-pdp {
-  background: color-mix(in srgb, #e5dac8 10%, #000);
-}
-
 .ohf-pdp__grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -795,6 +791,12 @@
 }
 
 /* ---- Related products, below ---- */
+/* Dawn's related products: on the page's OHF margins, so the heading and cards line up with the rest */
+.related-products.page-width {
+  max-width: var(--page-max);
+  padding-inline: var(--margin);
+}
+
 .related-products__heading {
   font-family: var(--font-heading-family);
   font-size: clamp(3.2rem, 3.6vw, 5.2rem) !important;
