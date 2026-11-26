@@ -1,0 +1,446 @@
+{%- comment -%}
+  OHF product page (redesign 2026). Two halves, edge to edge: text on the left scrolls; the photos fill the right half
+  and stay in place until the end of the section (phones: photos first, then text).
+
+  Buy box: breadcrumb, category · project, name, colour swatches, size pills (none chosen until the visitor picks one,
+  as in the concept; sold-out sizes struck through), quantity, price right before Add to cart, description, size guide,
+  share. Add to cart is Dawn's product-form (cart pop-up, errors, Shopify cart).
+  Gallery: the product's photos, then photos of it being worn (custom.worn_photos and Community photo entries that
+  feature it), thumbnails with dots, and a full-screen viewer (zoom, drag, swipe, keyboard).
+  Size guide dialog: the Size guide metaobject (custom.size_guide) when set; otherwise the size-guide image at the end
+  of the description, which is then left out of the description text.
+  Keeps the product JSON-LD from the old template (PR #10). Behaviour: assets/ohf-product.js.
+{%- endcomment -%}
+{{ 'ohf-product.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'ohf-product.js' | asset_url }}" defer="defer"></script>
+
+{%- liquid
+  assign current = product.selected_or_first_available_variant
+  assign form_id = 'product-form-' | append: section.id
+
+  # Description, with the trailing "Size guide" image split off (EU products carry the guide as an image there)
+  assign desc = product.description
+  assign guide_img = blank
+  assign desc_parts = product.description | split: '<strong>Size guide</strong>'
+  if desc_parts.size > 1
+    assign desc = desc_parts[0]
+    assign after = desc_parts[1] | split: 'src="'
+    if after.size > 1
+      assign guide_img = after[1] | split: '"' | first
+    endif
+  endif
+  assign guide = product.metafields.custom.size_guide.value
+  assign has_guide = false
+  if guide != blank or guide_img != blank
+    assign has_guide = true
+  endif
+
+  # Which option is colour and which is size
+  assign color_index = -1
+  assign size_index = -1
+  for option in product.options_with_values
+    assign n = option.name | downcase
+    if n == 'color' or n == 'colour'
+      assign color_index = forloop.index0
+    elsif n == 'size'
+      assign size_index = forloop.index0
+    endif
+  endfor
+  # Sizes start unchosen unless the URL names a variant or there's only one size
+  assign size_preselected = false
+  if product.selected_variant or size_index == -1
+    assign size_preselected = true
+  endif
+
+  # Photos of the product being worn: custom.worn_photos, then Community photo entries featuring it
+  assign worn_count = 0
+-%}
+
+<product-component view-event-payload="{{ product | standard_event_data: 'view' | escape }}">
+<ohf-product class="ohf-pdp" data-section="{{ section.id }}" data-url="{{ product.url }}">
+  <div class="ohf-pdp__grid">
+    {%- comment -%} ---------- Gallery ---------- {%- endcomment -%}
+    <div class="ohf-pdp__gallery" data-gallery>
+      <div class="ohf-pdp__main">
+        <button type="button" class="ohf-pdp__frame" data-gallery-open aria-label="Open the photo viewer">
+          {%- assign first = current.featured_media | default: product.featured_media -%}
+          {%- if first -%}
+            {{
+              first
+              | image_url: width: 1600
+              | image_tag:
+                widths: '500, 800, 1100, 1600',
+                sizes: '(min-width: 901px) 50vw, 100vw',
+                loading: 'eager',
+                fetchpriority: 'high',
+                class: 'ohf-pdp__main-img',
+                alt: first.alt
+            }}
+          {%- else -%}
+            {{ 'product-apparel-1' | placeholder_svg_tag: 'ohf-pdp__main-img' }}
+          {%- endif -%}
+        </button>
+      </div>
+
+      <div class="ohf-pdp__thumbs" role="list" data-gallery-thumbs>
+        {%- for media in product.media -%}
+          {%- if media.media_type == 'image' -%}
+            <button
+              type="button"
+              class="ohf-pdp__thumb{% if media.id == first.id %} is-current{% endif %}"
+              role="listitem"
+              aria-label="Show photo {{ forloop.index }}{% if media.alt != blank %}: {{ media.alt | escape }}{% endif %}"
+              {% if media.id == first.id %}
+                aria-current="true"
+              {% endif %}
+              data-media-id="{{ media.id }}"
+              data-src="{{ media | image_url: width: 1600 }}"
+              data-full="{{ media | image_url: width: 2400 }}"
+              data-alt="{{ media.alt | escape }}"
+            >
+              {{ media | image_url: width: 200 | image_tag: width: 96, height: 96, loading: 'lazy', alt: '' }}
+            </button>
+          {%- endif -%}
+        {%- endfor -%}
+
+        {%- for file in product.metafields.custom.worn_photos.value -%}
+          {%- assign worn_count = worn_count | plus: 1 -%}
+          <button
+            type="button"
+            class="ohf-pdp__thumb ohf-pdp__thumb--worn"
+            role="listitem"
+            aria-label="Show photo of it being worn{% if file.alt != blank %}: {{ file.alt | escape }}{% endif %}"
+            data-worn
+            data-src="{{ file | image_url: width: 1600 }}"
+            data-full="{{ file | image_url: width: 2400 }}"
+            data-alt="{{ file.alt | escape }}"
+          >
+            {{ file | image_url: width: 200 | image_tag: width: 96, height: 96, loading: 'lazy', alt: '' }}
+          </button>
+        {%- endfor -%}
+
+        {%- for entry in shop.metaobjects.community_photo.values -%}
+          {%- assign worn_handles = entry.products.value | map: 'handle' -%}
+          {%- if worn_handles contains product.handle and entry.photo.value != blank -%}
+            {%- assign worn_count = worn_count | plus: 1 -%}
+            <button
+              type="button"
+              class="ohf-pdp__thumb ohf-pdp__thumb--worn"
+              role="listitem"
+              aria-label="Show community photo{% if entry.place.value != blank %} from {{ entry.place.value | escape }}{% endif %}"
+              data-worn
+              data-src="{{ entry.photo.value | image_url: width: 1600 }}"
+              data-full="{{ entry.photo.value | image_url: width: 2400 }}"
+              data-alt="{{ entry.description.value | escape }}"
+              data-caption="{{ entry.place.value | escape }}{% if entry.event.value != blank %} – {{ entry.event.value | escape }}{% endif %}"
+            >
+              {{ entry.photo.value | image_url: width: 200 | image_tag: width: 96, height: 96, loading: 'lazy', alt: '' }}
+            </button>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+      <div class="ohf-pdp__dots" data-thumb-dots hidden></div>
+      {%- if worn_count > 0 -%}
+        <p class="ohf-pdp__worn-note">
+          {{ section.settings.worn_note | escape }}
+          {%- if product.metafields.custom.size_worn != blank %}
+            Size worn: {{ product.metafields.custom.size_worn.value | escape }}.
+          {%- endif -%}
+        </p>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} ---------- Buy box ---------- {%- endcomment -%}
+    <div class="ohf-pdp__info">
+      <nav class="ohf-pdp__crumbs" aria-label="Breadcrumb">
+        <a href="{{ routes.all_products_collection_url }}">{{ section.settings.shop_label | escape }}</a>
+        {%- if collection and collection.handle != 'all' -%}
+          <span aria-hidden="true">/</span><a href="{{ collection.url }}">{{ collection.title | escape }}</a>
+        {%- endif -%}
+        <span aria-hidden="true">/</span><span aria-current="page">{{ product.title | escape }}</span>
+      </nav>
+
+      {%- render 'ohf-product-meta', product: product, class: 'ohf-kicker ohf-pdp__kicker' -%}
+      <h1 class="ohf-pdp__title">{{ product.title | escape }}</h1>
+
+      <script type="application/json" data-product-json>
+        {{ product | json }}
+      </script>
+      {%- comment -%} Each variant's price and compare-at price, formatted by Shopify for the visitor's currency {%- endcomment -%}
+      <script type="application/json" data-variant-prices>
+        {
+        {%- for v in product.variants -%}
+          "{{ v.id }}": [{{ v.price | money | json }}, {% if v.compare_at_price > v.price %}{{ v.compare_at_price | money | json }}{% else %}null{% endif %}]
+          {%- unless forloop.last -%},{%- endunless -%}
+        {%- endfor -%}
+        }
+      </script>
+
+      {%- unless product.has_only_default_variant -%}
+        {%- for option in product.options_with_values -%}
+          {%- assign oi = forloop.index0 -%}
+          <fieldset class="ohf-pdp__opt" data-option-index="{{ oi }}">
+            {%- if oi == color_index -%}
+              <legend class="ohf-pdp__opt-label">
+                {{ option.name | escape }}: <span data-option-value>{{ current.options[oi] | escape }}</span>
+              </legend>
+              <div class="ohf-pdp__swatches">
+                {%- for value in option.values -%}
+                  {%- liquid
+                    assign swatch_style = ''
+                    if value.swatch.color
+                      assign swatch_style = 'background-color: ' | append: value.swatch.color
+                    elsif value.swatch.image
+                      assign swatch_img = value.swatch.image | image_url: width: 64
+                      assign swatch_style = 'background-image: url(' | append: swatch_img | append: ')'
+                    endif
+                  -%}
+                  <button
+                    type="button"
+                    class="ohf-pdp__swatch{% if swatch_style == '' %} ohf-pdp__swatch--text{% endif %}"
+                    style="{{ swatch_style }}"
+                    aria-pressed="{% if value == current.options[oi] %}true{% else %}false{% endif %}"
+                    aria-label="{{ value | escape }}"
+                    title="{{ value | escape }}"
+                    data-value="{{ value | escape }}"
+                  >
+                    {%- if swatch_style == '' -%}{{ value | escape }}{%- endif -%}
+                  </button>
+                {%- endfor -%}
+              </div>
+            {%- else -%}
+              <div class="ohf-pdp__opt-row">
+                <legend class="ohf-pdp__opt-label">{{ option.name | escape }}</legend>
+                {%- if oi == size_index and has_guide -%}
+                  <button type="button" class="ohf-pdp__link" data-guide-open>{{ section.settings.guide_label | escape }}</button>
+                {%- endif -%}
+              </div>
+              <div class="ohf-pdp__sizes">
+                {%- for value in option.values -%}
+                  {%- liquid
+                    assign pressed = false
+                    if value == current.options[oi]
+                      assign pressed = true
+                      if oi == size_index and size_preselected == false and option.values.size > 1
+                        assign pressed = false
+                      endif
+                    endif
+                  -%}
+                  <button
+                    type="button"
+                    class="ohf-pdp__size"
+                    aria-pressed="{{ pressed }}"
+                    data-value="{{ value | escape }}"
+                  >
+                    {{- value | escape -}}
+                  </button>
+                {%- endfor -%}
+              </div>
+            {%- endif -%}
+          </fieldset>
+        {%- endfor -%}
+        <p class="ohf-pdp__msg" role="alert" data-choose-msg hidden>{{ section.settings.choose_msg | escape }}</p>
+      {%- endunless -%}
+
+      <product-form class="ohf-pdp__form" data-section-id="{{ section.id }}">
+        <div class="product-form__error-message-wrapper ohf-pdp__msg" role="alert" hidden>
+          <span class="product-form__error-message"></span>
+        </div>
+        {%- form 'product', product, id: form_id, novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+          <input
+            type="hidden"
+            name="id"
+            value="{{ current.id }}"
+            class="product-variant-id"
+            data-variant-input
+            {% if size_preselected == false and size_index != -1 %}
+              data-needs-choice
+            {% endif %}
+          >
+
+          <div class="ohf-pdp__opt">
+            <label class="ohf-pdp__opt-label" for="Quantity-{{ section.id }}">
+              {{- 'products.product.quantity.label' | t -}}
+            </label>
+            <div class="ohf-pdp__qty">
+              <button type="button" data-qty="-1" aria-label="{{ 'products.product.quantity.decrease' | t: product: product.title | escape }}">−</button>
+              <input
+                type="number"
+                id="Quantity-{{ section.id }}"
+                name="quantity"
+                value="1"
+                min="1"
+                inputmode="numeric"
+                data-qty-input
+              >
+              <button type="button" data-qty="1" aria-label="{{ 'products.product.quantity.increase' | t: product: product.title | escape }}">+</button>
+            </div>
+          </div>
+
+          <div class="ohf-pdp__pricebox">
+            <p class="ohf-pdp__price">
+              <strong data-price>{{ current.price | money }}</strong>
+              <s class="ohf-pdp__compare" data-compare{% unless current.compare_at_price > current.price %} hidden{% endunless %}>
+                {{- current.compare_at_price | money -}}
+              </s>
+            </p>
+            {%- if cart.taxes_included -%}
+              <p class="ohf-pdp__tax">
+                {%- if cart.duties_included -%}
+                  {{ 'products.product.duties_and_taxes_included' | t }}
+                {%- else -%}
+                  {{ 'products.product.taxes_included' | t }}
+                {%- endif -%}
+              </p>
+            {%- endif -%}
+          </div>
+
+          <div class="ohf-pdp__buy">
+            <button
+              type="submit"
+              name="add"
+              class="ohf-cta ohf-cta--fill ohf-pdp__add"
+              data-add
+              {% unless current.available %}
+                disabled
+              {% endunless %}
+            >
+              <span data-add-text>
+                {%- if current.available -%}
+                  {{ 'products.product.add_to_cart' | t }}
+                {%- else -%}
+                  {{ 'products.product.sold_out' | t }}
+                {%- endif -%}
+              </span>
+              <span class="sold-out-message hidden">{{ 'products.product.sold_out' | t }}</span>
+              {%- render 'loading-spinner' -%}
+            </button>
+          </div>
+        {%- endform -%}
+      </product-form>
+
+      {%- if desc != blank -%}
+        <div class="ohf-pdp__desc rte">{{ desc }}</div>
+      {%- endif -%}
+
+      <div class="ohf-pdp__tools">
+        {%- if has_guide -%}
+          <button type="button" class="ohf-pdp__link" data-guide-open>{{ section.settings.guide_label | escape }}</button>
+        {%- endif -%}
+        <button
+          type="button"
+          class="ohf-pdp__link"
+          data-share
+          data-share-url="{{ request.origin }}{{ product.url }}"
+          data-share-title="{{ product.title | escape }}"
+        >
+          {{- section.settings.share_label | escape -}}
+        </button>
+        <span class="ohf-pdp__shared" role="status" data-share-status></span>
+      </div>
+    </div>
+  </div>
+
+  {%- comment -%} ---------- Size guide dialog ---------- {%- endcomment -%}
+  {%- if has_guide -%}
+    <dialog class="ohf-pdp__guide" data-guide aria-labelledby="SizeGuideTitle-{{ section.id }}">
+      <div class="ohf-pdp__guide-head">
+        <h2 id="SizeGuideTitle-{{ section.id }}">
+          {%- if guide != blank -%}{{ guide.name.value | escape }}{%- else -%}{{ section.settings.guide_label | escape }}{%- endif -%}
+        </h2>
+        <button type="button" class="ohf-pdp__close" data-guide-close aria-label="{{ 'accessibility.close' | t }}">
+          {%- render 'ohf-icon', icon: 'close', size: 20 -%}
+        </button>
+      </div>
+      {%- if guide != blank -%}
+        <div class="ohf-pdp__guide-body">
+          {%- if guide.drawing.value != blank -%}
+            {{ guide.drawing.value | image_url: width: 480 | image_tag: class: 'ohf-pdp__diagram', loading: 'lazy', alt: '' }}
+          {%- endif -%}
+          <div class="ohf-pdp__table-wrap">
+            <table class="ohf-pdp__table">
+              <thead>
+                <tr><th scope="col" rowspan="2">Size</th><th scope="colgroup" colspan="2">Width (A)</th><th scope="colgroup" colspan="2">Length (B)</th></tr>
+                <tr><th scope="col">cm</th><th scope="col">inch</th><th scope="col">cm</th><th scope="col">inch</th></tr>
+              </thead>
+              <tbody>
+                {%- for row in guide.measurements.value -%}
+                  <tr>
+                    <th scope="row">{{ row.size }}</th>
+                    <td>{{ row.width }}</td><td>{{ row.width | divided_by: 2.54 | round: 1 }}</td>
+                    <td>{{ row.length }}</td><td>{{ row.length | divided_by: 2.54 | round: 1 }}</td>
+                  </tr>
+                {%- endfor -%}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <dl class="ohf-pdp__facts">
+          {%- if guide.fibre.value != blank -%}<div><dt>Fibre composition</dt><dd>{{ guide.fibre.value | escape }}</dd></div>{%- endif -%}
+          {%- if guide.origin.value != blank -%}<div><dt>Country of origin</dt><dd>{{ guide.origin.value | escape }}</dd></div>{%- endif -%}
+          {%- if guide.hs_code.value != blank -%}<div><dt>HS code</dt><dd>{{ guide.hs_code.value | escape }}</dd></div>{%- endif -%}
+        </dl>
+      {%- else -%}
+        <img class="ohf-pdp__guide-img" src="{{ guide_img }}" alt="Size guide for {{ product.title | escape }}" loading="lazy" width="1000" height="1000">
+      {%- endif -%}
+    </dialog>
+  {%- endif -%}
+
+  {%- comment -%} ---------- Photo viewer ---------- {%- endcomment -%}
+  <dialog class="ohf-lb" data-viewer aria-label="Photo viewer">
+    <div class="ohf-lb__stage" data-viewer-stage>
+      <img class="ohf-lb__img" alt="" width="1600" height="1600" data-viewer-img draggable="false">
+    </div>
+    <div class="ohf-lb__bar">
+      <p class="ohf-lb__caption"><span class="ohf-lb__count" data-viewer-count></span><span data-viewer-caption></span></p>
+    </div>
+    <button type="button" class="ohf-lb__btn ohf-lb__nav ohf-lb__nav--prev" data-viewer-prev aria-label="Previous photo">
+      {%- render 'ohf-icon', icon: 'arrow-right', size: 28 -%}
+    </button>
+    <button type="button" class="ohf-lb__btn ohf-lb__nav ohf-lb__nav--next" data-viewer-next aria-label="Next photo">
+      {%- render 'ohf-icon', icon: 'arrow-right', size: 28 -%}
+    </button>
+    <button type="button" class="ohf-lb__btn ohf-lb__close" data-viewer-close aria-label="{{ 'accessibility.close' | t }}">
+      {%- render 'ohf-icon', icon: 'close', size: 28 -%}
+    </button>
+  </dialog>
+</ohf-product>
+</product-component>
+
+{%- comment -%} Product structured data, kept from the old product template (PR #10) {%- endcomment -%}
+{%- liquid
+  assign product_structured_data = product | structured_data
+  # Multi-variant products render as a ProductGroup whose hasVariant Products lack a description, which GSC flags
+  unless product.has_only_default_variant or product.description == blank
+    # strip_html leaves entities encoded; decode the common ones (&amp; last to avoid double-decoding)
+    assign variant_desc = product.description | strip_html | replace: '&nbsp;', ' ' | replace: '&quot;', '"' | replace: '&#39;', "'" | replace: '&amp;', '&' | strip | json
+    assign variant_desc_prop = '"@type":"Product","description":' | append: variant_desc | append: ','
+    assign product_structured_data = product_structured_data | replace: '"@type":"Product",', variant_desc_prop
+  endunless
+-%}
+<script type="application/ld+json">
+  {{ product_structured_data }}
+</script>
+
+{% schema %}
+{
+  "name": "OHF product",
+  "class": "ohf-main-product-section",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    { "type": "text", "id": "shop_label", "label": "Breadcrumb: shop link", "default": "Shop" },
+    { "type": "text", "id": "choose_msg", "label": "Message when no size is chosen", "default": "Choose a size first." },
+    { "type": "text", "id": "guide_label", "label": "Size guide link", "default": "Size guide" },
+    { "type": "text", "id": "share_label", "label": "Share link", "default": "Share" },
+    {
+      "type": "text",
+      "id": "worn_note",
+      "label": "Note under worn photos",
+      "default": "The last photos: spotted in open homes."
+    }
+  ]
+}
+{% endschema %}
