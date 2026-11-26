@@ -46,6 +46,12 @@ if (!customElements.get('ohf-cart')) {
           this.leaveTimer = setTimeout(() => this.close(), 250);
         });
 
+        // Tabbing out of the open dropdown closes it
+        this.menu.addEventListener('focusout', (e) => {
+          const to = e.relatedTarget;
+          if (this.isOpen && to && !this.menu.contains(to)) this.close();
+        });
+
         this.addEventListener('click', (e) => {
           if (e.target.closest('[data-ohf-cart-close]')) {
             this.close();

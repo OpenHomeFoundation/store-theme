@@ -256,6 +256,11 @@ if (!customElements.get('ohf-header')) {
           if (this.mobile.hidden) this.openMobile();
           else this.closeMobile();
         });
+        // Tabbing out of the open menu closes it, so focus never sits on the page hidden behind it
+        this.mobile.addEventListener('focusout', (e) => {
+          const to = e.relatedTarget;
+          if (to && !this.mobile.contains(to) && to !== this.menuToggle) this.closeMobile();
+        });
       }
 
       openMobile() {

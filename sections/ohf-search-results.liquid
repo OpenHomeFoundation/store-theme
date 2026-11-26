@@ -70,6 +70,7 @@
         </div>
 
         {%- paginate search.results by section.settings.per_page -%}
+          <h2 class="visually-hidden">{{ 'templates.search.title' | t }}</h2>
           <ul class="ohf-shop__grid" role="list">
             {%- for item in search.results -%}
               {%- case item.object_type -%}

@@ -170,6 +170,7 @@
         {{ 'templates.search.results_with_count' | t: count: collection.products_count }}
       </p>
       {%- if collection.products.size > 0 -%}
+        <h2 class="visually-hidden">{{ 'templates.search.products' | t }}</h2>
         <ul class="ohf-shop__grid" role="list">
           {%- for product in collection.products -%}
             <li class="ohf-shop__tile">
