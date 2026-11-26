@@ -36,6 +36,7 @@ if (!customElements.get('ohf-header')) {
         this.bindSubs();
         this.bindRegion();
         this.bindMobile();
+        this.bindSearch();
 
         this.scrim?.addEventListener('click', () => this.closeAll());
         document.addEventListener('keydown', this.onKeydown);
@@ -260,8 +261,28 @@ if (!customElements.get('ohf-header')) {
       syncScrim() {
         if (!this.scrim) return;
         const anyOpen =
-          !!this.openToggle() || (this.regionPop && !this.regionPop.hidden) || (this.mobile && !this.mobile.hidden);
+          !!this.openToggle() ||
+          (this.regionPop && !this.regionPop.hidden) ||
+          (this.mobile && !this.mobile.hidden) ||
+          !!this.searchDetails?.open;
         this.scrim.hidden = !anyOpen;
+      }
+
+      /* ---------- Search ---------- */
+
+      // Dawn's search modal (details-modal) opens and closes itself; the header only dims the page behind
+      // it with the same full-screen scrim, and closes any other menu when it opens. Clicking the scrim
+      // closes the search through Dawn's own outside-click handling.
+      bindSearch() {
+        this.searchDetails = this.querySelector('.ohf-search details');
+        this.searchDetails?.addEventListener('toggle', () => {
+          if (this.searchDetails.open) {
+            this.closeSubs();
+            this.closeRegion();
+            this.closeMobile();
+          }
+          this.syncScrim();
+        });
       }
 
       closeAll() {

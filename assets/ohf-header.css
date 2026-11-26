@@ -157,6 +157,12 @@
   place-items: center;
 }
 
+/* Dawn's own overlay only covers the area under the card (it's positioned inside it); the header's
+   full-screen scrim is used instead (ohf-header.js) */
+.ohf-search .modal-overlay {
+  display: none !important;
+}
+
 .ohf-search .search__button .ohf-icon,
 .ohf-search .search-modal__close-button .ohf-icon {
   display: block;
