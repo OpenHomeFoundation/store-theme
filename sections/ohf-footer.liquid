@@ -209,10 +209,14 @@
   .ohf-footer__brand {
     display: inline-flex;
   }
+  .ohf-footer__brand {
+    max-width: 100%;
+  }
+  /* 37px tall on wide screens; scales down to fit a phone (the lockup is about 10:1) */
   .ohf-footer__brand .ohf-logo__svg {
     display: block;
-    height: 37px;
-    width: auto;
+    width: min(100%, 378px);
+    height: auto;
   }
   .ohf-footer .ohf-logo--dark {
     display: none;
