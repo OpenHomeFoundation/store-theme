@@ -1,0 +1,423 @@
+{%- comment -%}
+  OHF product rail (redesign 2026): a collection's products as a scrolling row of product cards with position
+  dots, ending in a coloured "View all" card. Two layouts from the concept:
+  - "With artwork" (New collection): artwork on the left half fading into the section's background colour,
+    heading and two cards at a time on the right.
+  - "Full width" (Wear the mission / best sellers): heading above, four cards at a time across the page.
+  Cards are the shared OHF product card. Behaviour: assets/ohf-rail.js.
+{%- endcomment -%}
+{%- liquid
+  assign c = section.settings.collection
+  assign heading = section.settings.heading | default: c.title
+  assign layout = section.settings.layout
+  if layout == 'art' and section.settings.art == blank
+    assign layout = 'full'
+  endif
+  assign limit = section.settings.products_to_show
+  assign shown = c.products | size
+  if shown > limit
+    assign shown = limit
+  endif
+  assign count_text = section.settings.view_all_sub | replace: '[count]', c.products_count
+  assign bg = section.settings.background
+-%}
+
+{%- if c != blank and c.products_count > 0 -%}
+  <script src="{{ 'ohf-rail.js' | asset_url }}" defer="defer"></script>
+
+  <section
+    class="ohf-rail-section ohf-rail-section--{{ layout }}"
+    aria-labelledby="OhfRailTitle-{{ section.id }}"
+    style="{% if bg != blank and bg.alpha > 0 %}--rail-bg: {{ bg }};{% endif %} --rail-end: {{ section.settings.view_all_color }};"
+  >
+    {%- capture head -%}
+      <div class="ohf-rail-section__head">
+        {%- if section.settings.kicker != blank -%}
+          <p class="ohf-kicker">{{ section.settings.kicker | escape }}</p>
+        {%- endif -%}
+        <h2 id="OhfRailTitle-{{ section.id }}" class="ohf-title">{{ heading | escape }}</h2>
+      </div>
+    {%- endcapture -%}
+
+    {%- capture rail -%}
+      <ohf-rail class="ohf-rail">
+        <div class="ohf-rail__track" data-rail-track role="list">
+          {%- for product in c.products limit: limit -%}
+            <div class="ohf-rail__slide" data-rail-slide role="listitem">
+              {%- render 'card-product',
+                card_product: product,
+                show_secondary_image: true,
+                lazy_load: true,
+                quick_add: 'none',
+                section_id: section.id,
+                skip_styles: true
+              -%}
+            </div>
+          {%- endfor -%}
+          {%- if section.settings.show_view_all -%}
+            <div class="ohf-rail__slide ohf-rail__slide--end" data-rail-slide role="listitem">
+              <a class="ohf-rail__all" href="{{ c.url }}">
+                <span class="ohf-rail__all-text">{{ section.settings.view_all_text | escape }}</span>
+                {%- if count_text != blank -%}
+                  <span class="ohf-rail__all-sub">{{ count_text | escape }}</span>
+                {%- endif -%}
+                {%- render 'ohf-icon', icon: 'arrow-right', size: 22 -%}
+              </a>
+            </div>
+          {%- endif -%}
+        </div>
+        <div class="ohf-rail__dots" data-rail-dots data-label="{{ heading | escape }}" role="group" aria-label="{{ heading | escape }}"></div>
+      </ohf-rail>
+    {%- endcapture -%}
+
+    {%- if layout == 'art' -%}
+      <div class="ohf-rail-section__bg" aria-hidden="true"></div>
+      <div class="ohf-wrap ohf-rail-section__grid">
+        <div class="ohf-rail-section__art">
+          {%- if section.settings.art != blank -%}
+            {{
+              section.settings.art
+              | image_url: width: 2000
+              | image_tag:
+                widths: '600, 900, 1200, 1600, 2000',
+                sizes: '(min-width: 901px) 50vw, 100vw',
+                loading: 'lazy',
+                class: 'ohf-rail-section__art-img',
+                alt: section.settings.art_alt
+            }}
+          {%- endif -%}
+        </div>
+        <div class="ohf-rail-section__side">
+          {{ head }}
+          {{ rail }}
+        </div>
+      </div>
+    {%- else -%}
+      <div class="ohf-wrap">{{ head }}</div>
+      {{ rail }}
+    {%- endif -%}
+  </section>
+{%- elsif request.design_mode -%}
+  <div class="ohf-wrap ohf-rail-section__empty">
+    <p>
+      <strong>{{ section.settings.kicker | default: 'Product rail' }}:</strong>
+      choose a collection with products in the section settings. This message only shows in the theme editor.
+    </p>
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .ohf-rail-section {
+    --rail-bg: var(--bg);
+    position: relative;
+    isolation: isolate;
+    padding-block: 96px;
+    background: var(--rail-bg);
+  }
+  .ohf-rail-section__head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s8);
+    margin-bottom: 48px;
+  }
+  .ohf-rail-section__head .ohf-kicker {
+    margin: 0;
+  }
+
+  /* Track and slides */
+  .ohf-rail__track {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+    padding-bottom: 8px;
+    cursor: grab;
+  }
+  .ohf-rail__track::-webkit-scrollbar {
+    display: none;
+  }
+  .ohf-rail__track.is-panning {
+    cursor: grabbing;
+    user-select: none;
+  }
+  .ohf-rail__track.is-panning a {
+    pointer-events: none;
+  }
+  .ohf-rail__slide {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .ohf-rail__slide > product-component,
+  .ohf-rail__slide .card-wrapper {
+    flex: 1;
+  }
+
+  /* Full width: four cards at a time, the row lines up with the page margins */
+  .ohf-rail-section--full .ohf-rail__track {
+    margin-inline: max(var(--margin), calc((100% - var(--page-max)) / 2 + var(--margin)));
+  }
+  .ohf-rail-section--full .ohf-rail__slide {
+    flex: 0 0 calc((100% - 60px) / 4);
+  }
+
+  /* With artwork: art left, two cards at a time right */
+  .ohf-rail-section__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: stretch;
+  }
+  .ohf-rail-section__art {
+    position: relative;
+    min-height: 600px;
+  }
+  .ohf-rail-section__art-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Edges fade into the section colour, as in the concept */
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent),
+      linear-gradient(to bottom, transparent, #000 10%, #000 90%, transparent);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent),
+      linear-gradient(to bottom, transparent, #000 10%, #000 90%, transparent);
+    mask-composite: intersect;
+  }
+  .ohf-rail-section__side {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+  }
+  .ohf-rail-section--art .ohf-rail__slide {
+    flex: 0 0 calc(50% - 10px);
+  }
+  .ohf-rail-section--art .ohf-rail-section__head {
+    margin-bottom: var(--s32);
+  }
+  /* Cards pick up a tint of the section colour on hover */
+  .ohf-rail-section--art .ohf-card:hover {
+    background: color-mix(in srgb, var(--rail-bg) 55%, #fff);
+  }
+  /* The section colour is an inline style, so the dark mode override needs !important */
+  :root[data-lights='off'] .ohf-rail-section {
+    --rail-bg: var(--bg) !important;
+  }
+
+  /* "View all" end card */
+  .ohf-rail__all {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: var(--s8);
+    min-height: 100%;
+    padding: var(--s24);
+    border-radius: var(--r-xs);
+    background: var(--rail-end, var(--ohf-light-blue));
+    color: var(--ohf-dark-blue);
+    text-decoration: none;
+    transition: background-color var(--dur-ui) var(--ease), color var(--dur-ui) var(--ease);
+  }
+  .ohf-rail__all:hover {
+    background: color-mix(in srgb, var(--rail-end, var(--ohf-light-blue)) 82%, var(--ohf-dark-blue));
+  }
+  .ohf-rail__all:focus-visible {
+    outline: 4px solid var(--cta-focus);
+    outline-offset: -4px;
+  }
+  .ohf-rail__all-text {
+    font-family: var(--font-heading-family);
+    font-size: 4rem;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .ohf-rail__all-sub {
+    font-family: var(--font-heading-family);
+    font-size: 1.4rem;
+  }
+  .ohf-rail__all svg {
+    transition: translate var(--dur-ui) var(--ease);
+  }
+  .ohf-rail__all:hover svg {
+    translate: var(--nudge) 0;
+  }
+
+  /* Dots */
+  .ohf-rail__dots {
+    display: flex;
+    justify-content: center;
+    gap: var(--s4);
+    margin-top: var(--s24);
+  }
+  .ohf-rail__dots[hidden] {
+    display: none;
+  }
+  .ohf-rail__dot {
+    position: relative;
+    width: 20px;
+    height: 24px;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    transition: width var(--dur-ui) var(--ease);
+  }
+  .ohf-rail__dot::before {
+    content: '';
+    position: absolute;
+    left: 7.5px;
+    right: 7.5px;
+    top: 9.5px;
+    height: 5px;
+    border-radius: 2.5px;
+    background: color-mix(in srgb, var(--heading) 25%, transparent);
+    transition: background-color var(--dur-ui) var(--ease);
+  }
+  .ohf-rail__dot:hover::before {
+    background: color-mix(in srgb, var(--heading) 55%, transparent);
+  }
+  .ohf-rail__dot[aria-current='true'] {
+    width: 29px;
+  }
+  .ohf-rail__dot[aria-current='true']::before {
+    background: var(--heading);
+  }
+  .ohf-rail__dot:focus-visible {
+    outline: 2px solid var(--ohf-light-blue);
+    border-radius: var(--r-xs);
+  }
+
+  .ohf-rail-section__empty {
+    padding-block: 48px;
+    color: var(--body);
+  }
+
+  @media (max-width: 900px) {
+    .ohf-rail-section__grid {
+      grid-template-columns: 1fr;
+    }
+    .ohf-rail-section__art {
+      min-height: 0;
+      aspect-ratio: 2000 / 895;
+    }
+    .ohf-rail-section--art .ohf-rail__slide {
+      flex-basis: 78%;
+    }
+    .ohf-rail-section--full .ohf-rail__track {
+      margin-inline: 0;
+      padding-inline: var(--margin);
+      scroll-padding-inline: var(--margin);
+    }
+    .ohf-rail-section--full .ohf-rail__slide {
+      flex-basis: 72%;
+    }
+  }
+  @media (max-width: 640px) {
+    .ohf-rail-section {
+      padding-block: 56px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "OHF product rail",
+  "class": "ohf-product-rail-section",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 16,
+      "step": 1,
+      "default": 8,
+      "label": "Products to show"
+    },
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Small heading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Leave empty to use the collection's title."
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "default": "full",
+      "options": [
+        { "value": "full", "label": "Full width, four cards at a time" },
+        { "value": "art", "label": "With artwork, two cards at a time" }
+      ]
+    },
+    {
+      "type": "image_picker",
+      "id": "art",
+      "label": "Artwork",
+      "info": "With artwork layout only. Shown in the left half; its edges fade into the background colour. Set its focal point in Content › Files."
+    },
+    {
+      "type": "text",
+      "id": "art_alt",
+      "label": "Artwork description",
+      "info": "For screen readers."
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background colour",
+      "info": "Leave empty for the page colour. With artwork, match the artwork's paper tone."
+    },
+    {
+      "type": "header",
+      "content": "View all card"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "default": true,
+      "label": "Show a View all card at the end"
+    },
+    {
+      "type": "text",
+      "id": "view_all_text",
+      "default": "View all",
+      "label": "Text"
+    },
+    {
+      "type": "text",
+      "id": "view_all_sub",
+      "default": "[count] products",
+      "label": "Small text",
+      "info": "[count] becomes the number of products in the collection."
+    },
+    {
+      "type": "color",
+      "id": "view_all_color",
+      "default": "#18BCF2",
+      "label": "Colour"
+    }
+  ],
+  "presets": [
+    {
+      "name": "OHF product rail"
+    }
+  ]
+}
+{% endschema %}
