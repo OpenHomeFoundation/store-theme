@@ -4,6 +4,10 @@
  * price above a hairline, "View product". Sold-out and coming-soon variants.
  */
 
+/* Equal-height cards in a row: the grid item stretches to the tallest card, and the analytics
+   wrapper (product-component), the card wrapper and the card all fill it. The price and
+   "View product" then line up at the bottom whatever the title length. */
+product-component:has(> .ohf-card-wrapper),
 .ohf-card-wrapper {
   height: 100%;
 }
