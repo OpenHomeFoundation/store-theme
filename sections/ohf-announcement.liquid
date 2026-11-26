@@ -1,0 +1,203 @@
+{%- comment -%}
+  OHF announcement bar (redesign 2026). One line at a time; with several messages they fade through in turn.
+  Rotation pauses while the pointer or keyboard focus is on the bar, and is off for people who prefer
+  reduced motion (they get the first message, with the others reachable as a list for screen readers).
+{%- endcomment -%}
+{%- liquid
+  assign items = section.blocks | where: 'type', 'announcement'
+-%}
+{%- if items.size > 0 -%}
+  <ohf-announce
+    class="ohf-announce"
+    style="--announce-bg: {{ section.settings.background }}; --announce-fg: {{ section.settings.text }};"
+    data-interval="{{ section.settings.interval | times: 1000 }}"
+  >
+    <ul class="ohf-announce__list" role="list" aria-label="{{ 'sections.header.announcement' | t }}">
+      {%- for block in items -%}
+        <li
+          class="ohf-announce__item"
+          {% if forloop.first %}
+            data-active="true"
+          {% endif %}
+          {{ block.shopify_attributes }}
+        >
+          <span>{{ block.settings.text | escape }}</span>
+          {%- if block.settings.link != blank and block.settings.link_label != blank -%}
+            <a href="{{ block.settings.link }}">{{ block.settings.link_label | escape }}</a>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+  </ohf-announce>
+{%- endif -%}
+
+{% stylesheet %}
+  .ohf-announce {
+    display: block;
+    background: var(--announce-bg, #e5846a);
+    color: var(--announce-fg, #09202e);
+  }
+  .ohf-announce__list {
+    list-style: none;
+    margin: 0 auto;
+    padding: 0 var(--margin);
+    max-width: var(--page-max);
+    display: grid;
+    height: 46px;
+  }
+  .ohf-announce__item {
+    grid-area: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-width: 0;
+    font-family: var(--font-heading-family);
+    font-size: 1.4rem;
+    font-weight: 500;
+    line-height: 1.2;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity var(--dur-in) var(--ease), transform var(--dur-in) var(--ease);
+    pointer-events: none;
+  }
+  .ohf-announce__item[data-active='true'] {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+  .ohf-announce__item span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .ohf-announce__item a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    white-space: nowrap;
+  }
+  .ohf-announce__item a:hover {
+    text-decoration-thickness: 2px;
+  }
+  @media (max-width: 640px) {
+    .ohf-announce__list {
+      height: 40px;
+    }
+    .ohf-announce__item {
+      font-size: 1.2rem;
+    }
+    .ohf-announce__item span {
+      white-space: normal;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ohf-announce__item {
+      transition: none;
+      transform: none;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  if (!customElements.get('ohf-announce')) {
+    customElements.define(
+      'ohf-announce',
+      class extends HTMLElement {
+        connectedCallback() {
+          this.items = [...this.querySelectorAll('.ohf-announce__item')];
+          if (this.items.length < 2) return;
+          if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+          this.index = 0;
+          this.paused = false;
+          const pause = () => (this.paused = true);
+          const resume = () => (this.paused = false);
+          this.addEventListener('pointerenter', pause);
+          this.addEventListener('pointerleave', resume);
+          this.addEventListener('focusin', pause);
+          this.addEventListener('focusout', resume);
+          const ms = Math.max(3000, parseInt(this.dataset.interval, 10) || 5000);
+          this.timer = setInterval(() => this.next(), ms);
+        }
+        disconnectedCallback() {
+          clearInterval(this.timer);
+        }
+        next() {
+          if (this.paused || document.hidden) return;
+          this.items[this.index].removeAttribute('data-active');
+          this.index = (this.index + 1) % this.items.length;
+          this.items[this.index].setAttribute('data-active', 'true');
+        }
+      }
+    );
+  }
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "OHF announcement bar",
+  "class": "ohf-announcement-section",
+  "enabled_on": {
+    "groups": ["header"]
+  },
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background",
+      "default": "#E5846A"
+    },
+    {
+      "type": "color",
+      "id": "text",
+      "label": "Text",
+      "default": "#09202E"
+    },
+    {
+      "type": "range",
+      "id": "interval",
+      "min": 3,
+      "max": 12,
+      "step": 1,
+      "unit": "s",
+      "label": "Time per message",
+      "default": 5
+    }
+  ],
+  "blocks": [
+    {
+      "type": "announcement",
+      "name": "Message",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Shipping to Europe and the United States"
+        },
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "Link text"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "OHF announcement bar",
+      "blocks": [{ "type": "announcement" }]
+    }
+  ]
+}
+{% endschema %}

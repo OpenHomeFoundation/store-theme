@@ -1,15 +1,5 @@
-{% if cart == empty %}
-  <span class="svg-wrapper">{{ 'icon-cart-empty.svg' | inline_asset_content }}</span>
-{% else %}
-  <span class="svg-wrapper">{{ 'icon-cart.svg' | inline_asset_content }}</span>
-{% endif %}
-
-<span class="visually-hidden">{{ 'templates.cart.cart' | t }}</span>
-{%- if cart != empty -%}
-  <div class="cart-count-bubble">
-    {%- if cart.item_count < 100 -%}
-      <span aria-hidden="true">{{ cart.item_count }}</span>
-    {%- endif -%}
-    <span class="visually-hidden">{{ 'sections.header.cart_count' | t: count: cart.item_count }}</span>
-  </div>
-{%- endif -%}
+{%- comment -%}
+  Re-rendered by Dawn's cart scripts (cart-notification.js, cart.js) to refresh the header cart link.
+  Redesign 2026: outputs the same markup as the OHF header (snippets/ohf-cart-bubble.liquid).
+{%- endcomment -%}
+{%- render 'ohf-cart-bubble' -%}

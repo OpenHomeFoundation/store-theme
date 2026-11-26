@@ -11,26 +11,42 @@
   "name": "t:sections.header.name",
   "type": "header",
   "sections": {
-    "header": {
-      "type": "header",
+    "announcement": {
+      "type": "ohf-announcement",
+      "blocks": {
+        "msg1": {
+          "type": "announcement",
+          "settings": {
+            "text": "Shipping to Europe and the United States",
+            "link_label": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "msg1"
+      ],
       "settings": {
-        "logo_position": "middle-left",
-        "mobile_logo_position": "center",
-        "menu": "main-menu",
-        "menu_type_desktop": "dropdown",
-        "sticky_header_type": "on-scroll-up",
-        "show_line_separator": true,
-        "color_scheme": "scheme-1",
-        "menu_color_scheme": "scheme-1",
+        "background": "#E5846A",
+        "text": "#09202E",
+        "interval": 5
+      }
+    },
+    "header": {
+      "type": "ohf-header",
+      "settings": {
+        "menu": "main-menu-2026",
+        "new_label_match": "New collection",
+        "new_label_text": "New",
+        "show_search": true,
         "enable_country_selector": true,
-        "enable_language_selector": true,
-        "margin_bottom": 0,
-        "padding_top": 20,
-        "padding_bottom": 20
+        "show_lights": true,
+        "color_scheme": "scheme-1"
       }
     }
   },
   "order": [
+    "announcement",
     "header"
   ]
 }

@@ -1,0 +1,66 @@
+{%- comment -%}
+  Country/region list (flag, name, currency), submitting Shopify's own localization form, so picking one
+  really switches the market and currency. No JavaScript needed to submit. With more than 8 countries a
+  filter box appears (handled in assets/ohf-header.js).
+  Used by the header's globe popover and (later) the footer.
+
+  Accepts:
+  - id: {String} unique id prefix (required)
+  - label: {String} optional heading text, defaults to the "Country/region" translation
+{%- endcomment -%}
+{%- liquid
+  assign heading = label | default: 'localization.country_label' | t
+  assign many = false
+  if localization.available_countries.size > 8
+    assign many = true
+  endif
+-%}
+<div class="ohf-region" data-ohf-region>
+  <p class="ohf-region__label" id="{{ id }}-label">{{ heading }}</p>
+  {%- if many -%}
+    <div class="ohf-region__filter">
+      <label class="visually-hidden" for="{{ id }}-filter">{{ 'localization.search' | t }}</label>
+      <input
+        type="search"
+        id="{{ id }}-filter"
+        class="ohf-region__input"
+        placeholder="{{ 'localization.search' | t }}"
+        autocomplete="off"
+        data-ohf-region-filter
+      >
+    </div>
+  {%- endif -%}
+  {%- form 'localization', id: id, class: 'ohf-region__form' -%}
+    <ul class="ohf-region__list" role="list" aria-labelledby="{{ id }}-label">
+      {%- for country in localization.available_countries -%}
+        {%- liquid
+          assign current = false
+          if country.iso_code == localization.country.iso_code
+            assign current = true
+          endif
+        -%}
+        <li data-name="{{ country.name | downcase | escape }}">
+          <button
+            type="submit"
+            name="country_code"
+            value="{{ country.iso_code }}"
+            class="ohf-region__opt"
+            {% if current %}
+              aria-current="true"
+            {% endif %}
+          >
+            <span class="ohf-region__flag">
+              {{- country | image_url: width: 48 | image_tag: width: 24, height: 18, alt: '', loading: 'lazy' -}}
+            </span>
+            <span class="ohf-region__name">{{ country.name }}</span>
+            <span class="ohf-region__cur">
+              {{- country.currency.iso_code }}
+              {{ country.currency.symbol -}}
+            </span>
+            <span class="ohf-region__check">{% render 'ohf-icon', icon: 'check', size: 18 %}</span>
+          </button>
+        </li>
+      {%- endfor -%}
+    </ul>
+  {%- endform -%}
+</div>
