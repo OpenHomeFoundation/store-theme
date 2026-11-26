@@ -1,0 +1,402 @@
+{%- comment -%}
+  "Where your money goes" (redesign 2026): the concept's ring chart, using the same data as the existing cost
+  breakdown section (sections/cost-breakdown.liquid):
+  - Segment blocks: label, colour, default percentage, override key.
+  - Per-product overrides: product metafield cost_breakdown.<key> (Decimal); cost_breakdown.hide (True/false) hides
+    the section for that product.
+  The ring draws in, slice by slice, when it scrolls into view. The centre shows the key segment (the Open Home
+  Foundation's share); hovering or focusing a slice or a legend row shows that share instead.
+{%- endcomment -%}
+{%- liquid
+  assign hidden = false
+  if product == blank or product.metafields.cost_breakdown.hide.value == true
+    assign hidden = true
+  endif
+  assign segments = section.blocks | where: 'type', 'segment'
+  assign key_seg = section.settings.key_segment | strip | downcase
+  assign circ = 628.32
+  assign total = 0
+  for block in segments
+    assign pct = block.settings.percentage | default: 0
+    assign k = block.settings.key | strip | handleize | replace: '-', '_'
+    if k != blank and product.metafields.cost_breakdown[k].value != blank
+      assign pct = product.metafields.cost_breakdown[k].value
+    endif
+    assign total = total | plus: pct
+  endfor
+-%}
+{%- unless hidden or segments.size == 0 or total == 0 -%}
+  <section class="ohf-money" aria-labelledby="OhfMoneyTitle-{{ section.id }}">
+    <div class="ohf-wrap ohf-money__inner">
+      <div>
+        {%- if section.settings.kicker != blank -%}
+          <p class="ohf-kicker">{{ section.settings.kicker | escape }}</p>
+        {%- endif -%}
+        <h2 id="OhfMoneyTitle-{{ section.id }}" class="ohf-title">{{ section.settings.heading | escape }}</h2>
+        {%- if section.settings.intro != blank -%}
+          <div class="ohf-money__text">{{ section.settings.intro }}</div>
+        {%- endif -%}
+      </div>
+
+      <ohf-money class="ohf-money__chart" data-chart>
+        {%- liquid
+          assign offset = 0
+          assign centre_pct = ''
+          assign centre_label = ''
+        -%}
+        <figure class="ohf-money__ring">
+          <svg viewBox="0 0 240 240" aria-hidden="true" focusable="false">
+            {%- for block in segments -%}
+              {%- liquid
+                assign pct = block.settings.percentage | default: 0
+                assign k = block.settings.key | strip | handleize | replace: '-', '_'
+                if k != blank and product.metafields.cost_breakdown[k].value != blank
+                  assign pct = product.metafields.cost_breakdown[k].value
+                endif
+                assign share = pct | times: 1.0 | divided_by: total
+                assign len = share | times: circ
+                assign off = offset | times: -1
+                assign offset = offset | plus: len
+                if k == key_seg
+                  assign centre_pct = pct | round: 1 | append: '' | remove: '.0'
+                  assign centre_label = block.settings.centre_label | default: block.settings.label
+                endif
+              -%}
+              <circle
+                class="ohf-money__arc{% if k == key_seg %} is-key{% endif %}"
+                cx="120"
+                cy="120"
+                r="100"
+                style="--c: {{ block.settings.color }}; --len: {{ len }}; --off: {{ off }}; --C: {{ circ }}; --i: {{ forloop.index0 }};"
+                data-seg="{{ forloop.index0 }}"
+              />
+            {%- endfor -%}
+          </svg>
+          <figcaption class="ohf-money__centre" aria-live="polite">
+            <strong data-centre-pct>{{ centre_pct }}%</strong>
+            <span data-centre-label>{{ centre_label | escape }}</span>
+          </figcaption>
+        </figure>
+
+        <ul class="ohf-money__legend" role="list">
+          {%- for block in segments -%}
+            {%- liquid
+              assign pct = block.settings.percentage | default: 0
+              assign k = block.settings.key | strip | handleize | replace: '-', '_'
+              if k != blank and product.metafields.cost_breakdown[k].value != blank
+                assign pct = product.metafields.cost_breakdown[k].value
+              endif
+              assign pct_display = pct | round: 1 | append: '' | remove: '.0'
+            -%}
+            <li
+              class="{% if k == key_seg %}is-key{% endif %}"
+              style="--c: {{ block.settings.color }};"
+              tabindex="0"
+              data-seg="{{ forloop.index0 }}"
+              data-pct="{{ pct_display }}"
+              data-label="{{ block.settings.centre_label | default: block.settings.label | escape }}"
+              {{ block.shopify_attributes }}
+            >
+              <i aria-hidden="true"></i>
+              <span>{{ block.settings.label | escape }}</span>
+              <strong>{{ pct_display }}%</strong>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </ohf-money>
+    </div>
+  </section>
+{%- endunless -%}
+
+{% stylesheet %}
+  .ohf-money {
+    padding-block: 144px;
+    background: #fff;
+  }
+  :root[data-lights='off'] .ohf-money {
+    background: var(--bg);
+  }
+  .ohf-money__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    gap: 64px;
+    align-items: start;
+  }
+  .ohf-money .ohf-kicker {
+    margin: 0 0 var(--s8);
+  }
+  .ohf-money__text {
+    max-width: 520px;
+    margin-top: var(--s24);
+    font-size: 1.6rem;
+    color: var(--body);
+  }
+  .ohf-money__chart {
+    display: grid;
+    grid-template-columns: minmax(200px, 280px) 1fr;
+    gap: var(--s40);
+    align-items: center;
+  }
+  .ohf-money__ring {
+    position: relative;
+    margin: 0;
+    aspect-ratio: 1;
+  }
+  .ohf-money__ring svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    rotate: -90deg;
+  }
+  .ohf-money__arc {
+    fill: none;
+    stroke: var(--c);
+    stroke-width: 28;
+    stroke-dasharray: 0 var(--C);
+    stroke-dashoffset: var(--off);
+    cursor: pointer;
+    transition: stroke-dasharray 0.7s var(--ease) calc(var(--i) * 0.16s), stroke-width var(--dur-ui) var(--ease),
+      opacity var(--dur-ui) var(--ease);
+  }
+  .ohf-money__chart.is-in .ohf-money__arc {
+    stroke-dasharray: var(--len) var(--C);
+  }
+  .ohf-money__arc.is-key {
+    stroke-width: 34;
+  }
+  .ohf-money__chart.is-focusing .ohf-money__arc {
+    opacity: 0.35;
+    stroke-width: 24;
+  }
+  .ohf-money__chart.is-focusing .ohf-money__arc.is-hover {
+    opacity: 1;
+    stroke-width: 44;
+  }
+  .ohf-money__centre {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 22%;
+    text-align: center;
+    pointer-events: none;
+    opacity: 0;
+    translate: 0 8px;
+    transition: opacity var(--dur-in) var(--ease) 0.9s, translate var(--dur-in) var(--ease) 0.9s;
+  }
+  .ohf-money__chart.is-in .ohf-money__centre {
+    opacity: 1;
+    translate: none;
+  }
+  .ohf-money__centre strong {
+    font-family: var(--font-heading-family);
+    font-weight: 500;
+    font-size: clamp(3.6rem, 4vw, 5.2rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--heading);
+  }
+  .ohf-money__centre span {
+    margin-top: var(--s8);
+    font-family: var(--font-heading-family);
+    font-size: 1.4rem;
+    color: var(--body);
+  }
+  .ohf-money__legend {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ohf-money__legend li {
+    display: grid;
+    grid-template-columns: 16px 1fr auto;
+    gap: var(--s12);
+    align-items: center;
+    padding-block: var(--s12);
+    border-top: 1px solid var(--line);
+    font-size: 1.6rem;
+    color: var(--heading);
+    cursor: default;
+    opacity: 0;
+    translate: 0 6px;
+    transition: opacity var(--dur-in) var(--ease), translate var(--dur-in) var(--ease);
+  }
+  .ohf-money__legend li:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+  .ohf-money__chart.is-in .ohf-money__legend li {
+    opacity: 1;
+    translate: none;
+  }
+  .ohf-money__chart.is-in .ohf-money__legend li:nth-child(2) {
+    transition-delay: 0.16s;
+  }
+  .ohf-money__chart.is-in .ohf-money__legend li:nth-child(3) {
+    transition-delay: 0.32s;
+  }
+  .ohf-money__chart.is-in .ohf-money__legend li:nth-child(4) {
+    transition-delay: 0.48s;
+  }
+  .ohf-money__chart.is-in .ohf-money__legend li:nth-child(5) {
+    transition-delay: 0.64s;
+  }
+  .ohf-money__chart.is-drawn .ohf-money__arc,
+  .ohf-money__chart.is-drawn .ohf-money__legend li {
+    transition-delay: 0s !important;
+  }
+  .ohf-money__chart.is-focusing .ohf-money__legend li:not(.is-hover) {
+    opacity: 0.45;
+  }
+  .ohf-money__legend i {
+    width: 16px;
+    height: 16px;
+    border-radius: var(--r-xs);
+    background: var(--c);
+  }
+  .ohf-money__legend strong {
+    font-family: var(--font-heading-family);
+    font-weight: 500;
+    font-size: 2rem;
+  }
+  .ohf-money__legend li.is-key {
+    font-weight: 600;
+  }
+  .ohf-money__legend li.is-key strong {
+    font-size: 2.8rem;
+  }
+  @media (max-width: 900px) {
+    .ohf-money {
+      padding-block: 96px;
+    }
+    .ohf-money__inner,
+    .ohf-money__chart {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--s32);
+    }
+    .ohf-money__ring {
+      width: min(280px, 80%);
+      margin-inline: auto;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ohf-money__arc {
+      stroke-dasharray: var(--len) var(--C);
+      transition: none;
+    }
+    .ohf-money__centre,
+    .ohf-money__legend li {
+      opacity: 1;
+      translate: none;
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  if (!customElements.get('ohf-money')) {
+    customElements.define(
+      'ohf-money',
+      class extends HTMLElement {
+        connectedCallback() {
+          this.pctEl = this.querySelector('[data-centre-pct]');
+          this.labelEl = this.querySelector('[data-centre-label]');
+          this.key = { pct: this.pctEl?.textContent, label: this.labelEl?.textContent };
+
+          // Draw in once, when the chart reaches the lower part of the screen
+          const io = new IntersectionObserver(
+            (entries) => {
+              if (!entries.some((e) => e.isIntersecting)) return;
+              this.classList.add('is-in');
+              io.disconnect();
+              setTimeout(() => this.classList.add('is-drawn'), 1800);
+            },
+            { rootMargin: '0px 0px -20% 0px' }
+          );
+          io.observe(this);
+
+          const arcs = [...this.querySelectorAll('.ohf-money__arc')];
+          const rows = [...this.querySelectorAll('.ohf-money__legend li')];
+          const focus = (i) => {
+            this.classList.toggle('is-focusing', i !== null);
+            arcs.forEach((a, k) => a.classList.toggle('is-hover', k === i));
+            rows.forEach((r, k) => r.classList.toggle('is-hover', k === i));
+            const row = i === null ? null : rows[i];
+            if (this.pctEl) this.pctEl.textContent = row ? `${row.dataset.pct}%` : this.key.pct;
+            if (this.labelEl) this.labelEl.textContent = row ? row.dataset.label : this.key.label;
+          };
+          [...arcs, ...rows].forEach((el) => {
+            const i = +el.dataset.seg;
+            el.addEventListener('pointerenter', () => focus(i));
+            el.addEventListener('pointerleave', () => focus(null));
+          });
+          rows.forEach((r) => {
+            r.addEventListener('focus', () => focus(+r.dataset.seg));
+            r.addEventListener('blur', () => focus(null));
+          });
+        }
+      }
+    );
+  }
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "OHF money breakdown",
+  "class": "ohf-money-section",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Default segments for every product. To override one for a product, set the product metafield cost_breakdown.<segment key> (Decimal, e.g. 25 for 25%). Set cost_breakdown.hide (True/false) to hide this section for a product."
+    },
+    { "type": "text", "id": "kicker", "label": "Small heading", "default": "Every purchase" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Where your money goes" },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Intro text",
+      "default": "<p>A proportion of each purchase supports our mission: the breakdown below is based on the most recent price update. Percentages may vary between updates, which means it’s possible your contribution could be moderately higher or lower than shown.</p>"
+    },
+    {
+      "type": "text",
+      "id": "key_segment",
+      "label": "Segment shown in the centre",
+      "default": "contribution",
+      "info": "The override key of the segment to feature (e.g. contribution)."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "segment",
+      "name": "Segment",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Segment" },
+        {
+          "type": "text",
+          "id": "centre_label",
+          "label": "Label in the centre",
+          "info": "Optional shorter wording when this segment shows in the ring's centre (e.g. to the Open Home Foundation)."
+        },
+        {
+          "type": "text",
+          "id": "key",
+          "label": "Override key",
+          "info": "Product metafield key that overrides this segment, e.g. manufacturing reads cost_breakdown.manufacturing."
+        },
+        { "type": "number", "id": "percentage", "label": "Default percentage", "default": 0 },
+        { "type": "color", "id": "color", "label": "Colour", "default": "#18BCF2" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "OHF money breakdown"
+    }
+  ]
+}
+{% endschema %}

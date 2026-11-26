@@ -9,79 +9,6 @@
  */
 {
   "sections": {
-    "main": {
-      "type": "main-product",
-      "blocks": {
-        "vendor": {
-          "type": "text",
-          "settings": {
-            "text": "{{ product.vendor }}",
-            "text_style": "uppercase"
-          }
-        },
-        "title": {
-          "type": "title",
-          "settings": {}
-        },
-        "price": {
-          "type": "price",
-          "settings": {}
-        },
-        "variant_picker": {
-          "type": "variant_picker",
-          "settings": {
-            "picker_type": "button",
-            "swatch_shape": "circle"
-          }
-        },
-        "quantity_selector": {
-          "type": "quantity_selector",
-          "settings": {}
-        },
-        "buy_buttons": {
-          "type": "buy_buttons",
-          "settings": {
-            "show_dynamic_checkout": true,
-            "show_gift_card_recipient": true
-          }
-        },
-        "description": {
-          "type": "description",
-          "settings": {}
-        },
-        "share": {
-          "type": "share",
-          "settings": {
-            "share_label": "Share"
-          }
-        }
-      },
-      "block_order": [
-        "vendor",
-        "title",
-        "price",
-        "variant_picker",
-        "quantity_selector",
-        "buy_buttons",
-        "description",
-        "share"
-      ],
-      "settings": {
-        "enable_sticky_info": true,
-        "color_scheme": "scheme-1",
-        "media_size": "large",
-        "constrain_to_viewport": true,
-        "media_fit": "contain",
-        "gallery_layout": "stacked",
-        "mobile_thumbnails": "hide",
-        "media_position": "left",
-        "image_zoom": "hover",
-        "hide_variants": true,
-        "enable_video_looping": false,
-        "padding_top": 36,
-        "padding_bottom": 12
-      }
-    },
     "disclosures": {
       "type": "disclosures",
       "settings": {
@@ -111,8 +38,21 @@
         "padding_bottom": 28
       }
     },
-    "cost_breakdown": {
-      "type": "cost-breakdown",
+    "ohf_join": {
+      "type": "ohf-join",
+      "settings": {
+        "kicker": "Community",
+        "title_1": "Join the",
+        "title_2": "Open Home crowd",
+        "text": "Forums, meetups, and a growing community of tinkerers.",
+        "button_label": "Join the community",
+        "button_link": "https://community.home-assistant.io/",
+        "button_new_tab": true,
+        "show_stickers": true
+      }
+    },
+    "ohf_money": {
+      "type": "ohf-money",
       "blocks": {
         "segment_manufacturing": {
           "type": "segment",
@@ -156,7 +96,8 @@
             "label": "Contribution to the Open Home Foundation",
             "key": "contribution",
             "percentage": 30,
-            "color": "#18BCF2"
+            "color": "#18BCF2",
+            "centre_label": "to the Open Home Foundation"
           }
         }
       },
@@ -168,32 +109,28 @@
         "segment_contribution"
       ],
       "settings": {
+        "kicker": "Every purchase",
         "heading": "Where your money goes",
         "intro": "<p>A proportion of each purchase supports our mission: the breakdown below is based on the most recent price update. Percentages may vary between updates, which means it’s possible your contribution could be moderately higher or lower than shown.</p>",
-        "color_scheme": "",
-        "padding_top": 40,
-        "padding_bottom": 52
+        "key_segment": "contribution"
       }
     },
-    "ohf_join": {
-      "type": "ohf-join",
+    "ohf_main": {
+      "type": "ohf-main-product",
       "settings": {
-        "kicker": "Community",
-        "title_1": "Join the",
-        "title_2": "Open Home crowd",
-        "text": "Forums, meetups, and a growing community of tinkerers.",
-        "button_label": "Join the community",
-        "button_link": "https://community.home-assistant.io/",
-        "button_new_tab": true,
-        "show_stickers": true
+        "shop_label": "Shop",
+        "choose_msg": "Choose a size first.",
+        "guide_label": "Size guide",
+        "share_label": "Share",
+        "worn_note": "The last photos: spotted in open homes."
       }
     }
   },
   "order": [
-    "main",
+    "ohf_main",
+    "ohf_money",
     "disclosures",
     "related-products",
-    "cost_breakdown",
     "ohf_join"
   ]
 }

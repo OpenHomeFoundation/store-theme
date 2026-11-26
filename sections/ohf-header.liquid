@@ -22,6 +22,10 @@
   <link rel="stylesheet" href="{{ 'component-price.css' | asset_url }}" media="print" onload="this.media='all'">
 {%- endif -%}
 <script src="{{ 'ohf-header.js' | asset_url }}" defer="defer"></script>
+{%- comment -%} Dawn's add-to-cart pop-up (was loaded by Dawn's header) {%- endcomment -%}
+{%- if settings.cart_type == 'notification' -%}
+  <script src="{{ 'cart-notification.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
 
 {%- liquid
   assign menu = section.settings.menu
@@ -313,6 +317,48 @@
 </ohf-header>
 
 <div class="ohf-scrim" hidden data-ohf-scrim></div>
+
+{%- comment -%}
+  Site structured data, carried over from Dawn's header: the Organization (name, logo, social profiles) on every
+  page and the WebSite search box on the home page. Social profiles come from the social links menu.
+{%- endcomment -%}
+{%- liquid
+  assign same_as = ''
+  for link in linklists['social-links'].links
+    if link.url contains 'http'
+      assign same_as = same_as | append: link.url | append: '|'
+    endif
+  endfor
+  assign same_as = same_as | split: '|'
+-%}
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Organization",
+    "name": {{ shop.name | json }},
+    {%- if settings.logo %}
+      "logo": {{ settings.logo | image_url: width: 500 | prepend: 'https:' | json }},
+    {%- endif %}
+    "sameAs": {{ same_as | json }},
+    "url": {{ request.origin | append: page.url | json }}
+  }
+</script>
+{%- if request.page_type == 'index' -%}
+  {%- assign potential_action_target = request.origin | append: routes.search_url | append: '?q={search_term_string}' -%}
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "WebSite",
+      "name": {{ shop.name | json }},
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {{ potential_action_target | json }},
+        "query-input": "required name=search_term_string"
+      },
+      "url": {{ request.origin | append: page.url | json }}
+    }
+  </script>
+{%- endif -%}
 
 {% schema %}
 {
