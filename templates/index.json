@@ -68,11 +68,59 @@
         "view_all_sub": "[count] products",
         "view_all_color": "#18BCF2"
       }
+    },
+    "ohf_projects": {
+      "type": "ohf-projects",
+      "blocks": {
+        "project_1": {
+          "type": "project",
+          "settings": {
+            "name": "Home Assistant",
+            "mark": "ha",
+            "line": "For people whose lights answer to them."
+          }
+        },
+        "project_2": {
+          "type": "project",
+          "settings": {
+            "name": "ESPHome",
+            "mark": "esphome",
+            "line": "For people who flash first and ask later."
+          }
+        },
+        "project_3": {
+          "type": "project",
+          "settings": {
+            "name": "Music Assistant",
+            "mark": "ma",
+            "line": "For people with too many speakers and no regrets."
+          }
+        },
+        "project_4": {
+          "type": "project",
+          "settings": {
+            "name": "Open Home Foundation",
+            "mark": "ohf",
+            "line": "For people who fight for the Open Home."
+          }
+        }
+      },
+      "block_order": [
+        "project_1",
+        "project_2",
+        "project_3",
+        "project_4"
+      ],
+      "settings": {
+        "kicker": "Shop by project",
+        "heading": "Shop any project, support them all"
+      }
     }
   },
   "order": [
     "ohf_hero",
     "ohf_new_collection",
+    "ohf_projects",
     "ohf_best_sellers",
     "ohf_join"
   ]

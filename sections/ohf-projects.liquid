@@ -1,0 +1,410 @@
+{%- comment -%}
+  "Shop by project" (redesign 2026): one big row per project (logo mark, name, one-liner, arrow), each linking to that
+  project's products. Hovering a project name with a mouse shows a small tilted photo card that follows the pointer
+  (concept: velourproductions.com). Not on touch screens; no movement with reduced motion.
+
+  Each Project block:
+  - Link: the project's collection when one is chosen; otherwise all products filtered by the project's tag
+    (/collections/all/home-assistant), which works without a dedicated collection (decision: projects from tags).
+  - Preview photo: the block's own photo, else the collection's image, else the first product with that tag.
+{%- endcomment -%}
+{%- liquid
+  assign projects = section.blocks | where: 'type', 'project'
+  assign preview_cards = ''
+-%}
+<section class="ohf-projects" aria-labelledby="OhfProjectsTitle-{{ section.id }}">
+  <div class="ohf-wrap">
+    <div class="ohf-projects__head">
+      {%- if section.settings.kicker != blank -%}
+        <p class="ohf-kicker">{{ section.settings.kicker | escape }}</p>
+      {%- endif -%}
+      <h2 id="OhfProjectsTitle-{{ section.id }}" class="ohf-title">{{ section.settings.heading | escape }}</h2>
+    </div>
+
+    <ol class="ohf-plist" role="list">
+      {%- for block in projects -%}
+        {%- liquid
+          assign name = block.settings.name
+          assign tag_handle = name | handleize
+          if block.settings.collection != blank
+            assign url = block.settings.collection.url
+          else
+            assign url = routes.all_products_collection_url | append: '/' | append: tag_handle
+          endif
+
+          assign preview = block.settings.image
+          if preview == blank and block.settings.collection != blank
+            assign preview = block.settings.collection.featured_image
+          endif
+          if preview == blank
+            for p in collections['all'].products
+              if p.tags contains name and p.featured_media
+                assign preview = p.featured_media
+                break
+              endif
+            endfor
+          endif
+        -%}
+        <li {{ block.shopify_attributes }}>
+          <a class="ohf-prow" href="{{ url }}" data-preview="{{ block.id }}">
+            <span class="ohf-prow__name">
+              {%- if block.settings.mark != 'none' -%}
+                {%- render 'ohf-project-mark', mark: block.settings.mark -%}
+              {%- endif -%}
+              {{- name | escape -}}
+            </span>
+            {%- if block.settings.line != blank -%}
+              <span class="ohf-prow__line">{{ block.settings.line | escape }}</span>
+            {%- endif -%}
+            <span class="ohf-prow__go">{% render 'ohf-icon', icon: 'arrow-right', size: 28 %}</span>
+          </a>
+        </li>
+        {%- capture preview_cards -%}
+          {{ preview_cards }}
+          {%- if preview != blank -%}
+            <div class="ohf-ppreview__card" data-for="{{ block.id }}">
+              {{
+                preview
+                | image_url: width: 400
+                | image_tag: widths: '200, 400', sizes: '170px', loading: 'lazy', class: 'ohf-ppreview__img', alt: ''
+              }}
+            </div>
+          {%- endif -%}
+        {%- endcapture -%}
+      {%- endfor -%}
+    </ol>
+  </div>
+
+  <ohf-ppreview class="ohf-ppreview" aria-hidden="true">{{ preview_cards }}</ohf-ppreview>
+</section>
+
+{% stylesheet %}
+  .ohf-projects {
+    position: relative;
+    padding-block: 144px;
+    background: #fff;
+    color: var(--ohf-dark-blue);
+  }
+  :root[data-lights='off'] .ohf-projects {
+    background: color-mix(in srgb, var(--ohf-light-grey) 6%, var(--ohf-dark-blue));
+    color: var(--ohf-light-grey);
+  }
+  .ohf-projects__head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s8);
+    margin-bottom: 64px;
+  }
+  .ohf-projects__head .ohf-kicker {
+    margin: 0;
+  }
+  .ohf-projects .ohf-title {
+    max-width: 820px;
+  }
+
+  .ohf-plist {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--line);
+  }
+  .ohf-plist li {
+    border-bottom: 1px solid var(--line);
+  }
+  .ohf-prow {
+    display: grid;
+    grid-template-columns: 1fr minmax(200px, 320px) 48px;
+    align-items: center;
+    gap: var(--s24);
+    padding: 20px 0;
+    color: var(--heading);
+    text-decoration: none;
+  }
+  .ohf-prow__name {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.32em;
+    justify-self: start;
+    font-family: var(--font-heading-family);
+    font-weight: 600;
+    font-size: clamp(2.6rem, 3vw, 4.4rem);
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+    transition: color var(--dur-ui) var(--ease), translate var(--dur-ui) var(--ease);
+  }
+  .ohf-prow__line {
+    font-size: 1.6rem;
+    color: var(--body);
+  }
+  .ohf-prow__go {
+    display: grid;
+    place-items: center;
+    opacity: 0;
+    translate: -12px 0;
+    transition: opacity var(--dur-ui) var(--ease), translate var(--dur-ui) var(--ease);
+  }
+  .ohf-prow__name:hover,
+  .ohf-prow:focus-visible .ohf-prow__name {
+    translate: 16px 0;
+  }
+  :root[data-lights='off'] .ohf-prow__name:hover,
+  :root[data-lights='off'] .ohf-prow:focus-visible .ohf-prow__name {
+    color: var(--ohf-light-blue);
+  }
+  .ohf-prow:has(.ohf-prow__name:hover) .ohf-prow__go,
+  .ohf-prow:focus-visible .ohf-prow__go {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  /* Logo marks sit at the name's cap height */
+  .ohf-mark {
+    flex: none;
+    display: inline-flex;
+    height: 0.82em;
+  }
+  .ohf-mark > span {
+    display: inline-flex;
+    height: 100%;
+  }
+  .ohf-mark svg {
+    display: block;
+    width: auto;
+    height: 100%;
+  }
+  .ohf-mark--ohf {
+    align-items: flex-start;
+    overflow: visible;
+  }
+  .ohf-mark--ohf > span {
+    height: calc(100% * 356 / 240);
+  }
+  .ohf-mark__dark {
+    display: none !important;
+  }
+  :root[data-lights='off'] .ohf-mark--ohf .ohf-mark__light {
+    display: none !important;
+  }
+  :root[data-lights='off'] .ohf-mark--ohf .ohf-mark__dark {
+    display: inline-flex !important;
+  }
+
+  /* Photo card that follows the pointer */
+  .ohf-ppreview {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 45;
+    display: block;
+    width: 170px;
+    pointer-events: none;
+  }
+  .ohf-ppreview__card {
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 170px;
+    padding: 8px;
+    border-radius: var(--r-xs);
+    background: var(--ohf-light-grey);
+    box-shadow: 0 34px 90px -28px rgba(0, 0, 0, 0.7);
+    rotate: -3deg;
+    opacity: 0;
+    scale: 0.85;
+    transition: opacity var(--dur-ui) var(--ease), scale var(--dur-in) var(--ease), rotate var(--dur-in) var(--ease);
+  }
+  .ohf-ppreview__card.is-on {
+    opacity: 1;
+    scale: 1;
+    rotate: 2.5deg;
+  }
+  .ohf-ppreview__img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: var(--r-xs);
+    background: #fff;
+  }
+  @media (hover: none), (pointer: coarse) {
+    .ohf-ppreview {
+      display: none;
+    }
+  }
+
+  @media (max-width: 1100px) {
+    .ohf-prow {
+      grid-template-columns: 1fr 40px;
+    }
+    .ohf-prow__line {
+      grid-column: 1;
+      grid-row: 2;
+    }
+    .ohf-prow__go {
+      grid-column: 2;
+      grid-row: 1;
+    }
+  }
+  @media (max-width: 900px) {
+    .ohf-prow__go {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+  @media (max-width: 640px) {
+    .ohf-projects {
+      padding-block: 96px;
+    }
+    .ohf-prow {
+      gap: var(--s12);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ohf-prow__name,
+    .ohf-prow__go,
+    .ohf-ppreview__card {
+      transition: none;
+    }
+    .ohf-prow__name:hover,
+    .ohf-prow:focus-visible .ohf-prow__name {
+      translate: none;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  if (!customElements.get('ohf-ppreview')) {
+    customElements.define(
+      'ohf-ppreview',
+      class extends HTMLElement {
+        connectedCallback() {
+          this.section = this.closest('.ohf-projects');
+          this.fine = window.matchMedia('(hover: hover) and (pointer: fine)');
+          this.reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+          this.x = this.y = this.cx = this.cy = 0;
+          this.shown = null;
+
+          this.onMove = (e) => {
+            if (!this.fine.matches) return;
+            this.x = e.clientX + 18;
+            this.y = e.clientY - 110;
+            const name = e.target.closest?.('.ohf-prow__name');
+            const row = name ? name.closest('[data-preview]') : null;
+            this.show(row ? row.dataset.preview : null);
+            if (!this.frame) this.frame = requestAnimationFrame(() => this.tick());
+          };
+          this.onLeave = () => this.show(null);
+          this.section.addEventListener('pointermove', this.onMove);
+          this.section.addEventListener('pointerleave', this.onLeave);
+        }
+
+        disconnectedCallback() {
+          this.section?.removeEventListener('pointermove', this.onMove);
+          this.section?.removeEventListener('pointerleave', this.onLeave);
+          cancelAnimationFrame(this.frame);
+        }
+
+        show(id) {
+          if (id === this.shown) return;
+          if (!this.shown && id) {
+            // Appear at the pointer rather than sliding in from the last spot
+            this.cx = this.x;
+            this.cy = this.y;
+          }
+          this.shown = id;
+          this.querySelectorAll('.ohf-ppreview__card').forEach((c) => c.classList.toggle('is-on', c.dataset.for === id));
+        }
+
+        // The card trails the pointer slightly (eased), or follows it exactly with reduced motion
+        tick() {
+          this.frame = null;
+          const k = this.reduce.matches ? 1 : 0.2;
+          this.cx += (this.x - this.cx) * k;
+          this.cy += (this.y - this.cy) * k;
+          this.style.transform = `translate(${this.cx}px, ${this.cy}px)`;
+          if (Math.abs(this.x - this.cx) > 0.5 || Math.abs(this.y - this.cy) > 0.5) {
+            this.frame = requestAnimationFrame(() => this.tick());
+          }
+        }
+      }
+    );
+  }
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "OHF shop by project",
+  "class": "ohf-projects-section",
+  "max_blocks": 8,
+  "settings": [
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Small heading",
+      "default": "Shop by project"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Shop any project, support them all"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "project",
+      "name": "Project",
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Project name",
+          "default": "Home Assistant",
+          "info": "Must match the product tag exactly when no collection is chosen (e.g. Home Assistant)."
+        },
+        {
+          "type": "select",
+          "id": "mark",
+          "label": "Logo mark",
+          "default": "ha",
+          "options": [
+            { "value": "ha", "label": "Home Assistant" },
+            { "value": "esphome", "label": "ESPHome" },
+            { "value": "ma", "label": "Music Assistant" },
+            { "value": "ohf", "label": "Open Home Foundation" },
+            { "value": "none", "label": "None" }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "line",
+          "label": "One-liner"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection",
+          "info": "Optional. Without one, the row links to all products tagged with the project name."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Hover photo",
+          "info": "Optional. Ideally someone wearing the project's merch. Falls back to the collection image, then the first product with the tag."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "OHF shop by project",
+      "blocks": [
+        { "type": "project", "settings": { "name": "Home Assistant", "mark": "ha" } },
+        { "type": "project", "settings": { "name": "ESPHome", "mark": "esphome" } },
+        { "type": "project", "settings": { "name": "Music Assistant", "mark": "ma" } },
+        { "type": "project", "settings": { "name": "Open Home Foundation", "mark": "ohf" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
