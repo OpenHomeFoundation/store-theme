@@ -1,0 +1,308 @@
+{%- comment -%}
+  "Join the Open Home crowd" (redesign 2026): a big centred call to join the community. Real OHF stickers
+  pop up under the pointer as it moves, tilt, drift and fade away (two layers: some land behind the text,
+  some in front). On touch screens a tap drops one. With reduced motion they appear and fade without moving.
+  Sticker artwork: assets/ohf-sticker-01…12.webp, from the print files, sized in proportion to the printed
+  stickers. They're inside a <template>, so they only download once someone moves over the section.
+{%- endcomment -%}
+{%- liquid
+  assign widths = '140,140,150,140,170,150,140,150,200,130,170,195' | split: ','
+-%}
+<ohf-join class="ohf-join" role="region" aria-labelledby="OhfJoinTitle-{{ section.id }}">
+  {%- if section.settings.show_stickers -%}
+    <div class="ohf-join__stickers" aria-hidden="true" data-join-back></div>
+    <div class="ohf-join__stickers ohf-join__stickers--front" aria-hidden="true" data-join-front></div>
+  {%- endif -%}
+
+  <div class="ohf-wrap ohf-join__inner">
+    {%- if section.settings.kicker != blank -%}
+      <p class="ohf-kicker">{{ section.settings.kicker | escape }}</p>
+    {%- endif -%}
+    <h2 id="OhfJoinTitle-{{ section.id }}" class="ohf-join__title">
+      <span>{{ section.settings.title_1 | escape }}</span>
+      {%- if section.settings.title_2 != blank -%}
+        <span class="ohf-join__line2">{{ section.settings.title_2 | escape }}</span>
+      {%- endif -%}
+    </h2>
+    {%- if section.settings.text != blank -%}
+      <p class="ohf-join__sub">{{ section.settings.text | escape }}</p>
+    {%- endif -%}
+    {%- if section.settings.button_link != blank and section.settings.button_label != blank -%}
+      <a
+        class="ohf-cta ohf-cta--fill"
+        href="{{ section.settings.button_link }}"
+        {% if section.settings.button_new_tab %}
+          target="_blank" rel="noopener"
+        {% endif %}
+      >
+        <span>{{ section.settings.button_label | escape }}</span>
+        {%- render 'ohf-icon', icon: 'arrow-right', size: 18 -%}
+      </a>
+    {%- endif -%}
+  </div>
+
+  {%- if section.settings.show_stickers -%}
+    <template data-join-designs>
+      {%- for w in widths -%}
+        {%- capture file -%}ohf-sticker-{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}.webp{%- endcapture -%}
+        <img
+          class="ohf-jst"
+          src="{{ file | asset_url }}"
+          alt=""
+          width="{{ w | times: 0.68 | round }}"
+          height="{{ w | times: 0.68 | round }}"
+          style="--w: {{ w }}px"
+          draggable="false"
+        >
+      {%- endfor -%}
+    </template>
+  {%- endif -%}
+</ohf-join>
+
+{% stylesheet %}
+  .ohf-join {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    padding-block: 144px;
+    background: var(--ohf-light-blue);
+    color: var(--ohf-dark-blue);
+    cursor: crosshair;
+  }
+  .ohf-join__inner {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--s24);
+    pointer-events: none;
+  }
+  .ohf-join__inner a {
+    pointer-events: auto;
+    cursor: pointer;
+  }
+  .ohf-join .ohf-kicker {
+    color: var(--ohf-dark-blue);
+    margin: 0;
+  }
+  .ohf-join__title {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    font-size: clamp(4rem, 6vw, 9.6rem);
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.035em;
+    color: var(--ohf-dark-blue);
+  }
+  .ohf-join__line2 {
+    font-weight: 400;
+  }
+  .ohf-join__sub {
+    margin: 0;
+    font-size: 1.8rem;
+    max-width: 520px;
+    color: var(--ohf-dark-blue);
+  }
+  /* Dark button on the light-blue band */
+  .ohf-join .ohf-cta--fill:not(:hover):not(:active):not(:focus-visible) {
+    background: var(--ohf-dark-blue);
+    color: var(--ohf-light-grey);
+    border-color: var(--ohf-dark-blue);
+  }
+  .ohf-join__stickers {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+  .ohf-join__stickers--front {
+    z-index: 3;
+  }
+  .ohf-join__stickers .ohf-jst {
+    position: absolute;
+    width: calc(var(--w, 140px) * 0.68);
+    height: auto;
+    transform: translate(-50%, -50%);
+    rotate: var(--r, 0deg);
+    user-select: none;
+    animation: ohf-jst-pop 0.5s cubic-bezier(0.3, 1.25, 0.5, 1) both,
+      ohf-jst-drift 2.4s cubic-bezier(0.22, 1, 0.36, 1) both, ohf-jst-spin 2.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+    transition: opacity var(--dur-in) var(--ease), filter var(--dur-in) var(--ease);
+  }
+  .ohf-join__stickers .ohf-jst.is-out {
+    opacity: 0;
+    filter: blur(3px);
+  }
+  @keyframes ohf-jst-pop {
+    0% {
+      scale: 0.3;
+    }
+    60% {
+      scale: 1.06;
+    }
+    to {
+      scale: 1;
+    }
+  }
+  @keyframes ohf-jst-drift {
+    0% {
+      translate: 0 0;
+    }
+    to {
+      translate: var(--dx, 0px) var(--dy, -40px);
+    }
+  }
+  @keyframes ohf-jst-spin {
+    0% {
+      rotate: calc(var(--r, 0deg) - 10deg);
+    }
+    30% {
+      rotate: calc(var(--r, 0deg) + 3deg);
+    }
+    to {
+      rotate: calc(var(--r, 0deg) + var(--dr, 0deg));
+    }
+  }
+  @media (max-width: 900px) {
+    .ohf-join {
+      padding-block: 96px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ohf-join__stickers .ohf-jst {
+      animation: none;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  if (!customElements.get('ohf-join')) {
+    customElements.define(
+      'ohf-join',
+      class extends HTMLElement {
+        connectedCallback() {
+          const tpl = this.querySelector('[data-join-designs]');
+          this.back = this.querySelector('[data-join-back]');
+          this.front = this.querySelector('[data-join-front]');
+          if (!tpl || !this.back) return;
+          this.designs = [...tpl.content.children];
+          this.live = []; // oldest first, across both layers
+          this.n = 0;
+          this.lastX = -999;
+          this.lastY = -999;
+
+          this.onMove = (e) => {
+            if (e.pointerType !== 'mouse') return;
+            const r = this.getBoundingClientRect();
+            const x = e.clientX - r.left;
+            const y = e.clientY - r.top;
+            if (Math.hypot(x - this.lastX, y - this.lastY) < 170) return; // room between stickers
+            this.lastX = x;
+            this.lastY = y;
+            this.drop(x, y);
+          };
+          this.onDown = (e) => {
+            if (e.pointerType === 'mouse' || e.target.closest('a')) return;
+            const r = this.getBoundingClientRect();
+            this.drop(e.clientX - r.left, e.clientY - r.top);
+          };
+          this.addEventListener('pointermove', this.onMove);
+          this.addEventListener('pointerdown', this.onDown);
+        }
+
+        disconnectedCallback() {
+          this.removeEventListener('pointermove', this.onMove);
+          this.removeEventListener('pointerdown', this.onDown);
+        }
+
+        drop(x, y) {
+          const s = this.designs[this.n++ % this.designs.length].cloneNode(true);
+          const rnd = (a, b) => a + Math.random() * (b - a);
+          // A little scatter, so the trail spreads out instead of lining up
+          s.style.left = `${x + rnd(-30, 30)}px`;
+          s.style.top = `${y + rnd(-30, 30)}px`;
+          // Own tilt, a drift (mostly upward, as if flicked) and some extra spin
+          s.style.setProperty('--r', `${rnd(-12, 12).toFixed(1)}deg`);
+          s.style.setProperty('--dr', `${rnd(-14, 14).toFixed(1)}deg`);
+          s.style.setProperty('--dx', `${rnd(-50, 50).toFixed(0)}px`);
+          s.style.setProperty('--dy', `${rnd(-70, -25).toFixed(0)}px`);
+          // About 4 in 10 land in front of the text, the rest behind it
+          (Math.random() < 0.4 ? this.front : this.back).appendChild(s);
+          this.live.push(s);
+          while (this.live.length > 10) this.live.shift().remove();
+          setTimeout(() => s.classList.add('is-out'), 1900);
+          setTimeout(() => {
+            s.remove();
+            const k = this.live.indexOf(s);
+            if (k >= 0) this.live.splice(k, 1);
+          }, 2500);
+        }
+      }
+    );
+  }
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "OHF join the community",
+  "class": "ohf-join-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "kicker",
+      "default": "Community",
+      "label": "Small heading"
+    },
+    {
+      "type": "text",
+      "id": "title_1",
+      "default": "Join the",
+      "label": "Heading, first line"
+    },
+    {
+      "type": "text",
+      "id": "title_2",
+      "default": "Open Home crowd",
+      "label": "Heading, second line"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "default": "Forums, meetups, and a growing community of tinkerers.",
+      "label": "Text"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "default": "Join the community",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "info": "The button only shows when this is set."
+    },
+    {
+      "type": "checkbox",
+      "id": "button_new_tab",
+      "default": true,
+      "label": "Open the link in a new tab"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_stickers",
+      "default": true,
+      "label": "Stickers follow the pointer"
+    }
+  ],
+  "presets": [
+    {
+      "name": "OHF join the community"
+    }
+  ]
+}
+{% endschema %}

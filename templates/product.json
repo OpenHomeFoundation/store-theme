@@ -174,12 +174,26 @@
         "padding_top": 40,
         "padding_bottom": 52
       }
+    },
+    "ohf_join": {
+      "type": "ohf-join",
+      "settings": {
+        "kicker": "Community",
+        "title_1": "Join the",
+        "title_2": "Open Home crowd",
+        "text": "Forums, meetups, and a growing community of tinkerers.",
+        "button_label": "Join the community",
+        "button_link": "",
+        "button_new_tab": true,
+        "show_stickers": true
+      }
     }
   },
   "order": [
     "main",
     "disclosures",
     "related-products",
-    "cost_breakdown"
+    "cost_breakdown",
+    "ohf_join"
   ]
 }
