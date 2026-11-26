@@ -339,6 +339,22 @@
         </button>
         <span class="ohf-pdp__shared" role="status" data-share-status></span>
       </div>
+
+      {%- comment -%}
+        Product disclosures (safety and regulatory notes, the shopify.disclosure metafield) under the description,
+        so they're seen before adding to cart. Dawn's own snippet and script; OHF styles in ohf-product.css.
+      {%- endcomment -%}
+      {%- if section.settings.show_disclosures -%}
+        <div class="ohf-pdp__disclosures">
+          {%- render 'product-disclosures',
+            product: product,
+            heading: section.settings.disclosures_heading,
+            heading_size: '',
+            open_by_default: false,
+            surface: 'product_page'
+          -%}
+        </div>
+      {%- endif -%}
     </div>
   </div>
 
@@ -435,6 +451,8 @@
     { "type": "text", "id": "choose_msg", "label": "Message when no size is chosen", "default": "Choose a size first." },
     { "type": "text", "id": "guide_label", "label": "Size guide link", "default": "Size guide" },
     { "type": "text", "id": "share_label", "label": "Share link", "default": "Share" },
+    { "type": "checkbox", "id": "show_disclosures", "label": "Show product disclosures", "default": true, "info": "Safety and regulatory notes from the product's Disclosures (shopify.disclosure metafield), under the description. Only shown when a product has some." },
+    { "type": "text", "id": "disclosures_heading", "label": "Disclosures heading", "default": "Disclosures" },
     {
       "type": "text",
       "id": "worn_note",

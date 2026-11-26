@@ -9,17 +9,6 @@
  */
 {
   "sections": {
-    "disclosures": {
-      "type": "disclosures",
-      "settings": {
-        "heading": "Disclosures",
-        "heading_size": "h2",
-        "open_by_default": false,
-        "color_scheme": "",
-        "padding_top": 36,
-        "padding_bottom": 0
-      }
-    },
     "related-products": {
       "type": "related-products",
       "settings": {
@@ -129,7 +118,6 @@
   "order": [
     "ohf_main",
     "ohf_money",
-    "disclosures",
     "related-products",
     "ohf_join"
   ]
