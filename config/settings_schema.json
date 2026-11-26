@@ -167,8 +167,8 @@
         "type": "textarea",
         "id": "ohf_card_categories",
         "label": "Category names",
-        "default": "T-Shirt: T-Shirts & Polos\nPolo Shirt: T-Shirts & Polos\nHoodie: Sweatshirts\nCap: Hats\nBeanie: Hats\nSticker Pack: Stickers & paper\nCalendar: Stickers & paper\nTote Bag: Accessories\nSocks: Accessories",
-        "info": "One per line: product type, a colon, then the category name shown on cards. Types not listed show as they are."
+        "default": "T-Shirt: T-Shirts & Polos: t-shirts-polos\nPolo Shirt: T-Shirts & Polos: t-shirts-polos\nHoodie: Sweatshirts: hoodies\nCap: Hats: hats\nBeanie: Hats: hats\nSticker Pack: Stickers & paper: stickers\nCalendar: Stickers & paper: stickers\nTote Bag: Accessories: accessories\nSocks: Accessories: accessories",
+        "info": "One per line: product type, a colon, the category name shown on cards, then optionally another colon and the category's collection handle (used by the product page breadcrumb). Types not listed show as they are."
       },
       {
         "type": "text",

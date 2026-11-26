@@ -974,6 +974,21 @@
   margin-top: var(--s8);
 }
 
+.ohf-cart__view {
+  align-self: center;
+  padding: var(--s4);
+  font-family: var(--font-heading-family);
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--heading);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.ohf-cart__view:hover {
+  text-decoration-thickness: 2px;
+}
+
 
 @keyframes ohf-drop-in {
   from {

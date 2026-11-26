@@ -163,6 +163,12 @@
     margin-top: -1px;
     border-top: 1px solid var(--ohf-light-blue);
   }
+  /* The blue runs on from the Join section when that's the last section on the page. On any other page
+     (404, cart, policies, search, a page where Join was moved up…), the footer starts with its own blue band,
+     as wide as the one at its sides and bottom. */
+  body:not(:has(#MainContent > .shopify-section:last-child .ohf-join)) .ohf-footer {
+    padding-top: 20px;
+  }
   .ohf-footer__card {
     position: relative;
     max-width: 1400px;
