@@ -192,6 +192,27 @@
     ]
   },
   {
+    "name": "OHF cart",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "The cart dropdown under the header cart icon. It opens on hover or click, and for a few seconds after something is added."
+      },
+      {
+        "type": "image_picker",
+        "id": "ohf_cart_empty_image",
+        "label": "Empty cart image",
+        "info": "For example Casita holding an empty bag. Shown at 96px."
+      },
+      {
+        "type": "text",
+        "id": "ohf_cart_empty_text",
+        "label": "Empty cart message",
+        "default": "Your cart is emptier than a cloud server after the shutdown notice."
+      }
+    ]
+  },
+  {
     "name": "t:settings_schema.layout.name",
     "settings": [
       {
