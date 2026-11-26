@@ -48,14 +48,6 @@
 
       {%- if section.settings.newsletter_url != blank -%}
         <div class="ohf-footer__news">
-          <div>
-            {%- if section.settings.newsletter_heading != blank -%}
-              <p class="ohf-footer__head">{{ section.settings.newsletter_heading | escape }}</p>
-            {%- endif -%}
-            {%- if section.settings.newsletter_text != blank -%}
-              <p class="ohf-footer__news-text">{{ section.settings.newsletter_text | escape }}</p>
-            {%- endif -%}
-          </div>
           <a
             class="ohf-cta ohf-cta--fill"
             href="{{ section.settings.newsletter_url }}"
@@ -238,13 +230,6 @@
     flex-wrap: wrap;
     max-width: 640px;
   }
-  .ohf-footer__news .ohf-footer__head {
-    margin-bottom: var(--s4);
-  }
-  .ohf-footer__news-text {
-    margin: 0;
-    color: var(--body);
-  }
   .ohf-footer__cols {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -362,14 +347,25 @@
   .ohf-footer__region[open] .ohf-icon--chevron-down {
     rotate: 180deg;
   }
-  .ohf-footer__pop {
+  /* Opens upwards. The extra .ohf-footer in these selectors outranks the header's .ohf-pop rules
+     (ohf-header.css), which load later on the page and would otherwise push it down. */
+  .ohf-footer .ohf-footer__pop {
     top: auto;
     bottom: calc(100% + 8px);
     right: 0;
     z-index: 5;
+    animation: ohf-rise-in 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
-  .ohf-footer__pop::before {
+  .ohf-footer .ohf-footer__pop::before {
     display: none;
+  }
+  @keyframes ohf-rise-in {
+    from {
+      clip-path: inset(100% 0 0 0);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
   }
   @media (max-width: 900px) {
     .ohf-footer {
@@ -383,7 +379,7 @@
       grid-template-columns: 1fr 1fr;
       gap: var(--s32) var(--s24);
     }
-    .ohf-footer__pop {
+    .ohf-footer .ohf-footer__pop {
       right: auto;
       left: 0;
     }
@@ -394,7 +390,9 @@
       top: -80px;
       right: 16px;
     }
-    .ohf-footer__pop {
+    .ohf-footer .ohf-footer__pop {
+      top: auto;
+      bottom: calc(100% + 8px);
       width: min(300px, calc(100vw - 72px));
     }
   }
@@ -484,19 +482,8 @@
     },
     {
       "type": "text",
-      "id": "newsletter_heading",
-      "default": "Newsletter",
-      "label": "Heading"
-    },
-    {
-      "type": "text",
-      "id": "newsletter_text",
-      "label": "Text"
-    },
-    {
-      "type": "text",
       "id": "newsletter_button",
-      "default": "Subscribe",
+      "default": "Subscribe to our newsletter",
       "label": "Button label"
     },
     {
