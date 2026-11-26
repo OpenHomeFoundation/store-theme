@@ -1,14 +1,28 @@
 {
   "sections": {
     "main": {
-      "type": "main-page",
+      "type": "ohf-page",
       "settings": {
-        "padding_top": 28,
-        "padding_bottom": 28
+        "kicker": "",
+        "compact_bottom": false
+      }
+    },
+    "ohf_join": {
+      "type": "ohf-join",
+      "settings": {
+        "kicker": "Community",
+        "title_1": "Join the",
+        "title_2": "Open Home crowd",
+        "text": "Forums, meetups, and a growing community of tinkerers.",
+        "button_label": "Join the community",
+        "button_link": "https://community.home-assistant.io/",
+        "button_new_tab": true,
+        "show_stickers": true
       }
     }
   },
   "order": [
-    "main"
+    "main",
+    "ohf_join"
   ]
 }

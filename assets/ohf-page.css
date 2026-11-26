@@ -1,0 +1,191 @@
+/*
+ * OHF text pages (redesign 2026): About, Contact, Impressum and other pages (sections/ohf-page.liquid,
+ * sections/ohf-contact-form.liquid) and Shopify's policy pages (/policies/…), which Shopify renders itself
+ * inside .shopify-policy__container; layout/theme.liquid loads this file on those.
+ */
+.ohf-page {
+  padding-block: 72px 96px;
+}
+
+.ohf-page__head {
+  margin-bottom: 48px;
+}
+
+.ohf-page__title,
+.shopify-policy__title h1 {
+  margin: 0;
+  max-width: 900px;
+  font-family: var(--font-heading-family);
+  font-weight: 500;
+  font-size: clamp(4rem, 5.6vw, 7.2rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: var(--heading);
+  text-wrap: balance;
+}
+
+.ohf-page__lede {
+  margin: var(--s20) 0 0;
+  max-width: 640px;
+  font-size: 1.8rem;
+  line-height: 1.5;
+  color: var(--body);
+}
+
+/* Readable text column for page and policy content */
+.ohf-prose,
+.shopify-policy__body {
+  max-width: 720px;
+  font-size: 1.7rem;
+  line-height: 1.65;
+  color: var(--body);
+}
+
+.ohf-prose > * + *,
+.shopify-policy__body .rte > * + * {
+  margin-top: var(--s20);
+}
+
+.ohf-prose > :first-child,
+.shopify-policy__body .rte > :first-child {
+  margin-top: 0;
+}
+
+.ohf-prose h2,
+.ohf-prose h3,
+.ohf-prose h4,
+.shopify-policy__body h2,
+.shopify-policy__body h3,
+.shopify-policy__body h4 {
+  margin-top: 48px;
+  margin-bottom: 0;
+  font-family: var(--font-heading-family);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--heading);
+}
+
+.ohf-prose h2,
+.shopify-policy__body h2 {
+  font-size: clamp(2.6rem, 2.6vw, 3.4rem);
+}
+
+.ohf-prose h3,
+.shopify-policy__body h3 {
+  font-size: 2.2rem;
+}
+
+.ohf-prose h4,
+.shopify-policy__body h4 {
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.ohf-prose p,
+.shopify-policy__body p {
+  margin-bottom: 0;
+}
+
+.ohf-prose strong,
+.ohf-prose b,
+.shopify-policy__body strong {
+  font-weight: 600;
+  color: var(--heading);
+}
+
+.ohf-prose a,
+.shopify-policy__body a {
+  color: var(--heading);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+.ohf-prose a:hover,
+.shopify-policy__body a:hover {
+  text-decoration-thickness: 2px;
+}
+
+.ohf-prose ul,
+.ohf-prose ol,
+.shopify-policy__body ul,
+.shopify-policy__body ol {
+  padding-left: 2.4rem;
+}
+
+.ohf-prose li + li,
+.shopify-policy__body li + li {
+  margin-top: var(--s8);
+}
+
+.ohf-prose li::marker {
+  color: var(--ohf-light-blue);
+}
+
+.ohf-prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--r-xs);
+}
+
+.ohf-prose blockquote {
+  margin: 0;
+  padding-left: var(--s20);
+  border-left: 3px solid var(--ohf-light-blue);
+  font-family: var(--font-heading-family);
+  font-size: 2.2rem;
+  line-height: 1.35;
+  color: var(--heading);
+}
+
+.ohf-prose hr {
+  margin-block: 48px;
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
+.ohf-prose table,
+.shopify-policy__body table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1.5rem;
+}
+
+.ohf-prose th,
+.ohf-prose td,
+.shopify-policy__body th,
+.shopify-policy__body td {
+  padding: var(--s8) var(--s12) var(--s8) 0;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+/* Shopify's policy pages */
+.shopify-policy__container {
+  max-width: none !important;
+  margin: 0 auto !important;
+  padding: 72px var(--margin) 96px !important;
+  width: min(100%, var(--page-max));
+}
+
+.shopify-policy__title {
+  margin-bottom: 48px;
+  text-align: left !important;
+}
+
+@media (max-width: 640px) {
+  .ohf-page {
+    padding-block: 40px 72px;
+  }
+
+  .ohf-page__head,
+  .shopify-policy__title {
+    margin-bottom: 32px;
+  }
+
+  .shopify-policy__container {
+    padding-block: 40px 72px !important;
+  }
+}

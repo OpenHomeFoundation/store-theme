@@ -1,0 +1,61 @@
+{%- comment -%}
+  OHF page (redesign 2026): the page's title, big, then its content from Content › Pages in a readable column.
+  Used by the page templates (About, Impressum and any other page) and on top of the contact form.
+  Styles: assets/ohf-page.css (shared with Shopify's policy pages).
+{%- endcomment -%}
+{{ 'ohf-page.css' | asset_url | stylesheet_tag }}
+
+<div class="ohf-page{% if section.settings.compact_bottom %} ohf-page--compact{% endif %}">
+  <div class="ohf-wrap">
+    <header class="ohf-page__head">
+      {%- if section.settings.kicker != blank -%}
+        <p class="ohf-kicker">{{ section.settings.kicker | escape }}</p>
+      {%- endif -%}
+      <h1 class="ohf-page__title">{{ page.title | escape }}</h1>
+    </header>
+    {%- if page.content != blank -%}
+      <div class="ohf-prose">{{ page.content }}</div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .ohf-page--compact {
+    padding-bottom: 0;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "OHF page",
+  "tag": "section",
+  "class": "ohf-page-section",
+  "enabled_on": {
+    "templates": ["page"]
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "The title and content come from the page in Content › Pages."
+    },
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Small heading",
+      "info": "Optional, shown above the title."
+    },
+    {
+      "type": "checkbox",
+      "id": "compact_bottom",
+      "label": "No space below",
+      "default": false,
+      "info": "Use when another section (e.g. the contact form) follows straight on."
+    }
+  ],
+  "presets": [
+    {
+      "name": "OHF page"
+    }
+  ]
+}
+{% endschema %}
