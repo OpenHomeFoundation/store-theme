@@ -13,6 +13,7 @@
  * Phone menu: the menu button opens the light-blue panel.
  * Cart dropdown: <ohf-cart> (assets/ohf-cart.js) runs itself and calls closeOthers / syncScrim here.
  * One thing open at a time; a scrim dims the page behind.
+ * Scrolled: past 8px from the top the card gets .is-stuck (a soft shadow), so it lifts off the page.
  * Contrast: once the page has scrolled, the header checks what's behind its card. Where that's the same colour as
  * the card (beige on beige, or navy on navy with the lights off), the card fades to a contrasting surface
  * (.is-blend, styles in ohf-header.css). Photos and other colours leave it as it is.
@@ -363,8 +364,10 @@ if (!customElements.get('ohf-header')) {
         this.contrastFrame = null;
         if (!this.base) return;
         // At the very top the page is laid out around the header as designed
+        const stuck = window.scrollY > 8;
+        this.card.classList.toggle('is-stuck', stuck);
         let blend = false;
-        if (window.scrollY > 8) {
+        if (stuck) {
           const r = this.card.getBoundingClientRect();
           const y = r.top + r.height / 2;
           // Left, middle and right of the card: blend if any of them matches
