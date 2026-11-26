@@ -11,6 +11,7 @@
  *    blank frame. Hovering a link or column picks a photo matched to it (Dropdown photo blocks).
  * Region popover: the globe opens it (hover with a mouse, click or keyboard otherwise).
  * Phone menu: the menu button opens the light-blue panel.
+ * Cart dropdown: <ohf-cart> (assets/ohf-cart.js) runs itself and calls closeOthers / syncScrim here.
  * One thing open at a time; a scrim dims the page behind.
  */
 if (!customElements.get('ohf-header')) {
@@ -112,6 +113,7 @@ if (!customElements.get('ohf-header')) {
         if (!this.desktop.matches) return;
         clearTimeout(this.closeTimer);
         this.closeRegion();
+        this.closeCart();
         this.toggles.forEach((t) => {
           const p = this.panelFor(t);
           const on = t === toggle;
@@ -224,6 +226,7 @@ if (!customElements.get('ohf-header')) {
       openRegion() {
         this.closeSubs();
         this.closeMobile();
+        this.closeCart();
         this.regionPop.hidden = false;
         this.regionToggle.setAttribute('aria-expanded', 'true');
         this.regionPop.querySelector('[aria-current="true"]')?.scrollIntoView({ block: 'nearest' });
@@ -249,6 +252,7 @@ if (!customElements.get('ohf-header')) {
 
       openMobile() {
         this.closeRegion();
+        this.closeCart();
         this.mobile.hidden = false;
         this.menuToggle.setAttribute('aria-expanded', 'true');
         this.syncScrim();
@@ -269,6 +273,7 @@ if (!customElements.get('ohf-header')) {
           !!this.openToggle() ||
           (this.regionPop && !this.regionPop.hidden) ||
           (this.mobile && !this.mobile.hidden) ||
+          !!this.cartEl?.isOpen ||
           !!this.searchDetails?.open;
         this.scrim.hidden = !anyOpen;
       }
@@ -285,12 +290,31 @@ if (!customElements.get('ohf-header')) {
             this.closeSubs();
             this.closeRegion();
             this.closeMobile();
+            this.closeCart();
           }
           this.syncScrim();
         });
       }
 
       closeAll() {
+        this.closeSubs();
+        this.closeRegion();
+        this.closeMobile();
+        this.closeCart();
+      }
+
+      /* ---------- Cart dropdown (assets/ohf-cart.js) ---------- */
+
+      get cartEl() {
+        return this.querySelector('ohf-cart');
+      }
+
+      closeCart() {
+        this.cartEl?.close?.();
+      }
+
+      // Called by the cart when it opens: one thing open at a time
+      closeOthers() {
         this.closeSubs();
         this.closeRegion();
         this.closeMobile();

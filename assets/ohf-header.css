@@ -670,6 +670,311 @@
   box-shadow: 0 12px 40px rgba(9, 32, 46, 0.16);
 }
 
+/* Cart dropdown (assets/ohf-cart.js, snippets/ohf-cart-body.liquid): sits under the cart icon like the region list */
+.ohf-nav__cartmenu {
+  position: relative;
+  display: grid;
+}
+
+.ohf-nav__cart[aria-expanded='true'] {
+  color: var(--ohf-light-blue);
+}
+
+.ohf-cart {
+  position: absolute;
+  top: calc(100% + 26px);
+  right: -12px;
+  z-index: 3;
+  width: 400px;
+  max-height: min(600px, calc(100vh - 140px));
+  display: none;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--heading);
+  border-radius: var(--r-xs);
+  box-shadow: 0 12px 40px rgba(9, 32, 46, 0.16);
+  text-align: left;
+}
+
+.ohf-cart.is-open {
+  display: flex;
+  animation: ohf-drop-in 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Invisible bridge so the pointer can travel from the icon to the dropdown */
+.ohf-cart::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100%;
+  height: 28px;
+}
+
+.ohf-cart__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--s8) var(--s8) var(--s8) var(--s16);
+  border-bottom: 1px solid var(--line);
+}
+
+.ohf-cart__head h2 {
+  margin: 0;
+  font-family: var(--font-heading-family);
+  font-weight: 700;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--body);
+}
+
+.ohf-cart__close,
+.ohf-cart__remove {
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--body);
+  cursor: pointer;
+}
+
+.ohf-cart__close {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-xs);
+}
+
+.ohf-cart__remove {
+  width: 24px;
+  height: 24px;
+  flex: none;
+}
+
+.ohf-cart__close:hover,
+.ohf-cart__remove:hover {
+  color: var(--heading);
+}
+
+.ohf-cart__close:focus-visible,
+.ohf-cart__remove:focus-visible,
+.ohf-cart__step:focus-visible {
+  outline: 3px solid var(--cta-focus);
+  outline-offset: 1px;
+}
+
+.ohf-cart__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.ohf-cart__list {
+  list-style: none;
+  margin: 0;
+  padding: 0 var(--s16);
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.ohf-cart__row {
+  display: flex;
+  gap: var(--s12);
+  align-items: stretch;
+  padding: var(--s12) 0;
+  border-bottom: 1px solid var(--line);
+  transition: opacity var(--dur-ui) var(--ease);
+}
+
+.ohf-cart__row:last-child {
+  border-bottom: 0;
+}
+
+.ohf-cart__row.is-busy {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.ohf-cart__img {
+  flex: none;
+  width: 72px;
+  height: 72px;
+  border-radius: var(--r-xs);
+  overflow: hidden;
+  background: var(--ohf-light-grey);
+  box-shadow: inset 0 0 0 1px rgba(9, 32, 46, 0.08);
+}
+
+.ohf-cart__img img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ohf-cart__info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--s4);
+}
+
+.ohf-cart__top,
+.ohf-cart__bottom {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s8);
+}
+
+.ohf-cart__bottom {
+  align-items: center;
+}
+
+.ohf-cart__name {
+  margin: 0;
+  font-family: var(--font-heading-family);
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+
+.ohf-cart__name a {
+  color: var(--heading);
+  text-decoration: none;
+}
+
+.ohf-cart__name a:hover {
+  text-decoration: underline;
+}
+
+.ohf-cart__variant {
+  margin: 0;
+  font-family: var(--font-heading-family);
+  font-size: 1.2rem;
+  color: var(--body);
+}
+
+.ohf-cart__price {
+  margin: 0;
+  font-family: var(--font-heading-family);
+  font-weight: 600;
+  font-size: 2rem;
+  letter-spacing: -0.02em;
+  color: var(--heading);
+}
+
+.ohf-cart__price s {
+  margin-right: var(--s6);
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: var(--body);
+}
+
+.ohf-cart__counter {
+  display: flex;
+  align-items: center;
+  gap: var(--s12);
+}
+
+.ohf-cart__step {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--ohf-light-blue);
+  border-radius: var(--r-full);
+  background: var(--bg);
+  color: var(--heading);
+  cursor: pointer;
+  transition: background-color var(--dur-ui) var(--ease), border-color var(--dur-ui) var(--ease);
+}
+
+.ohf-cart__step:hover {
+  background: var(--privacy-main);
+  border-color: var(--privacy-main);
+  color: var(--ohf-dark-blue);
+}
+
+.ohf-cart__n {
+  min-width: 12px;
+  font-family: var(--font-heading-family);
+  font-weight: 700;
+  font-size: 1.4rem;
+  text-align: center;
+}
+
+.ohf-cart__empty {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s12);
+  padding: var(--s24) var(--s16);
+  text-align: center;
+  font-size: 1.4rem;
+  color: var(--body);
+}
+
+.ohf-cart__empty p {
+  margin: 0;
+}
+
+.ohf-cart__empty img {
+  width: 96px;
+  height: auto;
+}
+
+.ohf-cart__body.is-empty .ohf-cart__empty {
+  display: flex;
+}
+
+.ohf-cart__error {
+  margin: 0 var(--s16) var(--s8);
+  font-size: 1.3rem;
+  color: #c41e3a;
+}
+
+.ohf-cart__foot {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s8);
+  padding: var(--s16);
+  border-top: 1px solid var(--line);
+}
+
+.ohf-cart__total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin: 0;
+  font-family: var(--font-heading-family);
+  font-size: 1.6rem;
+  color: var(--heading);
+}
+
+.ohf-cart__total strong {
+  font-size: 2rem;
+}
+
+.ohf-cart__fine {
+  margin: 0;
+  font-size: 1.2rem;
+  color: var(--body);
+}
+
+.ohf-cart__checkout {
+  width: 100%;
+  margin-top: var(--s8);
+}
+
+
 @keyframes ohf-drop-in {
   from {
     clip-path: inset(0 0 100% 0);
@@ -719,6 +1024,18 @@
     gap: var(--s8);
   }
 
+  /* Cart dropdown spans the nav card */
+  .ohf-nav__cartmenu {
+    position: static;
+  }
+
+  .ohf-cart {
+    top: calc(100% + 8px);
+    right: 0;
+    width: 100%;
+    max-height: calc(100vh - 100px);
+  }
+
   /* Region and lights live in the phone menu instead (.ohf-mobile__extra) */
   .ohf-nav__region,
   .ohf-nav__lights {
@@ -752,6 +1069,7 @@
 @media (prefers-reduced-motion: reduce) {
   .ohf-sub,
   .ohf-pop,
+  .ohf-cart.is-open,
   .ohf-mobile,
   .ohf-scrim {
     animation: none;

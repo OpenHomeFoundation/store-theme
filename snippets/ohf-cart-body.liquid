@@ -1,0 +1,133 @@
+{%- comment -%}
+  Contents of the header cart dropdown: line items, empty state, subtotal and Check out.
+  Rendered inside <ohf-cart> by the OHF header, and by sections/ohf-cart-drawer.liquid, which the cart scripts
+  re-render through Shopify's Section Rendering API after every change (assets/ohf-cart.js).
+  Shopify's own cart: quantities change through /cart/change.js, Check out posts to /cart like Dawn's cart page.
+{%- endcomment -%}
+<div class="ohf-cart__body{% if cart == empty %} is-empty{% endif %}" data-ohf-cart-body data-count="{{ cart.item_count }}">
+  {%- if cart != empty -%}
+    <ul class="ohf-cart__list" role="list" aria-label="{{ 'sections.cart.caption' | t }}">
+      {%- for item in cart.items -%}
+        <li class="ohf-cart__row" data-line="{{ forloop.index }}">
+          <a class="ohf-cart__img" href="{{ item.url }}" tabindex="-1" aria-hidden="true">
+            {%- if item.image -%}
+              {{
+                item.image
+                | image_url: width: 192
+                | image_tag: width: 72, height: 72, loading: 'lazy', alt: '', sizes: '72px', widths: '96, 144, 192'
+              }}
+            {%- endif -%}
+          </a>
+          <div class="ohf-cart__info">
+            <div class="ohf-cart__top">
+              <h3 class="ohf-cart__name">
+                <a href="{{ item.url }}">{{ item.product.title | escape }}</a>
+              </h3>
+              <button
+                class="ohf-cart__remove"
+                type="button"
+                data-ohf-cart-qty="0"
+                aria-label="{{ 'sections.cart.remove_title' | t: title: item.title | escape }}"
+              >
+                {%- render 'ohf-icon', icon: 'close', size: 20 -%}
+              </button>
+            </div>
+            {%- unless item.product.has_only_default_variant -%}
+              <p class="ohf-cart__variant">
+                {%- for option in item.options_with_values -%}
+                  {{ option.value | escape }}
+                  {%- unless forloop.last %} · {% endunless -%}
+                {%- endfor -%}
+              </p>
+            {%- endunless -%}
+            {%- if item.selling_plan_allocation -%}
+              <p class="ohf-cart__variant">{{ item.selling_plan_allocation.selling_plan.name | escape }}</p>
+            {%- endif -%}
+            {%- for discount in item.line_level_discount_allocations -%}
+              <p class="ohf-cart__variant ohf-cart__discount">{{ discount.discount_application.title | escape }}</p>
+            {%- endfor -%}
+            <div class="ohf-cart__bottom">
+              <p class="ohf-cart__price">
+                {%- if item.original_line_price != item.final_line_price -%}
+                  <s>{{ item.original_line_price | money }}</s>
+                {%- endif -%}
+                {{ item.final_line_price | money }}
+              </p>
+              <div class="ohf-cart__counter">
+                <button
+                  class="ohf-cart__step"
+                  type="button"
+                  data-ohf-cart-qty="{{ item.quantity | minus: 1 }}"
+                  aria-label="{{ 'products.product.quantity.decrease' | t: product: item.product.title | escape }}"
+                >
+                  {%- render 'ohf-icon', icon: 'minus', size: 18 -%}
+                </button>
+                <span class="ohf-cart__n" aria-label="{{ 'products.product.quantity.label' | t }}: {{ item.quantity }}">
+                  {{- item.quantity -}}
+                </span>
+                <button
+                  class="ohf-cart__step"
+                  type="button"
+                  data-ohf-cart-qty="{{ item.quantity | plus: 1 }}"
+                  aria-label="{{ 'products.product.quantity.increase' | t: product: item.product.title | escape }}"
+                >
+                  {%- render 'ohf-icon', icon: 'plus', size: 18 -%}
+                </button>
+              </div>
+            </div>
+          </div>
+        </li>
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+
+  <div class="ohf-cart__empty">
+    {%- if settings.ohf_cart_empty_image -%}
+      {{
+        settings.ohf_cart_empty_image
+        | image_url: width: 192
+        | image_tag: width: 96, height: 96, loading: 'lazy', alt: '', sizes: '96px', widths: '96, 192'
+      }}
+    {%- endif -%}
+    <p>
+      {%- if settings.ohf_cart_empty_text != blank -%}
+        {{ settings.ohf_cart_empty_text | escape }}
+      {%- else -%}
+        {{ 'sections.cart.empty' | t }}
+      {%- endif -%}
+    </p>
+  </div>
+
+  <p class="ohf-cart__error" role="alert" hidden data-ohf-cart-error></p>
+
+  {%- if cart != empty -%}
+    <form class="ohf-cart__foot" action="{{ routes.cart_url }}" method="post">
+      {%- for discount in cart.cart_level_discount_applications -%}
+        <p class="ohf-cart__fine ohf-cart__discount">
+          {{ discount.title | escape }} (−{{ discount.total_allocated_amount | money }})
+        </p>
+      {%- endfor -%}
+      <p class="ohf-cart__total">
+        <span>Subtotal</span>
+        <strong>{{ cart.total_price | money }}</strong>
+      </p>
+      <p class="ohf-cart__fine">
+        {%- liquid
+          if cart.duties_included and cart.taxes_included
+            echo 'sections.cart.duties_and_taxes_included_shipping_at_checkout_without_policy' | t
+          elsif cart.taxes_included
+            echo 'sections.cart.taxes_included_shipping_at_checkout_without_policy' | t
+          elsif cart.duties_included
+            echo 'sections.cart.duties_included_taxes_at_checkout_shipping_at_checkout_without_policy' | t
+          else
+            echo 'sections.cart.taxes_at_checkout_shipping_at_checkout_without_policy' | t
+          endif
+        -%}
+      </p>
+      <button class="ohf-cta ohf-cta--fill ohf-cart__checkout" type="submit" name="checkout">
+        <span>{{ 'sections.cart.checkout' | t }}</span>
+        {%- render 'ohf-icon', icon: 'arrow-right', size: 18 -%}
+      </button>
+    </form>
+  {%- endif -%}
+</div>

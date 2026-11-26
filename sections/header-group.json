@@ -40,8 +40,7 @@
         "new_label_text": "New",
         "show_search": true,
         "enable_country_selector": true,
-        "show_lights": true,
-        "color_scheme": "scheme-1"
+        "show_lights": true
       }
     }
   },

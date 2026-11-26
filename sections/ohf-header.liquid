@@ -3,7 +3,9 @@
   - Logo (light/dark), top-level menu links, cart, search, country/region, lights switch, phone menu button.
   - Menu items with children open a dropdown panel: photos on the left (crossfading, from the Photo blocks),
     big links on the right. Children that have their own children become columns (e.g. Categories / Projects).
-  - Built on Shopify and Dawn pieces: the cart link keeps Dawn's #cart-icon-bubble and add-to-cart pop-up,
+  - Cart: a dropdown under the cart icon (as in the concept) on Shopify's own cart; contents in
+    snippets/ohf-cart-body.liquid, behaviour in assets/ohf-cart.js. The theme setting Cart type = Page turns it off.
+  - Built on Shopify and Dawn pieces: the cart link keeps Dawn's #cart-icon-bubble,
     search is Dawn's predictive search modal, and the region list submits Shopify's localization form.
   - No account link (redesign decision g03).
   Behaviour lives in assets/ohf-header.js, styles in assets/ohf-header.css.
@@ -12,20 +14,13 @@
 {{ 'ohf-header.css' | asset_url | stylesheet_tag }}
 {{ 'ohf-search.css' | asset_url | stylesheet_tag }}
 <link rel="stylesheet" href="{{ 'component-search.css' | asset_url }}" media="print" onload="this.media='all'">
-<link
-  rel="stylesheet"
-  href="{{ 'component-cart-notification.css' | asset_url }}"
-  media="print"
-  onload="this.media='all'"
->
 {%- if settings.predictive_search_enabled -%}
   <link rel="stylesheet" href="{{ 'component-price.css' | asset_url }}" media="print" onload="this.media='all'">
 {%- endif -%}
 <script src="{{ 'ohf-header.js' | asset_url }}" defer="defer"></script>
-{%- comment -%} Dawn's add-to-cart pop-up (was loaded by Dawn's header) {%- endcomment -%}
-{%- if settings.cart_type == 'notification' -%}
-  <script src="{{ 'cart-notification.js' | asset_url }}" defer="defer"></script>
-{%- endif -%}
+{%- unless settings.cart_type == 'page' -%}
+  <script src="{{ 'ohf-cart.js' | asset_url }}" defer="defer"></script>
+{%- endunless -%}
 
 {%- liquid
   assign menu = section.settings.menu
@@ -79,9 +74,29 @@
     </nav>
 
     <div class="ohf-nav__actions">
-      <a href="{{ routes.cart_url }}" class="ohf-nav__icon ohf-nav__cart" id="cart-icon-bubble">
-        {%- render 'ohf-cart-bubble' -%}
-      </a>
+      <div class="ohf-nav__cartmenu" data-ohf-cart-menu>
+        <a
+          href="{{ routes.cart_url }}"
+          class="ohf-nav__icon ohf-nav__cart"
+          id="cart-icon-bubble"
+          {% unless settings.cart_type == 'page' %}
+            aria-expanded="false" aria-controls="OhfCart"
+          {% endunless %}
+        >
+          {%- render 'ohf-cart-bubble' -%}
+        </a>
+        {%- unless settings.cart_type == 'page' -%}
+          <ohf-cart class="ohf-cart" id="OhfCart" role="dialog" aria-label="{{ 'sections.cart.title' | t }}" aria-hidden="true">
+            <div class="ohf-cart__head">
+              <h2>{{ 'sections.cart.title' | t }}</h2>
+              <button type="button" class="ohf-cart__close" aria-label="{{ 'accessibility.close' | t }}" data-ohf-cart-close>
+                {%- render 'ohf-icon', icon: 'close', size: 20 -%}
+              </button>
+            </div>
+            {%- render 'ohf-cart-body' -%}
+          </ohf-cart>
+        {%- endunless -%}
+      </div>
 
       {%- if section.settings.show_search -%}
         <div class="ohf-nav__search">
@@ -311,9 +326,6 @@
     {%- endif -%}
   </nav>
 
-  {%- if settings.cart_type == 'notification' -%}
-    {%- render 'cart-notification', color_scheme: section.settings.color_scheme, desktop_menu_type: 'dropdown' -%}
-  {%- endif -%}
 </ohf-header>
 
 <div class="ohf-scrim" hidden data-ohf-scrim></div>
@@ -406,12 +418,6 @@
       "id": "show_lights",
       "default": true,
       "label": "Show lights-off switch"
-    },
-    {
-      "type": "color_scheme",
-      "id": "color_scheme",
-      "label": "Add-to-cart pop-up colour scheme",
-      "default": "scheme-1"
     }
   ],
   "blocks": [
