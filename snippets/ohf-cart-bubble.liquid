@@ -1,0 +1,13 @@
+{%- comment -%}
+  Inside of the header cart link (#cart-icon-bubble): icon plus item count.
+  Also output by sections/cart-icon-bubble.liquid, which Dawn's cart scripts re-render after an add to cart,
+  so both places must stay identical.
+{%- endcomment -%}
+{%- render 'ohf-icon', icon: 'cart' -%}
+<span class="visually-hidden">{{ 'templates.cart.cart' | t }}</span>
+{%- if cart != empty -%}
+  <span class="ohf-nav__count" aria-hidden="true">
+    {%- if cart.item_count < 100 -%}{{ cart.item_count }}{%- else -%}99+{%- endif -%}
+  </span>
+  <span class="visually-hidden">{{ 'sections.header.cart_count' | t: count: cart.item_count }}</span>
+{%- endif -%}

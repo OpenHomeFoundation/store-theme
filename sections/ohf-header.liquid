@@ -1,0 +1,346 @@
+{%- comment -%}
+  OHF header (redesign 2026): a floating card nav.
+  - Logo (light/dark), top-level menu links, cart, search, country/region, lights switch, phone menu button.
+  - Menu items with children open a dropdown panel: photos on the left (crossfading, from the Photo blocks),
+    big links on the right. Children that have their own children become columns (e.g. Categories / Projects).
+  - Built on Shopify and Dawn pieces: the cart link keeps Dawn's #cart-icon-bubble and add-to-cart pop-up,
+    search is Dawn's predictive search modal, and the region list submits Shopify's localization form.
+  - No account link (redesign decision g03).
+  Behaviour lives in assets/ohf-header.js, styles in assets/ohf-header.css.
+{%- endcomment -%}
+
+{{ 'ohf-header.css' | asset_url | stylesheet_tag }}
+<link rel="stylesheet" href="{{ 'component-search.css' | asset_url }}" media="print" onload="this.media='all'">
+<link
+  rel="stylesheet"
+  href="{{ 'component-cart-notification.css' | asset_url }}"
+  media="print"
+  onload="this.media='all'"
+>
+{%- if settings.predictive_search_enabled -%}
+  <link rel="stylesheet" href="{{ 'component-price.css' | asset_url }}" media="print" onload="this.media='all'">
+{%- endif -%}
+<script src="{{ 'ohf-header.js' | asset_url }}" defer="defer"></script>
+
+{%- liquid
+  assign menu = section.settings.menu
+  if menu == blank or menu.links.size == 0
+    assign menu = linklists['main-menu']
+  endif
+
+  assign show_region = false
+  if section.settings.enable_country_selector and localization.available_countries.size > 1
+    assign show_region = true
+  endif
+
+  assign photo_blocks = section.blocks | where: 'type', 'photo'
+  assign new_match = section.settings.new_label_match | strip | downcase
+-%}
+
+<ohf-header class="ohf-nav" data-ohf-nav>
+  <div class="ohf-nav__card">
+    <a class="ohf-nav__logo" href="{{ routes.root_url }}">
+      {%- render 'ohf-logo' -%}
+      <span class="visually-hidden">{{ shop.name }}</span>
+    </a>
+
+    <nav class="ohf-nav__links" aria-label="{{ 'sections.header.menu' | t }}">
+      {%- for link in menu.links -%}
+        {%- if link.links != blank -%}
+          <a
+            class="ohf-nav__top"
+            href="{{ link.url }}"
+            aria-expanded="false"
+            aria-controls="OhfSub-{{ section.id }}-{{ forloop.index }}"
+            data-ohf-sub-toggle="{{ forloop.index }}"
+            {% if link.current %}
+              aria-current="page"
+            {% endif %}
+          >
+            {{- link.title | escape -}}
+          </a>
+        {%- else -%}
+          <a
+            class="ohf-nav__top"
+            href="{{ link.url }}"
+            {% if link.current %}
+              aria-current="page"
+            {% endif %}
+          >
+            {{- link.title | escape -}}
+          </a>
+        {%- endif -%}
+      {%- endfor -%}
+    </nav>
+
+    <div class="ohf-nav__actions">
+      <a href="{{ routes.cart_url }}" class="ohf-nav__icon ohf-nav__cart" id="cart-icon-bubble">
+        {%- render 'ohf-cart-bubble' -%}
+      </a>
+
+      {%- if section.settings.show_search -%}
+        <div class="ohf-nav__search">
+          {%- render 'header-search', input_id: 'Search-In-Modal' -%}
+        </div>
+      {%- endif -%}
+
+      {%- if show_region -%}
+        <div class="ohf-nav__region" data-ohf-region-menu>
+          <button
+            class="ohf-nav__icon ohf-nav__globe"
+            type="button"
+            aria-expanded="false"
+            aria-controls="OhfRegionPop-{{ section.id }}"
+            aria-label="{{ 'localization.country_label' | t }}: {{ localization.country.name | escape }} ({{ localization.country.currency.iso_code }} {{ localization.country.currency.symbol }})"
+            data-ohf-region-toggle
+          >
+            {%- render 'ohf-icon', icon: 'globe' -%}
+          </button>
+          <div class="ohf-pop" id="OhfRegionPop-{{ section.id }}" hidden data-ohf-region-pop>
+            {%- render 'ohf-region-list', id: 'OhfHeaderRegion' -%}
+          </div>
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.show_lights -%}
+        <button
+          class="ohf-nav__icon ohf-nav__lights"
+          type="button"
+          aria-pressed="false"
+          aria-label="Turn the lights off"
+          data-label-off="Turn the lights off"
+          data-label-on="Turn the lights on"
+          data-lights-toggle
+        >
+          <span class="ohf-bulb-on">{% render 'ohf-icon', icon: 'bulb-on' %}</span>
+          <span class="ohf-bulb-off">{% render 'ohf-icon', icon: 'bulb-off' %}</span>
+        </button>
+      {%- endif -%}
+
+      <button
+        class="ohf-nav__icon ohf-nav__menu"
+        type="button"
+        aria-expanded="false"
+        aria-controls="OhfMobileMenu-{{ section.id }}"
+        aria-label="{{ 'sections.header.menu' | t }}"
+        data-ohf-menu-toggle
+      >
+        <span class="ohf-nav__menu-open">{% render 'ohf-icon', icon: 'menu', size: 24 %}</span>
+        <span class="ohf-nav__menu-close">{% render 'ohf-icon', icon: 'close', size: 24 %}</span>
+      </button>
+    </div>
+  </div>
+
+  {%- comment -%} Desktop dropdown panels, one per menu item with children {%- endcomment -%}
+  {%- for link in menu.links -%}
+    {%- if link.links != blank -%}
+      {%- liquid
+        assign has_cols = false
+        for child in link.links
+          if child.links != blank
+            assign has_cols = true
+          endif
+        endfor
+      -%}
+      <div
+        class="ohf-sub{% if photo_blocks.size == 0 %} ohf-sub--nophoto{% endif %}"
+        id="OhfSub-{{ section.id }}-{{ forloop.index }}"
+        data-ohf-sub="{{ forloop.index }}"
+        hidden
+      >
+        {%- if photo_blocks.size > 0 -%}
+          {%- capture photos_json -%}
+            [
+            {%- for block in photo_blocks -%}
+              {%- if block.settings.image != blank -%}
+                {"src":{{ block.settings.image | image_url: width: 1200 | json }},"key":{{ block.settings.match | handleize | json }}}
+                {%- unless forloop.last -%},{%- endunless -%}
+              {%- endif -%}
+            {%- endfor -%}
+            ]
+          {%- endcapture -%}
+          <div class="ohf-sub__photo" data-ohf-photos="{{ photos_json | strip | escape }}" aria-hidden="true">
+            <img class="is-on" alt="" width="1200" height="800" data-ohf-img>
+            <img alt="" width="1200" height="800" data-ohf-img>
+          </div>
+        {%- endif -%}
+
+        <div class="ohf-sub__menu{% if has_cols %} ohf-sub__menu--cols{% endif %}">
+          {%- if has_cols -%}
+            {%- for child in link.links -%}
+              <div class="ohf-sub__col" data-ohf-photo-key="{{ child.title | handleize }}">
+                <p class="ohf-sub__head">{{ child.title | escape }}</p>
+                {%- if child.links != blank -%}
+                  <ul role="list">
+                    {%- for grandchild in child.links -%}
+                      <li>
+                        <a href="{{ grandchild.url }}" data-ohf-photo-key="{{ grandchild.title | handleize }}">
+                          {{- grandchild.title | escape -}}
+                          {%- assign item_title = grandchild.title | downcase -%}
+                          {%- if new_match != blank and item_title == new_match -%}
+                            <span class="ohf-label ohf-label--new">{{ section.settings.new_label_text | escape }}</span>
+                          {%- endif -%}
+                        </a>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                {%- else -%}
+                  <ul role="list">
+                    <li><a href="{{ child.url }}">{{ child.title | escape }}</a></li>
+                  </ul>
+                {%- endif -%}
+              </div>
+            {%- endfor -%}
+          {%- else -%}
+            <ul role="list">
+              {%- for child in link.links -%}
+                <li>
+                  <a href="{{ child.url }}" data-ohf-photo-key="{{ child.title | handleize }}">
+                    {{- child.title | escape -}}
+                    {%- assign item_title = child.title | downcase -%}
+                    {%- if new_match != blank and item_title == new_match -%}
+                      <span class="ohf-label ohf-label--new">{{ section.settings.new_label_text | escape }}</span>
+                    {%- endif -%}
+                  </a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+  {%- endfor -%}
+
+  {%- comment -%} Phone and tablet menu: top links, with child groups as expandable sections {%- endcomment -%}
+  <nav
+    class="ohf-mobile"
+    id="OhfMobileMenu-{{ section.id }}"
+    aria-label="{{ 'sections.header.menu' | t }}"
+    hidden
+    data-ohf-mobile
+  >
+    {%- for link in menu.links -%}
+      {%- if link.links != blank -%}
+        <details class="ohf-mobile__group">
+          <summary class="ohf-mobile__top">
+            {{- link.title | escape -}}
+            {%- render 'ohf-icon', icon: 'chevron-down', size: 28 -%}
+          </summary>
+          <div class="ohf-mobile__body">
+            <a class="ohf-mobile__all" href="{{ link.url }}">
+              {{- link.title | escape }}
+              {% render 'ohf-icon', icon: 'arrow-right', size: 18 -%}
+            </a>
+            {%- for child in link.links -%}
+              {%- if child.links != blank -%}
+                <p class="ohf-mobile__head">{{ child.title | escape }}</p>
+                <ul role="list">
+                  {%- for grandchild in child.links -%}
+                    <li>
+                      <a href="{{ grandchild.url }}">
+                        {{- grandchild.title | escape -}}
+                        {%- assign item_title = grandchild.title | downcase -%}
+                        {%- if new_match != blank and item_title == new_match -%}
+                          <span class="ohf-label ohf-label--new">{{ section.settings.new_label_text | escape }}</span>
+                        {%- endif -%}
+                      </a>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              {%- else -%}
+                <ul role="list">
+                  <li><a href="{{ child.url }}">{{ child.title | escape }}</a></li>
+                </ul>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        </details>
+      {%- else -%}
+        <a class="ohf-mobile__top" href="{{ link.url }}">{{ link.title | escape }}</a>
+      {%- endif -%}
+    {%- endfor -%}
+  </nav>
+
+  {%- if settings.cart_type == 'notification' -%}
+    {%- render 'cart-notification', color_scheme: section.settings.color_scheme, desktop_menu_type: 'dropdown' -%}
+  {%- endif -%}
+</ohf-header>
+
+<div class="ohf-scrim" hidden data-ohf-scrim></div>
+
+{% schema %}
+{
+  "name": "OHF header",
+  "class": "ohf-header-section",
+  "enabled_on": {
+    "groups": ["header"]
+  },
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "default": "main-menu",
+      "label": "Menu",
+      "info": "Items with children open the dropdown panel. Children with their own children become columns (e.g. Categories, Projects). Falls back to the main menu when empty."
+    },
+    {
+      "type": "text",
+      "id": "new_label_match",
+      "default": "New collection",
+      "label": "Menu item that gets a label",
+      "info": "Exact title of the menu item to mark, e.g. New collection. Leave empty for no label."
+    },
+    {
+      "type": "text",
+      "id": "new_label_text",
+      "default": "New",
+      "label": "Label text"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_search",
+      "default": true,
+      "label": "Show search"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_country_selector",
+      "default": true,
+      "label": "Show country/region selector",
+      "info": "Lists the countries set up in Settings › Markets."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_lights",
+      "default": true,
+      "label": "Show lights-off switch"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Add-to-cart pop-up colour scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "photo",
+      "name": "Dropdown photo",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Photo",
+          "info": "Landscape works best. Photos crossfade on the left of the dropdown."
+        },
+        {
+          "type": "text",
+          "id": "match",
+          "label": "Show for menu item",
+          "info": "Title of the menu item or column this photo belongs to (e.g. Sweatshirts or Projects). Leave empty to use it for any item."
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
