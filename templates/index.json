@@ -9,34 +9,6 @@
  */
 {
   "sections": {
-    "featured_collection": {
-      "type": "featured-collection",
-      "settings": {
-        "collection": "all",
-        "products_to_show": 25,
-        "title": "",
-        "heading_size": "h2",
-        "description": "",
-        "show_description": false,
-        "description_style": "body",
-        "columns_desktop": 4,
-        "enable_desktop_slider": false,
-        "full_width": false,
-        "show_view_all": true,
-        "view_all_style": "solid",
-        "color_scheme": "scheme-1",
-        "image_ratio": "portrait",
-        "image_shape": "default",
-        "show_secondary_image": true,
-        "show_vendor": false,
-        "show_rating": false,
-        "quick_add": "none",
-        "columns_mobile": "2",
-        "swipe_on_mobile": false,
-        "padding_top": 44,
-        "padding_bottom": 36
-      }
-    },
     "ohf_join": {
       "type": "ohf-join",
       "settings": {
@@ -66,11 +38,42 @@
         "size": "home",
         "pin": true
       }
+    },
+    "ohf_new_collection": {
+      "type": "ohf-product-rail",
+      "settings": {
+        "collection": "frontpage",
+        "products_to_show": 7,
+        "kicker": "New collection",
+        "heading": "New collection name",
+        "layout": "art",
+        "art_alt": "Collage of the new collection: a newspaper headline reading “Local resistance grows”, hoodies, a T-shirt and the 2027 calendar, with cut-out letters spelling New collection out now",
+        "background": "#E5DAC8",
+        "show_view_all": true,
+        "view_all_text": "View all",
+        "view_all_sub": "[count] new products",
+        "view_all_color": "#E5846A"
+      }
+    },
+    "ohf_best_sellers": {
+      "type": "ohf-product-rail",
+      "settings": {
+        "collection": "all",
+        "products_to_show": 8,
+        "kicker": "The classics",
+        "heading": "Wear the mission",
+        "layout": "full",
+        "show_view_all": true,
+        "view_all_text": "View all",
+        "view_all_sub": "[count] products",
+        "view_all_color": "#18BCF2"
+      }
     }
   },
   "order": [
     "ohf_hero",
-    "featured_collection",
+    "ohf_new_collection",
+    "ohf_best_sellers",
     "ohf_join"
   ]
 }
