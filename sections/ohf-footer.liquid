@@ -1,0 +1,555 @@
+{%- comment -%}
+  OHF footer (redesign 2026): a paper card on a light-blue band.
+  - Logo, plus a newsletter call to action linking to the OHF newsletter portal (decision g07: no Shopify form).
+  - Link columns from a menu: each top-level item is a column heading, its children the links. A flat menu
+    becomes one column. A second menu feeds the "Follow us" column.
+  - © line with Shopify's powered-by link, store policy links, the privacy-first analytics notice.
+  - Country/region picker (same list as the header, Shopify's localization form), opening upwards.
+  - Optional mascot image (Casita) sitting on the card.
+  - No account link (decision g03).
+{%- endcomment -%}
+{%- liquid
+  assign menu = section.settings.menu
+  if menu == blank or menu.links.size == 0
+    assign menu = linklists['footer']
+  endif
+  assign has_cols = false
+  for link in menu.links
+    if link.links != blank
+      assign has_cols = true
+    endif
+  endfor
+  assign social = section.settings.social_menu
+  assign new_match = section.settings.new_label_match | strip | downcase
+
+  assign show_region = false
+  if section.settings.enable_country_selector and localization.available_countries.size > 1
+    assign show_region = true
+  endif
+-%}
+
+<footer class="ohf-footer">
+  <div class="ohf-footer__card">
+    {%- if section.settings.mascot != blank -%}
+      <div class="ohf-footer__mascot">
+        {{-
+          section.settings.mascot
+          | image_url: width: 300
+          | image_tag: width: 110, alt: section.settings.mascot_alt, loading: 'lazy'
+        -}}
+      </div>
+    {%- endif -%}
+
+    <div class="ohf-footer__top">
+      <a class="ohf-footer__brand" href="{{ routes.root_url }}">
+        {%- render 'ohf-logo' -%}
+        <span class="visually-hidden">{{ shop.name }}</span>
+      </a>
+
+      {%- if section.settings.newsletter_url != blank -%}
+        <div class="ohf-footer__news">
+          <div>
+            {%- if section.settings.newsletter_heading != blank -%}
+              <p class="ohf-footer__head">{{ section.settings.newsletter_heading | escape }}</p>
+            {%- endif -%}
+            {%- if section.settings.newsletter_text != blank -%}
+              <p class="ohf-footer__news-text">{{ section.settings.newsletter_text | escape }}</p>
+            {%- endif -%}
+          </div>
+          <a
+            class="ohf-cta ohf-cta--fill"
+            href="{{ section.settings.newsletter_url }}"
+            {% if section.settings.newsletter_new_tab %}
+              target="_blank" rel="noopener"
+            {% endif %}
+          >
+            {{- section.settings.newsletter_button | escape -}}
+            {% render 'ohf-icon', icon: 'arrow-right', size: 18 %}
+          </a>
+        </div>
+      {%- endif -%}
+    </div>
+
+    <nav class="ohf-footer__cols" aria-label="Footer">
+      {%- if has_cols -%}
+        {%- for link in menu.links -%}
+          <div class="ohf-footer__col">
+            {%- if link.url != blank and link.url != '#' -%}
+              <a class="ohf-footer__head" href="{{ link.url }}">{{ link.title | escape }}</a>
+            {%- else -%}
+              <p class="ohf-footer__head">{{ link.title | escape }}</p>
+            {%- endif -%}
+            {%- if link.links != blank -%}
+              <ul role="list">
+                {%- for child in link.links -%}
+                  {%- assign item_title = child.title | downcase -%}
+                  <li>
+                    <a href="{{ child.url }}">
+                      {{- child.title | escape -}}
+                      {%- if new_match != blank and item_title == new_match -%}
+                        <span class="ohf-footer__new">{{ section.settings.new_label_text | escape }}</span>
+                      {%- endif -%}
+                    </a>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      {%- elsif menu.links.size > 0 -%}
+        <div class="ohf-footer__col">
+          <p class="ohf-footer__head">{{ menu.title | escape }}</p>
+          <ul role="list">
+            {%- for link in menu.links -%}
+              <li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- endif -%}
+
+      {%- if social != blank and social.links.size > 0 -%}
+        <div class="ohf-footer__col">
+          <p class="ohf-footer__head">{{ section.settings.social_heading | escape }}</p>
+          <ul role="list">
+            {%- for link in social.links -%}
+              <li><a href="{{ link.url }}" rel="noopener">{{ link.title | escape }}</a></li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- endif -%}
+    </nav>
+
+    <div class="ohf-footer__row">
+      <p>
+        &copy; {{ 'now' | date: '%Y' }}, <a href="{{ routes.root_url }}">{{ shop.name | escape }}</a> ·
+        {{ powered_by_link }}
+      </p>
+      {%- if section.settings.show_policies -%}
+        <ul class="ohf-footer__legal" role="list">
+          {%- for policy in shop.policies -%}
+            {%- if policy != blank -%}
+              <li><a href="{{ policy.url }}">{{ policy.title | escape }}</a></li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </div>
+
+    <div class="ohf-footer__row ohf-footer__row--last">
+      {%- if section.settings.analytics_text != blank -%}
+        <div class="ohf-footer__analytics">{{ section.settings.analytics_text }}</div>
+      {%- endif -%}
+
+      {%- if show_region -%}
+        <details class="ohf-footer__region" data-ohf-footer-region>
+          <summary class="ohf-footer__region-toggle">
+            <span>{{ 'localization.country_label' | t }}</span>
+            <strong>
+              {{- localization.country.name | escape }}
+              ({{ localization.country.currency.iso_code }}
+              {{ localization.country.currency.symbol -}}
+              )
+            </strong>
+            {% render 'ohf-icon', icon: 'chevron-down', size: 18 %}
+          </summary>
+          <div class="ohf-pop ohf-footer__pop">
+            {%- render 'ohf-region-list', id: 'OhfFooterRegion' -%}
+          </div>
+        </details>
+      {%- endif -%}
+    </div>
+  </div>
+</footer>
+
+{% stylesheet %}
+  .ohf-footer {
+    position: relative;
+    z-index: 20;
+    background: var(--ohf-light-blue);
+    color: var(--ohf-dark-grey);
+    padding: 0 20px 20px;
+    margin-top: -1px;
+    border-top: 1px solid var(--ohf-light-blue);
+  }
+  .ohf-footer__card {
+    position: relative;
+    max-width: 1400px;
+    margin-inline: auto;
+    background: var(--bg);
+    border-radius: var(--r-xs);
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    font-size: 1.4rem;
+  }
+  :root[data-lights='off'] .ohf-footer__card {
+    background: color-mix(in srgb, var(--ohf-light-grey) 6%, var(--bg));
+  }
+  :root[data-lights='off'] .ohf-footer {
+    color: var(--ohf-grey);
+  }
+  .ohf-footer__mascot {
+    position: absolute;
+    right: 40px;
+    top: -88px;
+    width: 110px;
+    pointer-events: none;
+    animation: ohf-bob 3.2s ease-in-out infinite;
+  }
+  .ohf-footer__mascot img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  @keyframes ohf-bob {
+    50% {
+      translate: 0 -6px;
+    }
+  }
+  .ohf-footer__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--s24);
+    flex-wrap: wrap;
+  }
+  .ohf-footer__brand {
+    display: inline-flex;
+  }
+  .ohf-footer__brand .ohf-logo__svg {
+    display: block;
+    height: 37px;
+    width: auto;
+  }
+  .ohf-footer .ohf-logo--dark {
+    display: none;
+  }
+  :root[data-lights='off'] .ohf-footer .ohf-logo--light {
+    display: none;
+  }
+  :root[data-lights='off'] .ohf-footer .ohf-logo--dark {
+    display: block;
+  }
+  .ohf-footer__news {
+    display: flex;
+    align-items: center;
+    gap: var(--s24);
+    flex-wrap: wrap;
+    max-width: 640px;
+  }
+  .ohf-footer__news .ohf-footer__head {
+    margin-bottom: var(--s4);
+  }
+  .ohf-footer__news-text {
+    margin: 0;
+    color: var(--body);
+  }
+  .ohf-footer__cols {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: var(--s24);
+  }
+  .ohf-footer__head {
+    display: block;
+    margin: 0 0 var(--s8);
+    font-family: var(--font-heading-family);
+    font-weight: 700;
+    font-size: 1.6rem;
+    color: var(--heading);
+    text-decoration: none;
+  }
+  a.ohf-footer__head:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .ohf-footer__col ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .ohf-footer__col li a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s8);
+    padding: 4px 0;
+    color: var(--body);
+    text-decoration: none;
+    font-family: var(--font-heading-family);
+  }
+  .ohf-footer__col li a:hover {
+    color: var(--heading);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .ohf-footer__new {
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1;
+    padding: 3px 6px;
+    background: var(--choice-main);
+    color: #fff;
+    text-transform: uppercase;
+  }
+  .ohf-footer__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--s16) var(--s24);
+    flex-wrap: wrap;
+  }
+  .ohf-footer__row p {
+    margin: 0;
+  }
+  .ohf-footer__row a,
+  .ohf-footer__analytics a {
+    color: inherit;
+    text-underline-offset: 3px;
+  }
+  .ohf-footer__row a:hover,
+  .ohf-footer__analytics a:hover {
+    color: var(--heading);
+  }
+  .ohf-footer__legal {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s8) var(--s16);
+  }
+  .ohf-footer__legal li {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s16);
+  }
+  .ohf-footer__legal li + li::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  .ohf-footer__legal a {
+    text-decoration: none;
+  }
+  .ohf-footer__row--last {
+    align-items: flex-end;
+  }
+  .ohf-footer__analytics {
+    max-width: 640px;
+  }
+  .ohf-footer__analytics p {
+    margin: 0;
+  }
+  .ohf-footer__region {
+    position: relative;
+  }
+  .ohf-footer__region-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s8);
+    padding: 6px 0;
+  }
+  .ohf-footer__region-toggle strong {
+    color: var(--heading);
+    font-weight: 600;
+    font-family: var(--font-heading-family);
+  }
+  .ohf-footer__region[open] .ohf-icon--chevron-down {
+    rotate: 180deg;
+  }
+  .ohf-footer__pop {
+    top: auto;
+    bottom: calc(100% + 8px);
+    right: 0;
+    z-index: 5;
+  }
+  .ohf-footer__pop::before {
+    display: none;
+  }
+  @media (max-width: 900px) {
+    .ohf-footer {
+      padding: 12px;
+    }
+    .ohf-footer__card {
+      padding: var(--s24);
+      gap: var(--s32);
+    }
+    .ohf-footer__cols {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--s32) var(--s24);
+    }
+    .ohf-footer__pop {
+      right: auto;
+      left: 0;
+    }
+  }
+  @media (max-width: 640px) {
+    .ohf-footer__mascot {
+      scale: 0.8;
+      top: -80px;
+      right: 16px;
+    }
+    .ohf-footer__pop {
+      width: min(300px, calc(100vw - 72px));
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ohf-footer__mascot {
+      animation: none;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (function () {
+    // Footer region picker: filter box, and close on outside click or Escape
+    document.addEventListener('input', (e) => {
+      const input = e.target.closest('.ohf-footer [data-ohf-region-filter]');
+      if (!input) return;
+      const q = input.value.trim().toLowerCase();
+      input
+        .closest('[data-ohf-region]')
+        .querySelectorAll('.ohf-region__list li')
+        .forEach((li) => {
+          li.hidden = q !== '' && !li.dataset.name.includes(q);
+        });
+    });
+    document.addEventListener('click', (e) => {
+      document.querySelectorAll('[data-ohf-footer-region][open]').forEach((d) => {
+        if (!d.contains(e.target)) d.removeAttribute('open');
+      });
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return;
+      document.querySelectorAll('[data-ohf-footer-region][open]').forEach((d) => {
+        d.removeAttribute('open');
+        d.querySelector('summary').focus();
+      });
+    });
+  })();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "OHF footer",
+  "class": "ohf-footer-section",
+  "enabled_on": {
+    "groups": ["footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Links"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "default": "footer",
+      "label": "Menu",
+      "info": "Each top-level item becomes a column heading and its children the links. A menu without children becomes one column. Falls back to the Footer menu when empty."
+    },
+    {
+      "type": "link_list",
+      "id": "social_menu",
+      "label": "Social links menu",
+      "info": "Shown as its own column."
+    },
+    {
+      "type": "text",
+      "id": "social_heading",
+      "default": "Follow us",
+      "label": "Social column heading"
+    },
+    {
+      "type": "text",
+      "id": "new_label_match",
+      "default": "New collection",
+      "label": "Link that gets a label",
+      "info": "Exact title of the link to mark. Leave empty for no label."
+    },
+    {
+      "type": "text",
+      "id": "new_label_text",
+      "default": "New",
+      "label": "Label text"
+    },
+    {
+      "type": "header",
+      "content": "Newsletter"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_heading",
+      "default": "Newsletter",
+      "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_text",
+      "label": "Text"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_button",
+      "default": "Subscribe",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "newsletter_url",
+      "label": "Button link",
+      "info": "The newsletter block only shows when this is set."
+    },
+    {
+      "type": "checkbox",
+      "id": "newsletter_new_tab",
+      "default": true,
+      "label": "Open the link in a new tab"
+    },
+    {
+      "type": "header",
+      "content": "Bottom rows"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_policies",
+      "default": true,
+      "label": "Show policy links",
+      "info": "From Settings › Policies."
+    },
+    {
+      "type": "richtext",
+      "id": "analytics_text",
+      "label": "Analytics notice",
+      "default": "<p>This website uses privacy-first analytics to help us improve the site.</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_country_selector",
+      "default": true,
+      "label": "Show country/region selector"
+    },
+    {
+      "type": "header",
+      "content": "Mascot"
+    },
+    {
+      "type": "image_picker",
+      "id": "mascot",
+      "label": "Mascot image",
+      "info": "Casita, sitting on the top edge of the footer. A transparent PNG or SVG around 300px wide."
+    },
+    {
+      "type": "text",
+      "id": "mascot_alt",
+      "label": "Mascot description",
+      "info": "Leave empty if it's purely decorative."
+    }
+  ]
+}
+{% endschema %}
