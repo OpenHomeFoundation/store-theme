@@ -1,0 +1,350 @@
+{%- comment -%}
+  OHF hero (redesign 2026): full-bleed photo behind the floating header, centred headline, text and two buttons.
+  - "Pin" (home page): the hero stays put while the next section slides up over it. As you scroll, the
+    photo zooms in slightly (up to 6%) and darkens (up to 45%), as in the concept.
+  - Lights off dims the photo. Reduced motion: no zoom or darkening (the pin stays; it doesn't move anything).
+  - The photo is a real <img> with responsive sizes, loaded early, since it's usually the largest thing on screen.
+  - Headline: two lines; one word or phrase in the second line can be highlighted in OHF light blue.
+{%- endcomment -%}
+{%- liquid
+  assign line_2 = section.settings.line_2 | escape
+  if section.settings.highlight != blank
+    assign hl = section.settings.highlight | escape
+    assign hl_html = '<span class="ohf-hl">' | append: hl | append: '</span>'
+    assign line_2 = line_2 | replace_first: hl, hl_html
+  endif
+-%}
+<ohf-hero
+  class="ohf-hero ohf-hero--{{ section.settings.size }}{% if section.settings.pin %} ohf-hero--pin{% endif %}"
+  role="region"
+  aria-labelledby="OhfHeroTitle-{{ section.id }}"
+>
+  <div class="ohf-hero__bg">
+    {%- if section.settings.image != blank -%}
+      {{
+        section.settings.image
+        | image_url: width: 3000
+        | image_tag:
+          widths: '750, 1100, 1500, 2000, 2500, 3000',
+          sizes: '100vw',
+          loading: 'eager',
+          fetchpriority: 'high',
+          class: 'ohf-hero__img',
+          alt: section.settings.image_alt
+      }}
+    {%- else -%}
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'ohf-hero__img ohf-hero__placeholder' }}
+    {%- endif -%}
+  </div>
+
+  <div class="ohf-wrap ohf-hero__inner">
+    <div class="ohf-hero__copy">
+      <h1 id="OhfHeroTitle-{{ section.id }}" class="ohf-hero__title">
+        <span class="ohf-hero__line">{{ section.settings.line_1 | escape }}</span>
+        {%- if line_2 != blank -%}
+          <span class="ohf-hero__line">{{ line_2 }}</span>
+        {%- endif -%}
+      </h1>
+      {%- if section.settings.text != blank -%}
+        <p class="ohf-hero__lede">{{ section.settings.text | escape }}</p>
+      {%- endif -%}
+      {%- if section.settings.button_1_label != blank or section.settings.button_2_label != blank -%}
+        <div class="ohf-hero__ctas">
+          {%- if section.settings.button_1_label != blank -%}
+            <a class="ohf-cta ohf-cta--fill" href="{{ section.settings.button_1_link | default: routes.all_products_collection_url }}">
+              <span>{{ section.settings.button_1_label | escape }}</span>
+              {%- render 'ohf-icon', icon: 'arrow-right', size: 18 -%}
+            </a>
+          {%- endif -%}
+          {%- if section.settings.button_2_label != blank and section.settings.button_2_link != blank -%}
+            <a class="ohf-cta ohf-cta--outline" href="{{ section.settings.button_2_link }}">
+              {{- section.settings.button_2_label | escape -}}
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</ohf-hero>
+
+{% stylesheet %}
+  /* Pin: the section wrapper sticks, and every section after it slides over it on its own background.
+     --hero-h is set by the script so a hero taller than the screen can still be scrolled to its end. */
+  .ohf-hero-section:has(.ohf-hero--pin) {
+    position: sticky;
+    top: min(0px, calc(100vh - var(--hero-h, 100vh)));
+    z-index: 0;
+  }
+  .ohf-hero-section:has(.ohf-hero--pin) ~ .shopify-section {
+    position: relative;
+    z-index: 1;
+    background: var(--bg);
+  }
+
+  .ohf-hero {
+    --p: 0;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    min-height: clamp(680px, calc(100svh - 46px), 1000px);
+    margin-top: -90px; /* runs up behind the floating header card */
+    overflow: hidden;
+    color: var(--ohf-light-grey);
+    background: var(--ohf-dark-blue);
+  }
+  .ohf-hero--page {
+    min-height: clamp(520px, 70svh, 760px);
+  }
+  .ohf-hero__bg {
+    position: absolute;
+    inset: 0;
+    scale: calc(1 + var(--p) * 0.06);
+    transition: filter var(--dur-in) var(--ease);
+  }
+  .ohf-hero__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 50%; /* Shopify adds the photo's own focal point inline (Content › Files) */
+  }
+  .ohf-hero__placeholder {
+    fill: var(--ohf-grey);
+    background: var(--privacy-neutral);
+  }
+  /* Readability gradient behind the text */
+  .ohf-hero__bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      ellipse 65% 60% at 50% 80%,
+      rgba(9, 32, 46, 0.66),
+      rgba(9, 32, 46, 0.36) 60%,
+      rgba(9, 32, 46, 0.18)
+    );
+  }
+  /* Darkens as you scroll past */
+  .ohf-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--ohf-dark-blue);
+    opacity: calc(var(--p) * 0.45);
+    pointer-events: none;
+  }
+  :root[data-lights='off'] .ohf-hero__bg {
+    filter: brightness(0.45) saturate(0.7);
+  }
+  .ohf-hero__inner {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    padding-block: 120px 96px;
+  }
+  .ohf-hero--home .ohf-hero__inner {
+    padding-block: 112px 72px;
+  }
+  .ohf-hero__copy {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--s24);
+    max-width: 900px;
+    margin-inline: auto;
+    text-align: center;
+  }
+  .ohf-hero__title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    font-size: clamp(4.2rem, 6vw, 8.8rem);
+    font-weight: 500;
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    color: var(--ohf-light-grey);
+  }
+  .ohf-hero--home .ohf-hero__title {
+    font-size: clamp(3.6rem, 4.6vw, 6.8rem);
+  }
+  .ohf-hero__line {
+    display: block;
+  }
+  .ohf-hl {
+    color: var(--ohf-light-blue);
+    white-space: nowrap;
+  }
+  .ohf-hero__lede {
+    margin: 0;
+    max-width: 520px;
+    font-size: 1.7rem;
+    color: var(--ohf-light-grey);
+  }
+  .ohf-hero__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--s12);
+  }
+  .ohf-hero .ohf-cta--outline {
+    color: var(--ohf-light-grey);
+  }
+  @media (max-width: 640px) {
+    .ohf-hero {
+      margin-top: -72px;
+      min-height: clamp(600px, calc(100svh - 40px), 860px);
+    }
+    .ohf-hero--page {
+      min-height: clamp(460px, 70svh, 640px);
+    }
+    .ohf-hero__inner {
+      padding-block: 140px 48px;
+    }
+    .ohf-hero--home .ohf-hero__inner {
+      padding-block: 128px 40px;
+    }
+    .ohf-hero__lede {
+      font-size: 1.6rem;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ohf-hero {
+      --p: 0 !important;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  if (!customElements.get('ohf-hero')) {
+    customElements.define(
+      'ohf-hero',
+      class extends HTMLElement {
+        connectedCallback() {
+          if (!this.classList.contains('ohf-hero--pin')) return;
+          this.wrapper = this.closest('.shopify-section');
+          // A marker just before the section records where the hero would sit without pinning
+          this.marker = document.createElement('div');
+          this.marker.setAttribute('aria-hidden', 'true');
+          this.marker.style.height = '0';
+          this.wrapper.before(this.marker);
+
+          const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+          this.setHeight = () => this.wrapper.style.setProperty('--hero-h', `${this.wrapper.offsetHeight}px`);
+          this.onScroll = () => {
+            if (this.frame) return;
+            this.frame = requestAnimationFrame(() => {
+              this.frame = null;
+              if (reduce.matches) return;
+              const start = this.marker.getBoundingClientRect().top + window.scrollY;
+              const p = Math.min(1, Math.max(0, (window.scrollY - start) / (this.offsetHeight * 0.8)));
+              this.style.setProperty('--p', p.toFixed(3));
+            });
+          };
+          this.resizeObserver = new ResizeObserver(this.setHeight);
+          this.resizeObserver.observe(this.wrapper);
+          this.setHeight();
+          window.addEventListener('scroll', this.onScroll, { passive: true });
+          this.onScroll();
+        }
+
+        disconnectedCallback() {
+          window.removeEventListener('scroll', this.onScroll);
+          this.resizeObserver?.disconnect();
+          this.marker?.remove();
+        }
+      }
+    );
+  }
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "OHF hero",
+  "class": "ohf-hero-section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Photo",
+      "info": "Landscape, at least 2400px wide. To choose which part stays in view when it's cropped, set the photo's focal point in Content › Files."
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Photo description",
+      "info": "For screen readers. Describe what's in the photo."
+    },
+    {
+      "type": "text",
+      "id": "line_1",
+      "label": "Heading, first line",
+      "default": "Local control"
+    },
+    {
+      "type": "text",
+      "id": "line_2",
+      "label": "Heading, second line",
+      "default": "looks good on you"
+    },
+    {
+      "type": "text",
+      "id": "highlight",
+      "label": "Highlighted word",
+      "default": "good",
+      "info": "Shown in light blue where it first appears in the second line."
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text"
+    },
+    {
+      "type": "text",
+      "id": "button_1_label",
+      "label": "Main button label",
+      "default": "Shop all"
+    },
+    {
+      "type": "url",
+      "id": "button_1_link",
+      "label": "Main button link",
+      "info": "Defaults to all products."
+    },
+    {
+      "type": "text",
+      "id": "button_2_label",
+      "label": "Second button label"
+    },
+    {
+      "type": "url",
+      "id": "button_2_link",
+      "label": "Second button link",
+      "info": "The second button only shows when both label and link are set."
+    },
+    {
+      "type": "select",
+      "id": "size",
+      "label": "Size",
+      "default": "home",
+      "options": [
+        { "value": "home", "label": "Home page (full screen)" },
+        { "value": "page", "label": "Page (shorter)" }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "pin",
+      "default": true,
+      "label": "Pin while the next section slides over",
+      "info": "The photo also zooms and darkens slightly as you scroll."
+    }
+  ],
+  "presets": [
+    {
+      "name": "OHF hero"
+    }
+  ]
+}
+{% endschema %}
