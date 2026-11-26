@@ -207,12 +207,17 @@ if (!customElements.get('ohf-header')) {
         });
         menu.addEventListener('pointerenter', () => clearTimeout(this.regionTimer));
 
-        const filter = this.regionPop.querySelector('[data-ohf-region-filter]');
-        filter?.addEventListener('input', () => {
+        // Filter box in any region list in the header (the globe popover and the phone menu's copy)
+        this.addEventListener('input', (e) => {
+          const filter = e.target.closest('[data-ohf-region-filter]');
+          if (!filter) return;
           const q = filter.value.trim().toLowerCase();
-          this.regionPop.querySelectorAll('.ohf-region__list li').forEach((li) => {
-            li.hidden = q !== '' && !li.dataset.name.includes(q);
-          });
+          filter
+            .closest('[data-ohf-region]')
+            .querySelectorAll('.ohf-region__list li')
+            .forEach((li) => {
+              li.hidden = q !== '' && !li.dataset.name.includes(q);
+            });
         });
       }
 

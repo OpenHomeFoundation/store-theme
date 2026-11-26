@@ -564,6 +564,74 @@
   text-decoration: none;
 }
 
+/* Phone menu extras: region and lights move here on phones (the header bar only has room for search,
+   cart and menu below 641px) */
+.ohf-mobile__extra {
+  display: none;
+  flex-direction: column;
+  margin-top: var(--s16);
+  padding: var(--s12) var(--s24) 0;
+  border-top: 1px solid rgba(9, 32, 46, 0.2);
+}
+
+.ohf-mobile__extra-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--s12);
+  width: 100%;
+  padding: 12px 0;
+  border: 0;
+  background: none;
+  color: var(--ohf-dark-blue);
+  font: 500 1.6rem/1.2 var(--font-heading-family);
+  text-align: left;
+  list-style: none;
+  cursor: pointer;
+}
+
+.ohf-mobile__extra-row::-webkit-details-marker {
+  display: none;
+}
+
+.ohf-mobile__extra-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ohf-mobile__extra-row strong {
+  font-weight: 600;
+  font-size: 1.4rem;
+  text-align: right;
+}
+
+.ohf-mobile__region-list {
+  margin: 0 0 var(--s8);
+  border-radius: var(--r-xs);
+  background: var(--bg);
+  color: var(--heading);
+}
+
+.ohf-mobile__region-list .ohf-region__list {
+  max-height: 40vh;
+}
+
+.ohf-mobile__lights .ohf-bulb-off,
+.ohf-mobile__lights .ohf-mobile__lights-on-text,
+.ohf-mobile__lights[aria-pressed='true'] .ohf-bulb-on,
+.ohf-mobile__lights[aria-pressed='true'] .ohf-mobile__lights-off-text {
+  display: none;
+}
+
+.ohf-mobile__lights[aria-pressed='true'] .ohf-bulb-off {
+  display: contents;
+}
+
+.ohf-mobile__lights[aria-pressed='true'] .ohf-mobile__lights-on-text {
+  display: inline;
+}
+
 /* Dims the page while a dropdown, the region list or the phone menu is open */
 .ohf-scrim {
   position: fixed;
@@ -651,19 +719,33 @@
     gap: var(--s8);
   }
 
-  /* The region list spans the card instead of hanging off the globe */
-  .ohf-nav__region {
-    position: static;
+  /* Region and lights live in the phone menu instead (.ohf-mobile__extra) */
+  .ohf-nav__region,
+  .ohf-nav__lights {
+    display: none !important;
   }
 
-  .ohf-pop {
-    top: calc(100% + 8px);
-    right: 0;
-    width: min(300px, 100%);
+  .ohf-mobile__extra {
+    display: flex;
   }
+
 
   .ohf-nav .search-modal__content {
     padding: 0 5rem 0 1.6rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .ohf-nav__card {
+    padding: 0 var(--s12);
+  }
+
+  .ohf-logo__svg {
+    height: 15px;
+  }
+
+  .ohf-nav__actions {
+    gap: var(--s4);
   }
 }
 

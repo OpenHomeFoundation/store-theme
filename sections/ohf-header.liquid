@@ -259,6 +259,51 @@
         <a class="ohf-mobile__top" href="{{ link.url }}">{{ link.title | escape }}</a>
       {%- endif -%}
     {%- endfor -%}
+
+    {%- comment -%}
+      Phones only (CSS shows this below 641px): the region and lights controls don't fit in the header bar there,
+      so they move into the menu.
+    {%- endcomment -%}
+    {%- if show_region or section.settings.show_lights -%}
+      <div class="ohf-mobile__extra">
+        {%- if show_region -%}
+          <details class="ohf-mobile__region">
+            <summary class="ohf-mobile__extra-row">
+              <span class="ohf-mobile__extra-label">
+                {%- render 'ohf-icon', icon: 'globe', size: 20 -%}
+                {{ 'localization.country_label' | t }}
+              </span>
+              <strong>
+                {{- localization.country.name | escape }}
+                ({{ localization.country.currency.iso_code }}
+                {{ localization.country.currency.symbol -}}
+                )
+              </strong>
+            </summary>
+            <div class="ohf-mobile__region-list">
+              {%- render 'ohf-region-list', id: 'OhfMobileRegion' -%}
+            </div>
+          </details>
+        {%- endif -%}
+        {%- if section.settings.show_lights -%}
+          <button
+            type="button"
+            class="ohf-mobile__extra-row ohf-mobile__lights"
+            aria-pressed="false"
+            data-label-off="Turn the lights off"
+            data-label-on="Turn the lights on"
+            data-lights-toggle
+          >
+            <span class="ohf-mobile__extra-label">
+              <span class="ohf-bulb-on">{% render 'ohf-icon', icon: 'bulb-on', size: 20 %}</span>
+              <span class="ohf-bulb-off">{% render 'ohf-icon', icon: 'bulb-off', size: 20 %}</span>
+              <span class="ohf-mobile__lights-off-text">Turn the lights off</span>
+              <span class="ohf-mobile__lights-on-text">Turn the lights on</span>
+            </span>
+          </button>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
   </nav>
 
   {%- if settings.cart_type == 'notification' -%}
