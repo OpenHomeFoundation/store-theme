@@ -153,10 +153,46 @@
 
     {%- comment -%} ---------- Buy box ---------- {%- endcomment -%}
     <div class="ohf-pdp__info">
+      {%- comment -%}
+        Breadcrumb: Shop / category / product, as in the concept. The category is the product type renamed by
+        Theme settings › OHF product cards › Category names; a third part on that line names the category's
+        collection (e.g. "Hoodie: Sweatshirts: hoodies"). The link goes to that collection when it's on the
+        Online Store, else to all products of this type (/collections/types?q=…). Reached from a collection
+        page's own URL, that collection is used instead.
+      {%- endcomment -%}
+      {%- liquid
+        assign crumb_name = product.type
+        assign crumb_handle = ''
+        assign type_lc = product.type | strip | downcase
+        assign cat_lines = settings.ohf_card_categories | newline_to_br | split: '<br />'
+        for line in cat_lines
+          assign parts = line | split: ':'
+          if parts.size > 1
+            assign from = parts[0] | strip | downcase
+            if from == type_lc
+              assign crumb_name = parts[1] | strip
+              if parts.size > 2
+                assign crumb_handle = parts[2] | strip | downcase
+              endif
+              break
+            endif
+          endif
+        endfor
+        assign crumb_url = ''
+        if collection and collection.handle != 'all' and collection.url != blank
+          assign crumb_name = collection.title
+          assign crumb_url = collection.url
+        elsif crumb_handle != blank and collections[crumb_handle].url != blank
+          assign crumb_url = collections[crumb_handle].url
+        elsif product.type != blank
+          assign type_q = product.type | url_param_escape
+          assign crumb_url = routes.collections_url | append: '/types?q=' | append: type_q
+        endif
+      -%}
       <nav class="ohf-pdp__crumbs" aria-label="Breadcrumb">
         <a href="{{ routes.all_products_collection_url }}">{{ section.settings.shop_label | escape }}</a>
-        {%- if collection and collection.handle != 'all' -%}
-          <span aria-hidden="true">/</span><a href="{{ collection.url }}">{{ collection.title | escape }}</a>
+        {%- if crumb_name != blank and crumb_url != blank -%}
+          <span aria-hidden="true">/</span><a href="{{ crumb_url }}">{{ crumb_name | escape }}</a>
         {%- endif -%}
         <span aria-hidden="true">/</span><span aria-current="page">{{ product.title | escape }}</span>
       </nav>
@@ -326,7 +362,10 @@
 
       <div class="ohf-pdp__tools">
         {%- if has_guide -%}
-          <button type="button" class="ohf-pdp__link" data-guide-open>{{ section.settings.guide_label | escape }}</button>
+          <button type="button" class="ohf-pdp__link" data-guide-open>
+            {%- render 'ohf-icon', icon: 'ruler', size: 18 -%}
+            {{- section.settings.guide_label | escape -}}
+          </button>
         {%- endif -%}
         <button
           type="button"
@@ -335,6 +374,7 @@
           data-share-url="{{ request.origin }}{{ product.url }}"
           data-share-title="{{ product.title | escape }}"
         >
+          {%- render 'ohf-icon', icon: 'share', size: 18 -%}
           {{- section.settings.share_label | escape -}}
         </button>
         <span class="ohf-pdp__shared" role="status" data-share-status></span>
