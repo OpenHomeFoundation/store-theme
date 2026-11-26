@@ -106,6 +106,13 @@
       </ohf-money>
     </div>
   </section>
+{%- else -%}
+  {%- if request.design_mode -%}
+    <div class="ohf-wrap" style="padding-block: 48px; color: var(--body); font-size: 1.4rem;">
+      OHF money breakdown: nothing to show for this product. Add segments with percentages to this section, or check
+      the product's cost_breakdown.hide metafield. This message only shows in the theme editor.
+    </div>
+  {%- endif -%}
 {%- endunless -%}
 
 {% stylesheet %}
@@ -395,7 +402,55 @@
   ],
   "presets": [
     {
-      "name": "OHF money breakdown"
+      "name": "OHF money breakdown",
+      "blocks": [
+        {
+          "type": "segment",
+          "settings": {
+            "label": "Manufacturing",
+            "key": "manufacturing",
+            "percentage": 27,
+            "color": "#5A6675"
+          }
+        },
+        {
+          "type": "segment",
+          "settings": {
+            "label": "Warehousing & Logistics",
+            "key": "logistics",
+            "percentage": 15,
+            "color": "#09293B"
+          }
+        },
+        {
+          "type": "segment",
+          "settings": {
+            "label": "Operational costs",
+            "key": "operational",
+            "percentage": 6,
+            "color": "#A2AAB6"
+          }
+        },
+        {
+          "type": "segment",
+          "settings": {
+            "label": "VAT (country dependant)",
+            "key": "vat",
+            "percentage": 22,
+            "color": "#7A8594"
+          }
+        },
+        {
+          "type": "segment",
+          "settings": {
+            "label": "Contribution to the Open Home Foundation",
+            "key": "contribution",
+            "percentage": 30,
+            "color": "#18BCF2",
+            "centre_label": "to the Open Home Foundation"
+          }
+        }
+      ]
     }
   ]
 }
