@@ -102,10 +102,7 @@ if (!customElements.get('ohf-header')) {
         // Leaving the whole nav (card and panels) closes with a short grace period
         this.addEventListener('pointerleave', (e) => {
           if (e.pointerType !== 'mouse') return;
-          this.closeTimer = setTimeout(() => {
-            this.closeSubs();
-            this.closeRegion();
-          }, 150);
+          this.closeTimer = setTimeout(() => this.closeSubs(), 150);
         });
         this.addEventListener('pointerenter', () => clearTimeout(this.closeTimer));
       }
@@ -197,6 +194,17 @@ if (!customElements.get('ohf-header')) {
         this.regionToggle.addEventListener('pointerenter', (e) => {
           if (e.pointerType === 'mouse' && this.hoverCapable.matches) this.openRegion();
         });
+
+        // With a mouse, the list closes shortly after the pointer leaves the globe and the list
+        // (the gap between them is bridged in CSS), not only when it leaves the whole header.
+        const menu = this.regionToggle.closest('[data-ohf-region-menu]');
+        menu.addEventListener('pointerleave', (e) => {
+          if (e.pointerType !== 'mouse') return;
+          // Keep it open while someone is typing in the filter box
+          if (this.regionPop.contains(document.activeElement) && document.activeElement.matches('input')) return;
+          this.regionTimer = setTimeout(() => this.closeRegion(), 200);
+        });
+        menu.addEventListener('pointerenter', () => clearTimeout(this.regionTimer));
 
         const filter = this.regionPop.querySelector('[data-ohf-region-filter]');
         filter?.addEventListener('input', () => {

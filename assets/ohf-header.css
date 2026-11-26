@@ -100,8 +100,13 @@
   justify-self: end;
 }
 
-.ohf-nav__icon,
-.ohf-nav .header__search summary.header__icon {
+/* Every icon sits in the same 32px box, centred, with no text line box around the SVG */
+.ohf-nav__actions > * {
+  display: grid;
+  place-items: center;
+}
+
+.ohf-nav__icon {
   position: relative;
   display: grid;
   place-items: center;
@@ -112,15 +117,19 @@
   border-radius: var(--r-xs);
   background: none;
   color: var(--heading);
+  line-height: 0;
   cursor: pointer;
   text-decoration: none;
   transition: color var(--dur-ui) var(--ease);
 }
 
+.ohf-nav__icon svg {
+  display: block;
+}
+
 .ohf-nav__icon:hover,
 .ohf-nav__icon:focus-visible,
-.ohf-nav__icon[aria-expanded='true'],
-.ohf-nav .header__search summary.header__icon:hover {
+.ohf-nav__icon[aria-expanded='true'] {
   color: var(--ohf-light-blue);
 }
 
@@ -141,14 +150,16 @@
   text-align: center;
 }
 
-/* Search: Dawn's modal, opening over the nav card */
-.ohf-nav__search {
+/* Search: Dawn's modal (snippets/ohf-search.liquid), opening over the nav card */
+.ohf-search,
+.ohf-search > details {
   display: grid;
+  place-items: center;
 }
 
-.ohf-nav .header__search summary .svg-wrapper svg {
-  width: 22px;
-  height: 22px;
+.ohf-search .search__button .ohf-icon,
+.ohf-search .search-modal__close-button .ohf-icon {
+  display: block;
 }
 
 .ohf-nav .search-modal {
@@ -306,19 +317,24 @@
   visibility: visible;
 }
 
-/* Lights switch */
+/* Lights switch (the visible bulb's wrapper is display: contents, so the SVG centres like the others) */
+.ohf-bulb-on,
+.ohf-nav__lights[aria-pressed='true'] .ohf-bulb-off {
+  display: contents;
+}
+
 .ohf-bulb-off,
 .ohf-nav__lights[aria-pressed='true'] .ohf-bulb-on {
   display: none;
 }
 
-.ohf-nav__lights[aria-pressed='true'] .ohf-bulb-off {
-  display: contents;
-}
-
 /* Phone menu button */
 .ohf-nav__menu {
   display: none;
+}
+
+.ohf-nav__menu-open {
+  display: contents;
 }
 
 .ohf-nav__menu-close,
