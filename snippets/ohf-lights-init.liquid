@@ -1,0 +1,15 @@
+{%- comment -%}
+  "Lights off" (dark mode), applied before first paint so a returning visitor never sees a light flash.
+  The choice is kept in this browser only (localStorage "ohf-lights"); nothing is sent anywhere.
+  Toggled by any [data-lights-toggle] button (see assets/ohf-lights.js).
+  Also marks the page as having scripts for the entrance animations (.ohf-motion).
+{%- endcomment -%}
+<script>
+  (function () {
+    var root = document.documentElement;
+    root.classList.add('ohf-motion');
+    try {
+      if (localStorage.getItem('ohf-lights') === 'off') root.setAttribute('data-lights', 'off');
+    } catch (e) {}
+  })();
+</script>

@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="theme-color" content="">
+    {% render 'ohf-lights-init' %}
     <link rel="canonical" href="{{ canonical_url }}">
 
     {%- if settings.favicon != blank -%}
@@ -82,11 +83,13 @@
     %}
 
     {% style %}
-      {{ settings.type_body_font | font_face: font_display: 'swap' }}
-      {{ body_font_bold | font_face: font_display: 'swap' }}
-      {{ body_font_italic | font_face: font_display: 'swap' }}
-      {{ body_font_bold_italic | font_face: font_display: 'swap' }}
-      {{ settings.type_header_font | font_face: font_display: 'swap' }}
+      {%- unless settings.ohf_brand_fonts -%}
+        {{ settings.type_body_font | font_face: font_display: 'swap' }}
+        {{ body_font_bold | font_face: font_display: 'swap' }}
+        {{ body_font_italic | font_face: font_display: 'swap' }}
+        {{ body_font_bold_italic | font_face: font_display: 'swap' }}
+        {{ settings.type_header_font | font_face: font_display: 'swap' }}
+      {%- endunless -%}
 
       {% for scheme in settings.color_schemes -%}
         {% assign scheme_classes = scheme_classes | append: ', .color-' | append: scheme.id %}
@@ -288,7 +291,15 @@
       }
     {% endstyle %}
 
+    {%- if settings.ohf_brand_fonts -%}
+      {% render 'ohf-fonts' %}
+    {%- endif -%}
+
     {{ 'base.css' | asset_url | stylesheet_tag }}
+    {{ 'ohf-tokens.css' | asset_url | stylesheet_tag }}
+    {{ 'ohf-base.css' | asset_url | stylesheet_tag }}
+    <script src="{{ 'ohf-lights.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'ohf-motion.js' | asset_url }}" defer="defer"></script>
     <link rel="stylesheet" href="{{ 'component-cart-items.css' | asset_url }}" media="print" onload="this.media='all'">
 
     {%- if settings.cart_type == 'drawer' -%}
@@ -299,12 +310,12 @@
       {{ 'component-discounts.css' | asset_url | stylesheet_tag }}
     {%- endif -%}
 
-    {%- unless settings.type_body_font.system? -%}
+    {%- unless settings.type_body_font.system? or settings.ohf_brand_fonts -%}
       {% comment %}theme-check-disable AssetPreload{% endcomment %}
       <link rel="preload" as="font" href="{{ settings.type_body_font | font_url }}" type="font/woff2" crossorigin>
       {% comment %}theme-check-enable AssetPreload{% endcomment %}
     {%- endunless -%}
-    {%- unless settings.type_header_font.system? -%}
+    {%- unless settings.type_header_font.system? or settings.ohf_brand_fonts -%}
       {% comment %}theme-check-disable AssetPreload{% endcomment %}
       <link rel="preload" as="font" href="{{ settings.type_header_font | font_url }}" type="font/woff2" crossorigin>
       {% comment %}theme-check-enable AssetPreload{% endcomment %}

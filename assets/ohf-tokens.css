@@ -1,0 +1,118 @@
+/*
+ * OHF design tokens (redesign 2026).
+ * Taken from the restyle concept. Loaded after base.css on every page.
+ *
+ * - Brand palette, spacing, radius, motion and page margins as CSS custom properties.
+ * - "Lights off" (dark mode): <html data-lights="off">, set before first paint by the
+ *   inline script in layout/theme.liquid (snippets/ohf-lights-init.liquid) and toggled by
+ *   the lights switch in the header. It redefines the semantic tokens here and remaps every
+ *   Dawn colour scheme, so existing Dawn sections follow along without their own dark CSS.
+ */
+
+:root {
+  /* Brand palette */
+  --ohf-light-blue: #18bcf2;
+  --ohf-dark-blue: #09202e;
+  --ohf-light-grey: #f7f6f2;
+  --ohf-dark-grey: #5a6675;
+  --ohf-grey: #a2aab6;
+
+  /* Value palettes: privacy, choice, sustainability */
+  --privacy-main: #becfe5;
+  --privacy-accent: #00a4eb;
+  --privacy-neutral: #5c7391;
+  --choice-main: #e10054;
+  --choice-accent: #f8b34c;
+  --choice-neutral: #89223c;
+  --sustainability-main: #d6e96d;
+  --sustainability-accent: #41d09b;
+  --sustainability-neutral: #66988e;
+
+  /* Semantic colours (redefined for lights off) */
+  --bg: var(--ohf-light-grey);
+  --bg-alt: var(--privacy-main);
+  --heading: var(--ohf-dark-blue);
+  --body: var(--ohf-dark-grey);
+  --line: color-mix(in srgb, var(--ohf-grey) 55%, var(--ohf-light-grey));
+  --card: var(--ohf-light-grey);
+  --card-raised: color-mix(in srgb, var(--ohf-dark-blue) 4%, var(--bg));
+
+  /* Call-to-action states */
+  --cta-hover: #b9e6fc;
+  --cta-active: #006895;
+  --cta-focus: #37c8fd;
+  --cta-disabled: #d3e5f5;
+
+  /* Spacing */
+  --s4: 4px;
+  --s6: 6px;
+  --s8: 8px;
+  --s12: 12px;
+  --s16: 16px;
+  --s20: 20px;
+  --s24: 24px;
+  --s32: 32px;
+  --s40: 40px;
+
+  /* Radius */
+  --r-xs: 8px;
+  --r-m: 8px;
+  --r-full: 8px;
+
+  /* Page side margin and maximum width */
+  --margin: 120px;
+  --page-max: 1440px;
+
+  /* Motion */
+  --dur-ui: 0.25s;
+  --dur-in: 0.6s;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --nudge: 4px;
+}
+
+@media (max-width: 1100px) {
+  :root {
+    --margin: 40px;
+  }
+}
+
+@media (max-width: 640px) {
+  :root {
+    --margin: 16px;
+  }
+}
+
+/* ---- Lights off ---- */
+
+:root[data-lights='off'] {
+  --bg: var(--ohf-dark-blue);
+  --bg-alt: var(--ohf-dark-blue);
+  --heading: var(--ohf-light-grey);
+  --body: var(--ohf-grey);
+  --line: color-mix(in srgb, var(--ohf-grey) 40%, var(--ohf-dark-blue));
+  --card: var(--ohf-dark-blue);
+  --card-raised: color-mix(in srgb, var(--ohf-light-grey) 6%, var(--ohf-dark-blue));
+  color-scheme: dark;
+}
+
+/*
+ * Dawn colour schemes in the dark. Every scheme becomes dark blue with light text; buttons
+ * stay OHF light blue. Values are "r,g,b" triplets, the format Dawn's CSS expects.
+ */
+:root[data-lights='off'],
+:root[data-lights='off'] [class*='color-scheme-'] {
+  --color-background: 9, 32, 46;
+  --gradient-background: #09202e;
+  --color-foreground: 247, 246, 242;
+  --color-background-contrast: 36, 67, 90;
+  --color-shadow: 0, 0, 0;
+  --color-button: 24, 188, 242;
+  --color-button-text: 9, 32, 46;
+  --color-secondary-button: 9, 32, 46;
+  --color-secondary-button-text: 247, 246, 242;
+  --color-link: 247, 246, 242;
+  --color-badge-foreground: 247, 246, 242;
+  --color-badge-background: 9, 32, 46;
+  --color-badge-border: 247, 246, 242;
+  --payment-terms-background-color: #09202e;
+}
