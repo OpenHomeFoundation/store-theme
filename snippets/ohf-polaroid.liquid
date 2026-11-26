@@ -1,0 +1,84 @@
+{%- comment -%}
+  One community photo print (redesign 2026), used by sections/ohf-community.liquid for both sources
+  (Community photo metaobject entries and the section's own Photo blocks).
+  - The print: photo on a paper card, tilted by its slot in the strip (set by the section's script).
+  - "Where it was taken" caption on hover (always visible on touch screens).
+  - A pin per product worn; a pin opens a small product card (thumbnail, name, View product).
+
+  Accepts:
+  - image: {Object} image (required)
+  - alt: {String} photo description
+  - place: {String} e.g. "Oslo, Norway"
+  - event: {String} e.g. "Community Meetup 2026"
+  - products: {Array} products worn (up to 3 shown)
+  - pins: {String} optional pin positions, "x,y" percentages per product separated by "|" (e.g. "25,57|50,53");
+    missing positions are spread across the photo
+  - key: {String} unique id for this print
+{%- endcomment -%}
+{%- liquid
+  assign ratio = image.aspect_ratio | default: 1.333
+  assign pin_list = pins | split: '|'
+  assign product_count = products | size
+-%}
+<figure class="ohf-print" style="--ar: {{ ratio }};" data-print>
+  {{
+    image
+    | image_url: width: 900
+    | image_tag:
+      widths: '300, 450, 600, 900',
+      sizes: '(max-width: 640px) 70vw, 480px',
+      loading: 'lazy',
+      class: 'ohf-print__img',
+      alt: alt,
+      draggable: 'false'
+  }}
+  {%- if place != blank or event != blank -%}
+    <figcaption class="ohf-print__where">
+      {%- render 'ohf-icon', icon: 'globe', size: 14 -%}
+      <span>
+        {%- if place != blank -%}<strong>{{ place | escape }}</strong>{%- endif -%}
+        {%- if place != blank and event != blank %} – {% endif -%}
+        {{- event | escape -}}
+      </span>
+    </figcaption>
+  {%- endif -%}
+
+  {%- for product in products limit: 3 -%}
+    {%- liquid
+      assign i = forloop.index0
+      assign pos = pin_list[i] | split: ','
+      if pos.size == 2
+        assign sx = pos[0] | strip
+        assign sy = pos[1] | strip
+      else
+        assign shown_count = product_count | at_most: 3
+        assign slots = shown_count | plus: 1
+        assign sx = i | plus: 1 | times: 100 | divided_by: slots
+        assign sy = 58
+      endif
+      assign sy_num = sy | plus: 0
+      assign delay = i | times: 0.7
+    -%}
+    <div class="ohf-spot{% if sy_num > 50 %} ohf-spot--up{% endif %}" style="--sx: {{ sx }}%; --sy: {{ sy }}%; --pd: {{ delay }}s;">
+      <button
+        class="ohf-spot__dot"
+        type="button"
+        aria-expanded="false"
+        aria-controls="Spot-{{ key }}-{{ i }}"
+        aria-label="Show {{ product.title | escape }}"
+        data-spot
+      ></button>
+      <div class="ohf-small-card" id="Spot-{{ key }}-{{ i }}">
+        <a class="ohf-small-card__body" href="{{ product.url }}">
+          {%- if product.featured_media -%}
+            {{ product.featured_media | image_url: width: 160 | image_tag: width: 78, height: 78, alt: '', loading: 'lazy' }}
+          {%- endif -%}
+          <span class="ohf-small-card__info">
+            <span class="ohf-small-card__name">{{ product.title | escape }}</span>
+            <span class="ohf-small-card__link">View product <span aria-hidden="true">→</span></span>
+          </span>
+        </a>
+      </div>
+    </div>
+  {%- endfor -%}
+</figure>
