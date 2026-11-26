@@ -83,13 +83,12 @@
         </button>
       </div>
 
-      <div class="ohf-pdp__thumbs" role="list" data-gallery-thumbs>
+      <div class="ohf-pdp__thumbs" role="group" aria-label="Product photos" data-gallery-thumbs>
         {%- for media in product.media -%}
           {%- if media.media_type == 'image' -%}
             <button
               type="button"
               class="ohf-pdp__thumb{% if media.id == first.id %} is-current{% endif %}"
-              role="listitem"
               aria-label="Show photo {{ forloop.index }}{% if media.alt != blank %}: {{ media.alt | escape }}{% endif %}"
               {% if media.id == first.id %}
                 aria-current="true"
@@ -109,7 +108,6 @@
           <button
             type="button"
             class="ohf-pdp__thumb ohf-pdp__thumb--worn"
-            role="listitem"
             aria-label="Show photo of it being worn{% if file.alt != blank %}: {{ file.alt | escape }}{% endif %}"
             data-worn
             data-src="{{ file | image_url: width: 1600 }}"
@@ -127,7 +125,6 @@
             <button
               type="button"
               class="ohf-pdp__thumb ohf-pdp__thumb--worn"
-              role="listitem"
               aria-label="Show community photo{% if entry.place.value != blank %} from {{ entry.place.value | escape }}{% endif %}"
               data-worn
               data-src="{{ entry.photo.value | image_url: width: 1600 }}"
