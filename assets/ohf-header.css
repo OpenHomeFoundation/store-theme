@@ -35,7 +35,18 @@
   background: var(--bg);
   color: var(--heading);
   border-radius: var(--r-m);
-  transition: background-color var(--dur-in) var(--ease);
+  transition: background-color var(--dur-in) var(--ease), box-shadow var(--dur-in) var(--ease);
+}
+
+/* Over a section the same colour as the card (set by ohf-header.js once scrolled): a contrasting surface */
+.ohf-nav__card.is-blend {
+  background: #fff;
+  box-shadow: 0 8px 28px rgba(9, 32, 46, 0.1);
+}
+
+:root[data-lights='off'] .ohf-nav__card.is-blend {
+  background: color-mix(in srgb, var(--ohf-light-grey) 10%, var(--bg));
+  box-shadow: 0 0 0 1px rgba(247, 246, 242, 0.1), 0 8px 28px rgba(0, 0, 0, 0.35);
 }
 
 /* Logo */

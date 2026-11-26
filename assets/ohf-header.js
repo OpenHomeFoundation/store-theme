@@ -13,6 +13,9 @@
  * Phone menu: the menu button opens the light-blue panel.
  * Cart dropdown: <ohf-cart> (assets/ohf-cart.js) runs itself and calls closeOthers / syncScrim here.
  * One thing open at a time; a scrim dims the page behind.
+ * Contrast: once the page has scrolled, the header checks what's behind its card. Where that's the same colour as
+ * the card (beige on beige, or navy on navy with the lights off), the card fades to a contrasting surface
+ * (.is-blend, styles in ohf-header.css). Photos and other colours leave it as it is.
  */
 if (!customElements.get('ohf-header')) {
   customElements.define(
@@ -38,6 +41,7 @@ if (!customElements.get('ohf-header')) {
         this.bindRegion();
         this.bindMobile();
         this.bindSearch();
+        this.bindContrast();
 
         this.scrim?.addEventListener('click', () => this.closeAll());
         document.addEventListener('keydown', this.onKeydown);
@@ -46,6 +50,9 @@ if (!customElements.get('ohf-header')) {
       }
 
       disconnectedCallback() {
+        window.removeEventListener('scroll', this.onContrastScroll);
+        window.removeEventListener('resize', this.onContrastScroll);
+        this.lightsObserver?.disconnect();
         document.removeEventListener('keydown', this.onKeydown);
         document.removeEventListener('click', this.onDocClick);
         this.desktop.removeEventListener('change', this.onBreakpoint);
@@ -294,6 +301,85 @@ if (!customElements.get('ohf-header')) {
           }
           this.syncScrim();
         });
+      }
+
+      /* ---------- Contrast with what's behind the card ---------- */
+
+      bindContrast() {
+        this.card = this.querySelector('.ohf-nav__card');
+        if (!this.card) return;
+        // The card's own colour, read from a probe so it follows the lights switch
+        this.probe = document.createElement('span');
+        this.probe.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden;background:var(--bg);pointer-events:none';
+        this.probe.setAttribute('aria-hidden', 'true');
+        this.card.appendChild(this.probe);
+        this.readBase = () => (this.base = this.parseColour(getComputedStyle(this.probe).backgroundColor));
+        this.readBase();
+
+        this.onContrastScroll = () => {
+          if (!this.contrastFrame) this.contrastFrame = requestAnimationFrame(() => this.checkContrast());
+        };
+        window.addEventListener('scroll', this.onContrastScroll, { passive: true });
+        window.addEventListener('resize', this.onContrastScroll);
+        // Lights on/off changes both the card and the sections
+        this.lightsObserver = new MutationObserver(() => {
+          this.readBase();
+          this.onContrastScroll();
+        });
+        this.lightsObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-lights'] });
+        this.checkContrast();
+      }
+
+      parseColour(value) {
+        const m = value && value.match(/rgba?\(([^)]+)\)/);
+        if (!m) return null;
+        const [r, g, b, a = 1] = m[1].split(/[\s,\/]+/).filter(Boolean).map(Number);
+        return { r, g, b, a };
+      }
+
+      // The colour of the band behind one point of the card: the first thing under it (outside the header) that's
+      // at least 60% of the screen wide and has a solid background colour. Narrower things (product cards, buttons)
+      // are skipped, so scrolling over a grid doesn't flicker. A wide photo or background image counts as "not a
+      // flat colour".
+      colourBehind(x, y) {
+        const stack = document.elementsFromPoint(x, y);
+        const minWidth = window.innerWidth * 0.6;
+        for (const hit of stack) {
+          if (this.contains(hit) || hit.closest('[data-ohf-scrim]')) continue;
+          for (let el = hit; el && el !== document.documentElement; el = el.parentElement) {
+            if (this.contains(el)) break;
+            if (el.getBoundingClientRect().width < minWidth) continue;
+            if (el.tagName === 'IMG' || el.tagName === 'VIDEO' || el.tagName === 'CANVAS') return 'photo';
+            const cs = getComputedStyle(el);
+            if (cs.backgroundImage && cs.backgroundImage !== 'none') return 'photo';
+            const c = this.parseColour(cs.backgroundColor);
+            if (c && c.a > 0.5) return c;
+          }
+        }
+        return this.parseColour(getComputedStyle(document.body).backgroundColor);
+      }
+
+      checkContrast() {
+        this.contrastFrame = null;
+        if (!this.base) return;
+        // At the very top the page is laid out around the header as designed
+        let blend = false;
+        if (window.scrollY > 8) {
+          const r = this.card.getBoundingClientRect();
+          const y = r.top + r.height / 2;
+          // Left, middle and right of the card: blend if any of them matches
+          for (const fx of [0.08, 0.5, 0.92]) {
+            const c = this.colourBehind(r.left + r.width * fx, y);
+            if (c && c !== 'photo') {
+              const d = Math.hypot(c.r - this.base.r, c.g - this.base.g, c.b - this.base.b);
+              if (d < 6) {
+                blend = true;
+                break;
+              }
+            }
+          }
+        }
+        this.card.classList.toggle('is-blend', blend);
       }
 
       closeAll() {
