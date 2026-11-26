@@ -9,42 +9,6 @@
  */
 {
   "sections": {
-    "image_banner": {
-      "type": "image-banner",
-      "blocks": {
-        "heading": {
-          "type": "heading",
-          "settings": {
-            "heading": "Open Home Foundation Store",
-            "heading_size": "h0"
-          }
-        },
-        "text_GrQiXp": {
-          "type": "text",
-          "settings": {
-            "text": "Shopping here is an easy way of supporting the Open Home Foundation and our fight for the <a href=\"https://www.openhomefoundation.org/\"><span style=\"text-decoration:underline\">principles of privacy, choice, and sustainability</span></a> for smart homes. And of course, you’ll snag some quality swag along the way!",
-            "text_style": "body"
-          }
-        }
-      },
-      "block_order": [
-        "heading",
-        "text_GrQiXp"
-      ],
-      "settings": {
-        "image": "shopify://shop_images/store-hero-bg.webp",
-        "image_overlay_opacity": 60,
-        "image_height": "medium",
-        "image_behavior": "none",
-        "desktop_content_position": "bottom-center",
-        "desktop_content_alignment": "center",
-        "show_text_box": false,
-        "color_scheme": "scheme-3",
-        "stack_images_on_mobile": false,
-        "mobile_content_alignment": "center",
-        "show_text_below": false
-      }
-    },
     "featured_collection": {
       "type": "featured-collection",
       "settings": {
@@ -85,10 +49,27 @@
         "button_new_tab": true,
         "show_stickers": true
       }
+    },
+    "ohf_hero": {
+      "type": "ohf-hero",
+      "settings": {
+        "image": "shopify://shop_images/store-hero-bg.webp",
+        "image_alt": "Four people from the community chatting on a sunny rooftop terrace, one with a sticker-covered laptop",
+        "line_1": "Local control",
+        "line_2": "looks good on you",
+        "highlight": "good",
+        "text": "Hoodies, tees, stickers, and a calendar that doesn’t need the cloud. Shop the range for swag that says no to data surveillance. Every purchase supports the Open Home Foundation’s fight for privacy, choice, and sustainability in the smart home.",
+        "button_1_label": "Shop all",
+        "button_1_link": "shopify://collections/all",
+        "button_2_label": "Read the manifesto",
+        "button_2_link": "",
+        "size": "home",
+        "pin": true
+      }
     }
   },
   "order": [
-    "image_banner",
+    "ohf_hero",
     "featured_collection",
     "ohf_join"
   ]
