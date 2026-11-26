@@ -81,7 +81,7 @@
         "title_2": "Open Home crowd",
         "text": "Forums, meetups, and a growing community of tinkerers.",
         "button_label": "Join the community",
-        "button_link": "",
+        "button_link": "https://community.home-assistant.io/",
         "button_new_tab": true,
         "show_stickers": true
       }
