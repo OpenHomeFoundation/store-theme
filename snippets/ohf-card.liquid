@@ -4,8 +4,7 @@
 
   Layout (concept): photo (second photo on hover), labels top left, "+" quick add bottom right;
   then "CATEGORY · PROJECT", name, colour swatches (2+ colours only), price, "View product".
-  - Category: the product type, renamed by the "Category names" theme setting (e.g. Hoodie → Sweatshirts).
-  - Project: the first product tag that matches the "Project tags" theme setting (decision d04).
+  - Category · project: snippets/ohf-product-meta.liquid (shared with search results).
   - Labels: NEW for products in the New collection (theme setting), LIMITED EDITION from
     custom.limited_edition, COMING SOON from custom.coming_soon, SOLD OUT when nothing is in stock.
   - States: sold out (greyed photo, struck price, "Out of stock"), coming soon (frosted photo, no add).
@@ -19,32 +18,6 @@
 {%- endcomment -%}
 {%- liquid
   assign p = card_product
-
-  # Category from product type
-  assign category = p.type
-  assign cat_lines = settings.ohf_card_categories | newline_to_br | split: '<br />'
-  for line in cat_lines
-    assign pair = line | split: ':'
-    if pair.size > 1
-      assign from = pair[0] | strip | downcase
-      assign type_lc = p.type | strip | downcase
-      if from == type_lc
-        assign category = pair[1] | strip
-        break
-      endif
-    endif
-  endfor
-
-  # Project from tags
-  assign project = ''
-  assign project_names = settings.ohf_card_projects | split: ','
-  for name in project_names
-    assign wanted = name | strip
-    if p.tags contains wanted
-      assign project = wanted
-      break
-    endif
-  endfor
 
   # Colour option (swatches only with 2+ colours)
   assign color_option = null
@@ -242,17 +215,7 @@
       </div>
 
       <div class="ohf-card__desc">
-        {%- if category != blank or project != blank -%}
-          <p class="ohf-card__cat">
-            {{- category | escape -}}
-            {%- if category != blank and project != blank -%}
-              <span class="ohf-card__sep" aria-hidden="true"> · </span>
-            {%- endif -%}
-            {%- if project != blank -%}
-              <span class="ohf-card__project">{{ project | escape }}</span>
-            {%- endif -%}
-          </p>
-        {%- endif -%}
+        {%- render 'ohf-product-meta', product: p, class: 'ohf-card__cat' -%}
 
         <h3 class="ohf-card__name card__heading" id="{{ title_id }}">
           <a href="{{ p.url }}" id="{{ link_id }}" class="ohf-card__link">{{ p.title | escape }}</a>

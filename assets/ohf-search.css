@@ -1,0 +1,237 @@
+/*
+ * OHF header search (redesign 2026): the search field inside the nav card and Shopify's predictive search
+ * results under it. The concept doesn't show search, so this follows the theme: paper panel with 8px
+ * corners floating 8px under the card, Figtree headings in the kicker style, product rows like small cards
+ * (thumbnail on light grey, category · project, name, price), light-blue hover.
+ * Markup: snippets/ohf-search.liquid and sections/predictive-search.liquid (Dawn, lightly extended).
+ */
+
+/* ---- Field ---- */
+.ohf-nav .search-modal__form .field {
+  --inputs-radius: var(--r-xs);
+}
+
+.ohf-nav .search-modal .field::before,
+.ohf-nav .search-modal .field::after {
+  display: none; /* Dawn's double border; replaced by the border below */
+}
+
+.ohf-nav .search-modal .field__input {
+  height: 52px;
+  padding: 2rem 9rem 0.6rem 1.6rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r-xs);
+  background: #fff;
+  color: var(--heading);
+  font-size: 1.6rem;
+  box-shadow: none;
+  transition: border-color var(--dur-ui) var(--ease);
+}
+
+.ohf-nav .search-modal .field__input:focus {
+  outline: none;
+  border-color: var(--ohf-light-blue);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ohf-light-blue) 30%, transparent);
+}
+
+:root[data-lights='off'] .ohf-nav .search-modal .field__input {
+  background: color-mix(in srgb, var(--ohf-light-grey) 6%, var(--bg));
+}
+
+.ohf-nav .search-modal .field__label {
+  left: 1.6rem;
+  color: var(--body);
+  font-family: var(--font-body-family);
+  letter-spacing: 0;
+}
+
+.ohf-nav .search-modal .field__button {
+  color: var(--heading);
+}
+
+.ohf-nav .search-modal .field__button:hover {
+  color: var(--ohf-light-blue);
+}
+
+.ohf-nav .search-modal__close-button {
+  color: var(--heading);
+}
+
+/* ---- Results panel ---- */
+.ohf-nav .predictive-search {
+  top: calc(100% + 16px);
+  left: auto;
+  right: auto;
+  width: 100%;
+  max-height: calc(100vh - 160px);
+  border: 0;
+  border-radius: var(--r-m);
+  background: var(--bg);
+  color: var(--heading);
+  box-shadow: 0 16px 48px rgba(9, 32, 46, 0.18);
+}
+
+.ohf-nav predictive-search {
+  position: relative;
+}
+
+.ohf-nav .predictive-search__results-groups-wrapper {
+  gap: var(--s24);
+  padding: var(--s16) var(--s16) var(--s8);
+  border-bottom: 1px solid var(--line);
+}
+
+.ohf-nav .predictive-search__result-group {
+  gap: var(--s16);
+}
+
+/* Section headings: the kicker style */
+.ohf-nav .predictive-search__heading {
+  margin: 0 0 var(--s4);
+  padding: var(--s8) var(--s8) var(--s8);
+  border-bottom: 1px solid var(--line);
+  font-family: var(--font-heading-family);
+  font-weight: 700;
+  font-size: 1.2rem;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--body);
+}
+
+/* Rows */
+.ohf-nav .predictive-search__item {
+  padding: var(--s8);
+  border-radius: var(--r-xs);
+  color: var(--heading);
+  font-family: var(--font-heading-family);
+  transition: background-color var(--dur-ui) var(--ease);
+}
+
+.ohf-nav .predictive-search__list-item:hover > *,
+.ohf-nav .predictive-search__list-item[aria-selected='true'] > *,
+.ohf-nav .predictive-search__item:hover,
+.ohf-nav .predictive-search__item[aria-selected='true'] {
+  background: color-mix(in srgb, var(--cta-hover) 45%, transparent);
+  color: var(--heading);
+}
+
+.ohf-nav .predictive-search__list-item:hover .predictive-search__item-heading,
+.ohf-nav .predictive-search__list-item[aria-selected='true'] .predictive-search__item-heading {
+  text-decoration: none;
+}
+
+.ohf-nav .predictive-search__item-heading {
+  font-family: var(--font-heading-family);
+  font-weight: 500;
+  font-size: 1.6rem;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--heading);
+}
+
+/* Suggestions: the matched part plain, the rest bold */
+.ohf-nav .predictive-search__item-query-result mark {
+  color: var(--body);
+}
+
+/* Product rows: thumbnail, category · project, name, price */
+.ohf-nav .predictive-search__results-list {
+  display: grid;
+  gap: 2px;
+}
+
+/* Long titles and category lines stay inside their row (truncate) instead of widening the panel */
+.ohf-nav .predictive-search__result-group,
+.ohf-nav .predictive-search__list-item,
+.ohf-nav .predictive-search__item-content {
+  min-width: 0;
+}
+
+.ohf-nav .predictive-search__item--link-with-thumbnail {
+  grid-template-columns: 64px 1fr;
+  grid-column-gap: var(--s16);
+  align-items: center;
+}
+
+.ohf-ps__thumb {
+  grid-area: product-image;
+  display: grid;
+  place-items: center;
+  width: 64px;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: var(--r-xs);
+  background: #fff;
+}
+
+.ohf-nav .ohf-ps__thumb .predictive-search__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ohf-ps__meta {
+  margin: 0 0 var(--s4);
+  font-family: var(--font-heading-family);
+  font-weight: 600;
+  font-size: 1.1rem;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--body);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ohf-ps__price {
+  margin: var(--s6) 0 0;
+  font-family: var(--font-heading-family);
+  font-weight: 700;
+  font-size: 1.4rem;
+  color: var(--heading);
+}
+
+.ohf-ps__soldout {
+  margin-left: var(--s8);
+  font-weight: 500;
+  color: var(--body);
+}
+
+/* "Search for …" row */
+.ohf-nav .predictive-search__search-for-button {
+  display: block;
+  padding: var(--s8);
+}
+
+.ohf-nav .predictive-search__item--term {
+  padding: var(--s12) var(--s8);
+  font-family: var(--font-heading-family);
+  font-weight: 600;
+  font-size: 1.5rem;
+  color: var(--heading);
+}
+
+.ohf-nav .predictive-search__item--term .svg-wrapper {
+  color: var(--heading);
+}
+
+/* No results */
+.ohf-ps__empty {
+  margin: 0;
+  padding: var(--s24) var(--s16) var(--s8);
+  color: var(--body);
+  font-size: 1.5rem;
+}
+
+@media (max-width: 749px) {
+  .ohf-nav .predictive-search {
+    top: calc(100% + 12px);
+    max-height: calc(100vh - 130px);
+  }
+
+  .ohf-nav .search-modal .field__input {
+    height: 48px;
+  }
+}

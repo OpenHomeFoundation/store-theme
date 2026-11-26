@@ -142,26 +142,32 @@
                       class="predictive-search__item predictive-search__item--link-with-thumbnail link link--text"
                       tabindex="-1"
                     >
-                      {%- if product.featured_media != blank -%}
-                        <img
-                          class="predictive-search__image"
-                          src="{{ product.featured_media | image_url: width: 150 }}"
-                          alt="{{ product.featured_media.alt | escape }}"
-                          width="50"
-                          height="{{ 50 | divided_by: product.featured_media.preview_image.aspect_ratio }}"
-                        >
-                      {%- endif -%}
-                      <div class="predictive-search__item-content{% unless settings.predictive_search_show_vendor or settings.predictive_search_show_price %} predictive-search__item-content--centered{% endunless %}">
-                        {%- if settings.predictive_search_show_vendor -%}
-                          <span class="visually-hidden">{{ 'accessibility.vendor' | t }}</span>
-                          <div class="predictive-search__item-vendor caption-with-letter-spacing">
-                            {{ product.vendor }}
-                          </div>
+                      <span class="ohf-ps__thumb">
+                        {%- if product.featured_media != blank -%}
+                          <img
+                            class="predictive-search__image"
+                            src="{{ product.featured_media | image_url: width: 160 }}"
+                            alt="{{ product.featured_media.alt | escape }}"
+                            width="80"
+                            height="{{ 80 | divided_by: product.featured_media.preview_image.aspect_ratio | round }}"
+                          >
                         {%- endif -%}
+                      </span>
+                      <div class="predictive-search__item-content">
+                        {%- comment -%} Redesign 2026: category · project and price, as on the product card {%- endcomment -%}
+                        {%- render 'ohf-product-meta', product: product, class: 'ohf-ps__meta' -%}
                         <p class="predictive-search__item-heading h5">{{ product.title | escape }}</p>
-                        {%- if settings.predictive_search_show_price -%}
-                          {% render 'price', product: product, use_variant: true, show_badges: false %}
-                        {%- endif -%}
+                        <p class="ohf-ps__price">
+                          {%- if product.price_varies -%}
+                            {%- assign from_price = product.price_min | money -%}
+                            {{ 'products.product.price.from_price_html' | t: price: from_price }}
+                          {%- else -%}
+                            {{ product.price | money }}
+                          {%- endif -%}
+                          {%- unless product.available -%}
+                            <span class="ohf-ps__soldout">{{ 'products.product.sold_out' | t }}</span>
+                          {%- endunless -%}
+                        </p>
                       </div>
                     </a>
                   </product-component>
@@ -219,6 +225,10 @@
     {%- endif -%}
     {%- if first_column_results_size > 0 or predictive_search.resources.products.size > 0 -%}
       </div>
+    {%- endif -%}
+
+    {%- if first_column_results_size == 0 and predictive_search.resources.products.size == 0 -%}
+      <p class="ohf-ps__empty">{{ 'templates.search.no_results' | t: terms: predictive_search.terms }}</p>
     {%- endif -%}
 
     {%- render 'loading-spinner', class: 'predictive-search__loading-state' -%}
