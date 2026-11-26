@@ -1,0 +1,101 @@
+{
+  "sections": {
+    "ohf_hero": {
+      "type": "ohf-hero",
+      "settings": {
+        "image": "shopify://shop_images/store-hero-bg.webp",
+        "image_alt": "Four people from the community chatting on a sunny rooftop terrace, one with a sticker-covered laptop",
+        "line_1": "Merch with",
+        "line_2": "a mission",
+        "highlight": "mission",
+        "text": "Every order supports the Open Home Foundation and our fight for privacy, choice, and sustainability for smart homes. Here’s what we believe, and how we make what we sell.",
+        "button_1_label": "",
+        "button_1_link": "",
+        "button_2_label": "",
+        "button_2_link": "",
+        "size": "home",
+        "pin": true
+      }
+    },
+    "ohf_manifesto": {
+      "type": "ohf-manifesto",
+      "settings": {
+        "kicker": "Our manifesto",
+        "heading": "Manifesto",
+        "text": "Your home should keep working when the internet doesn’t. We don’t sell your data. We sell T-shirts. Wear them like you mean it.",
+        "key_phrase": "Wear them like you mean it."
+      }
+    },
+    "ohf_made": {
+      "type": "ohf-made",
+      "settings": {
+        "kicker": "How it’s made",
+        "heading": "Made to last, made with care",
+        "text": "<p>We choose every item ourselves, and we check it before it reaches you. Our apparel is made from certified organic cotton by manufacturers committed to fair labor and renewable energy, so it’s kinder to the people who make it and the planet it comes from. It’s built to last, because sustainability applies to a hoodie too.</p><p>We’re a nonprofit with no investors to answer to, so after covering production and shipping, profits from your purchase directly fund the Open Home Foundation and our work to keep smart homes private, local, and controlled by you.</p>",
+        "button_label": "Shop all",
+        "button_link": "shopify://collections/all"
+      }
+    },
+    "ohf_values": {
+      "type": "ohf-values",
+      "blocks": {
+        "privacy": {
+          "type": "value",
+          "settings": {
+            "colour": "privacy",
+            "label": "Privacy",
+            "title": "Control your personal data.",
+            "text": "<p>You decide what to share and who sees it. Devices must work locally, with the cloud strictly opt-in.</p>"
+          }
+        },
+        "choice": {
+          "type": "value",
+          "settings": {
+            "colour": "choice",
+            "label": "Choice",
+            "title": "Mix and match your devices.",
+            "text": "<p>Devices should be interoperable by design, with open standards and no vendor lock-in.</p>"
+          }
+        },
+        "sustainability": {
+          "type": "value",
+          "settings": {
+            "colour": "sustainability",
+            "label": "Sustainability",
+            "title": "Keep your gear going.",
+            "text": "<p>Hardware should be built to last and stay useful for years, not until a server shuts down.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "privacy",
+        "choice",
+        "sustainability"
+      ],
+      "settings": {
+        "kicker": "What we stand for",
+        "heading": "Three things we won’t trade for convenience."
+      }
+    },
+    "ohf_join": {
+      "type": "ohf-join",
+      "settings": {
+        "kicker": "Shop",
+        "title_1": "Wear what",
+        "title_2": "you stand for",
+        "text": "Rep the projects you love and back the people building smart homes that answer to you.",
+        "button_label": "Shop all",
+        "button_link": "shopify://collections/all",
+        "button_new_tab": false,
+        "show_stickers": true
+      }
+    }
+  },
+  "order": [
+    "ohf_hero",
+    "ohf_manifesto",
+    "ohf_made",
+    "ohf_values",
+    "ohf_join"
+  ]
+}

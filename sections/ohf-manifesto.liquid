@@ -1,0 +1,193 @@
+{%- comment -%}
+  OHF manifesto (redesign 2026, Why it matters page): a big statement on dark blue whose letters light up as you
+  scroll; the key phrase gets a light-blue underline once it has filled in.
+  The full text is also in the page as plain text for screen readers and search engines; the lit-up copy is decorative.
+  With reduced motion turned on, the text is shown fully lit.
+{%- endcomment -%}
+{%- liquid
+  assign text = section.settings.text | strip
+  assign key = section.settings.key_phrase | strip
+  assign has_key = false
+  if key != blank and text contains key
+    assign has_key = true
+    assign parts = text | split: key
+    assign before = parts[0] | strip
+    assign after = parts[1] | strip
+  endif
+-%}
+
+<ohf-manifesto class="ohf-manifesto" id="ohf-manifesto-{{ section.id }}">
+  <div class="ohf-wrap ohf-manifesto__shell">
+    {%- if section.settings.kicker != blank -%}
+      <p class="ohf-kicker ohf-manifesto__kicker">{{ section.settings.kicker | escape }}</p>
+    {%- endif -%}
+    <h2 class="visually-hidden">{{ section.settings.heading | escape }}</h2>
+    <p class="visually-hidden">{{ text | escape }}</p>
+    <p class="ohf-fill" aria-hidden="true" data-fill-text>
+      {%- if has_key -%}
+        {%- if before != blank -%}
+          {%- render 'ohf-fill-words', text: before -%}
+          {{- ' ' -}}
+        {%- endif -%}
+        <span class="ohf-fill__key">{%- render 'ohf-fill-words', text: key -%}</span>
+        {%- if after != blank -%}
+          {{- ' ' -}}
+          {%- render 'ohf-fill-words', text: after -%}
+        {%- endif -%}
+      {%- else -%}
+        {%- render 'ohf-fill-words', text: text -%}
+      {%- endif -%}
+    </p>
+  </div>
+</ohf-manifesto>
+
+{% stylesheet %}
+  .ohf-manifesto {
+    display: block;
+    padding-block: 144px;
+    overflow: hidden;
+    background: var(--ohf-dark-blue);
+    color: var(--ohf-grey);
+  }
+  :root[data-lights='off'] .ohf-manifesto {
+    border-top: 1px solid var(--ohf-dark-grey);
+  }
+  .ohf-manifesto__shell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .ohf-manifesto__kicker {
+    color: var(--ohf-light-blue);
+  }
+  .ohf-fill {
+    max-width: 1240px;
+    margin: 0 auto;
+    text-align: center;
+    text-wrap: balance;
+    font-family: var(--font-heading-family);
+    font-weight: 500;
+    font-size: clamp(4rem, 6.6vw, 9.6rem);
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+  }
+  .ohf-fill__word {
+    white-space: nowrap;
+  }
+  .ohf-fill__ch {
+    color: color-mix(in srgb, var(--ohf-grey) 40%, transparent);
+    transition: color var(--dur-ui) var(--ease);
+  }
+  .ohf-fill__ch.on {
+    color: var(--ohf-light-grey);
+  }
+  .ohf-fill__key {
+    background: linear-gradient(var(--ohf-light-blue), var(--ohf-light-blue)) no-repeat 0 100% / 0% 3px;
+    transition: background-size var(--dur-in) var(--ease);
+  }
+  .ohf-fill__key .ohf-fill__ch.on {
+    color: var(--ohf-light-blue);
+  }
+  .ohf-fill__key.lit {
+    background-size: 100% 3px;
+  }
+  @media (max-width: 900px) {
+    .ohf-manifesto {
+      padding-block: 96px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ohf-fill__ch,
+    .ohf-fill__key {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  if (!customElements.get('ohf-manifesto')) {
+    customElements.define(
+      'ohf-manifesto',
+      class extends HTMLElement {
+        connectedCallback() {
+          this.text = this.querySelector('[data-fill-text]');
+          if (!this.text) return;
+          this.chars = [...this.text.querySelectorAll('.ohf-fill__ch')];
+          this.keys = [...this.text.querySelectorAll('.ohf-fill__key')];
+          this.lit = -1;
+          const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+          // Letters fill from when the text is 80% down the screen until it has nearly left the top
+          this.render = () => {
+            this.frame = null;
+            const vh = window.innerHeight;
+            const rect = this.text.getBoundingClientRect();
+            const p = reduce.matches ? 1 : Math.min(1, Math.max(0, (vh * 0.8 - rect.top) / (rect.height + vh * 0.35)));
+            const n = Math.round(p * this.chars.length);
+            if (n === this.lit) return;
+            this.lit = n;
+            this.chars.forEach((ch, i) => ch.classList.toggle('on', i < n));
+            this.keys.forEach((k) => {
+              const cs = k.querySelectorAll('.ohf-fill__ch');
+              k.classList.toggle('lit', cs[cs.length - 1].classList.contains('on'));
+            });
+          };
+          this.onScroll = () => {
+            if (!this.frame) this.frame = requestAnimationFrame(this.render);
+          };
+          window.addEventListener('scroll', this.onScroll, { passive: true });
+          window.addEventListener('resize', this.onScroll);
+          this.render();
+        }
+
+        disconnectedCallback() {
+          window.removeEventListener('scroll', this.onScroll);
+          window.removeEventListener('resize', this.onScroll);
+        }
+      }
+    );
+  }
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "OHF manifesto",
+  "tag": "section",
+  "class": "ohf-manifesto-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Small heading",
+      "default": "Our manifesto"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading for screen readers",
+      "default": "Manifesto",
+      "info": "Not shown; announced before the manifesto."
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Manifesto",
+      "default": "Your home should keep working when the internet doesn’t. We don’t sell your data. We sell T-shirts. Wear them like you mean it.",
+      "info": "Lights up letter by letter as the page scrolls. Keep it short: a few sentences."
+    },
+    {
+      "type": "text",
+      "id": "key_phrase",
+      "label": "Key phrase",
+      "default": "Wear them like you mean it.",
+      "info": "Part of the manifesto, copied exactly. It turns light blue and gets underlined once it has filled in."
+    }
+  ],
+  "presets": [
+    {
+      "name": "OHF manifesto"
+    }
+  ]
+}
+{% endschema %}

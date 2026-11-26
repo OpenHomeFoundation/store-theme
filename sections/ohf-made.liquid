@@ -1,0 +1,127 @@
+{%- comment -%}
+  OHF "How it's made" (redesign 2026, Why it matters page): a big heading on the left, the story and a button on
+  the right. Two columns on desktop, stacked on smaller screens.
+{%- endcomment -%}
+<div class="ohf-made" id="ohf-made-{{ section.id }}">
+  <div class="ohf-wrap ohf-made__top">
+    <div>
+      {%- if section.settings.kicker != blank -%}
+        <p class="ohf-kicker">{{ section.settings.kicker | escape }}</p>
+      {%- endif -%}
+      <h2 class="ohf-made__title">{{ section.settings.heading | escape }}</h2>
+    </div>
+    <div class="ohf-made__story ohf-reveal">
+      {%- if section.settings.text != blank -%}
+        <div class="ohf-made__text">{{ section.settings.text }}</div>
+      {%- endif -%}
+      {%- if section.settings.button_label != blank -%}
+        <a href="{{ section.settings.button_link | default: routes.all_products_collection_url }}" class="ohf-cta ohf-cta--fill">
+          <span>{{ section.settings.button_label | escape }}</span>
+          {%- render 'ohf-icon', icon: 'arrow-right', size: 18 -%}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .ohf-made {
+    padding-block: 144px;
+    background: var(--bg);
+  }
+  :root[data-lights='off'] .ohf-made {
+    background: color-mix(in srgb, var(--ohf-light-grey) 6%, var(--ohf-dark-blue));
+  }
+  .ohf-made__top {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 64px;
+    align-items: start;
+  }
+  .ohf-made__title {
+    margin: 0;
+    font-family: var(--font-heading-family);
+    font-size: clamp(3.2rem, 3.6vw, 5.2rem);
+    font-weight: 500;
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+    color: var(--heading);
+  }
+  .ohf-made__story {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--s20);
+    padding-top: 12px;
+  }
+  .ohf-made__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s20);
+  }
+  .ohf-made__text p {
+    margin: 0;
+    max-width: 560px;
+    font-size: 1.7rem;
+    line-height: 1.55;
+    color: var(--body);
+  }
+  .ohf-made__text a {
+    color: inherit;
+  }
+  @media (max-width: 900px) {
+    .ohf-made {
+      padding-block: 96px;
+    }
+    .ohf-made__top {
+      grid-template-columns: 1fr;
+      gap: var(--s32);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "OHF how it's made",
+  "tag": "section",
+  "class": "ohf-made-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Small heading",
+      "default": "How it’s made"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Made to last, made with care"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Story",
+      "default": "<p>We choose every item ourselves, and we check it before it reaches you. Our apparel is made from certified organic cotton by manufacturers committed to fair labor and renewable energy, so it’s kinder to the people who make it and the planet it comes from. It’s built to last, because sustainability applies to a hoodie too.</p><p>We’re a nonprofit with no investors to answer to, so after covering production and shipping, profits from your purchase directly fund the Open Home Foundation and our work to keep smart homes private, local, and controlled by you.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Shop all"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "info": "Leave empty to link to all products."
+    }
+  ],
+  "presets": [
+    {
+      "name": "OHF how it's made"
+    }
+  ]
+}
+{% endschema %}
