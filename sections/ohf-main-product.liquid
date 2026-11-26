@@ -189,6 +189,35 @@
           assign crumb_url = routes.collections_url | append: '/types?q=' | append: type_q
         endif
       -%}
+      {%- comment -%} The same trail for search engines (BreadcrumbList structured data) {%- endcomment -%}
+      <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": {{ section.settings.shop_label | json }},
+              "item": {{ request.origin | append: routes.all_products_collection_url | json }}
+            },
+            {%- if crumb_name != blank and crumb_url != blank -%}
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": {{ crumb_name | json }},
+                "item": {{ request.origin | append: crumb_url | json }}
+              },
+            {%- endif -%}
+            {
+              "@type": "ListItem",
+              "position": {% if crumb_name != blank and crumb_url != blank %}3{% else %}2{% endif %},
+              "name": {{ product.title | json }},
+              "item": {{ request.origin | append: product.url | json }}
+            }
+          ]
+        }
+      </script>
       <nav class="ohf-pdp__crumbs" aria-label="Breadcrumb">
         <a href="{{ routes.all_products_collection_url }}">{{ section.settings.shop_label | escape }}</a>
         {%- if crumb_name != blank and crumb_url != blank -%}
