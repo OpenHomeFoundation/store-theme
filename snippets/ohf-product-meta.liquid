@@ -1,0 +1,48 @@
+{%- comment -%}
+  "CATEGORY · PROJECT" for a product (redesign 2026). Used by the product card and the search results, so
+  they always agree.
+  - Category: the product type, renamed by Theme settings › OHF product cards › Category names
+    (e.g. "Hoodie: Sweatshirts"). Types not listed show as they are.
+  - Project: the first tag that matches Theme settings › OHF product cards › Project tags.
+  Outputs nothing when the product has neither.
+
+  Accepts:
+  - product: {Object} the product (required)
+  - class: {String} class for the wrapping <p> (optional, default ohf-meta)
+{%- endcomment -%}
+{%- liquid
+  assign category = product.type
+  assign type_lc = product.type | strip | downcase
+  assign cat_lines = settings.ohf_card_categories | newline_to_br | split: '<br />'
+  for line in cat_lines
+    assign pair = line | split: ':'
+    if pair.size > 1
+      assign from = pair[0] | strip | downcase
+      if from == type_lc
+        assign category = pair[1] | strip
+        break
+      endif
+    endif
+  endfor
+
+  assign project = ''
+  assign project_names = settings.ohf_card_projects | split: ','
+  for name in project_names
+    assign wanted = name | strip
+    if product.tags contains wanted
+      assign project = wanted
+      break
+    endif
+  endfor
+-%}
+{%- if category != blank or project != blank -%}
+  <p class="{{ class | default: 'ohf-meta' }}">
+    {{- category | escape -}}
+    {%- if category != blank and project != blank -%}
+      <span aria-hidden="true"> · </span>
+    {%- endif -%}
+    {%- if project != blank -%}
+      <span>{{ project | escape }}</span>
+    {%- endif -%}
+  </p>
+{%- endif -%}
