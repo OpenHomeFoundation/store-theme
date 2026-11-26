@@ -67,7 +67,7 @@
                 cx="120"
                 cy="120"
                 r="100"
-                style="--c: {{ block.settings.color }}; --len: {{ len }}; --off: {{ off }}; --C: {{ circ }}; --i: {{ forloop.index0 }};"
+                style="--c: {{ block.settings.color }};{% if block.settings.color.lightness < 25 %} --c-dark: var(--ohf-light-grey);{% endif %} --len: {{ len }}; --off: {{ off }}; --C: {{ circ }}; --i: {{ forloop.index0 }};"
                 data-seg="{{ forloop.index0 }}"
               />
             {%- endfor -%}
@@ -90,7 +90,7 @@
             -%}
             <li
               class="{% if k == key_seg %}is-key{% endif %}"
-              style="--c: {{ block.settings.color }};"
+              style="--c: {{ block.settings.color }};{% if block.settings.color.lightness < 25 %} --c-dark: var(--ohf-light-grey);{% endif %}"
               tabindex="0"
               data-seg="{{ forloop.index0 }}"
               data-pct="{{ pct_display }}"
@@ -292,6 +292,15 @@
       translate: none;
       transition: none;
     }
+  }
+  /* Lights off: a segment set to a very dark colour (e.g. the OHF navy) would vanish on the navy page, so it
+     shows in light grey instead, the lightest segment as navy is the darkest in light mode (--c-dark is set
+     in the markup for colours under 25% lightness) */
+  :root[data-lights='off'] .ohf-money__arc {
+    stroke: var(--c-dark, var(--c));
+  }
+  :root[data-lights='off'] .ohf-money__legend i {
+    background: var(--c-dark, var(--c));
   }
 {% endstylesheet %}
 
