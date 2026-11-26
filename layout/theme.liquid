@@ -305,6 +305,10 @@
     {{ 'component-swatch.css' | asset_url | stylesheet_tag }}
     {{ 'component-card-swatches.css' | asset_url | stylesheet_tag }}
     {{ 'ohf-card.css' | asset_url | stylesheet_tag }}
+    {%- if request.page_type == 'policy' -%}
+      {%- comment -%} Shopify renders policy pages itself; these are the OHF text page styles {%- endcomment -%}
+      {{ 'ohf-page.css' | asset_url | stylesheet_tag }}
+    {%- endif -%}
     <script src="{{ 'ohf-lights.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'ohf-motion.js' | asset_url }}" defer="defer"></script>
     <link rel="stylesheet" href="{{ 'component-cart-items.css' | asset_url }}" media="print" onload="this.media='all'">

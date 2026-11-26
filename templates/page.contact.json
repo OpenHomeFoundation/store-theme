@@ -1,25 +1,37 @@
 {
   "sections": {
     "main": {
-      "type": "main-page",
+      "type": "ohf-page",
       "settings": {
-        "padding_top": 36,
-        "padding_bottom": 36
+        "kicker": "",
+        "compact_bottom": true
       }
     },
     "form": {
-      "type": "contact-form",
+      "type": "ohf-contact-form",
       "settings": {
-        "heading": "",
-        "heading_size": "h1",
-        "color_scheme": "scheme-1",
-        "padding_top": 36,
-        "padding_bottom": 36
+        "heading": "Send us a message",
+        "show_phone": true,
+        "note": ""
+      }
+    },
+    "ohf_join": {
+      "type": "ohf-join",
+      "settings": {
+        "kicker": "Community",
+        "title_1": "Join the",
+        "title_2": "Open Home crowd",
+        "text": "Forums, meetups, and a growing community of tinkerers.",
+        "button_label": "Join the community",
+        "button_link": "https://community.home-assistant.io/",
+        "button_new_tab": true,
+        "show_stickers": true
       }
     }
   },
   "order": [
     "main",
-    "form"
+    "form",
+    "ohf_join"
   ]
 }

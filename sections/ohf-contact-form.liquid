@@ -1,0 +1,270 @@
+{%- comment -%}
+  OHF contact form (redesign 2026). Shopify's own contact form ({% form 'contact' %}): messages go to the store's
+  sender email exactly as with Dawn's form, with the same field names (name, email, phone, comment).
+  Shown under the page content on the contact page template.
+{%- endcomment -%}
+{{ 'ohf-page.css' | asset_url | stylesheet_tag }}
+
+<div class="ohf-contact">
+  <div class="ohf-wrap">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="ohf-contact__heading">{{ section.settings.heading | escape }}</h2>
+    {%- endif -%}
+
+    {%- form 'contact', id: 'OhfContactForm', class: 'ohf-contact__form' -%}
+      {%- if form.posted_successfully? -%}
+        <p class="ohf-contact__status ohf-contact__status--ok" role="status" tabindex="-1" autofocus>
+          {%- render 'ohf-icon', icon: 'check', size: 22 -%}
+          {{ 'templates.contact.form.post_success' | t }}
+        </p>
+      {%- elsif form.errors -%}
+        <div class="ohf-contact__status ohf-contact__status--error" role="alert" tabindex="-1" autofocus>
+          <p>{{ 'templates.contact.form.error_heading' | t }}</p>
+          <a href="#OhfContactForm-email">
+            {{ form.errors.translated_fields.email | capitalize }}
+            {{ form.errors.messages.email }}
+          </a>
+        </div>
+      {%- endif -%}
+
+      <div class="ohf-contact__row">
+        <div class="ohf-field">
+          <label class="ohf-field__label" for="OhfContactForm-name">{{ 'templates.contact.form.name' | t }}</label>
+          <input
+            class="ohf-field__input"
+            autocomplete="name"
+            type="text"
+            id="OhfContactForm-name"
+            name="contact[{{ 'templates.contact.form.name' | t }}]"
+            value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
+          >
+        </div>
+        <div class="ohf-field">
+          <label class="ohf-field__label" for="OhfContactForm-email">
+            {{- 'templates.contact.form.email' | t }}
+            <span aria-hidden="true">*</span>
+          </label>
+          <input
+            class="ohf-field__input"
+            autocomplete="email"
+            type="email"
+            id="OhfContactForm-email"
+            name="contact[email]"
+            spellcheck="false"
+            autocapitalize="off"
+            required
+            aria-required="true"
+            value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
+            {% if form.errors contains 'email' %}
+              aria-invalid="true" aria-describedby="OhfContactForm-email-error"
+            {% endif %}
+          >
+          {%- if form.errors contains 'email' -%}
+            <small class="ohf-field__error" id="OhfContactForm-email-error">
+              {{- form.errors.translated_fields.email | capitalize }}
+              {{ form.errors.messages.email -}}
+            </small>
+          {%- endif -%}
+        </div>
+      </div>
+
+      {%- if section.settings.show_phone -%}
+        <div class="ohf-field">
+          <label class="ohf-field__label" for="OhfContactForm-phone">{{ 'templates.contact.form.phone' | t }}</label>
+          <input
+            class="ohf-field__input"
+            type="tel"
+            id="OhfContactForm-phone"
+            autocomplete="tel"
+            name="contact[{{ 'templates.contact.form.phone' | t }}]"
+            pattern="[0-9\-+ ]*"
+            value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}"
+          >
+        </div>
+      {%- endif -%}
+
+      <div class="ohf-field">
+        <label class="ohf-field__label" for="OhfContactForm-body">{{ 'templates.contact.form.comment' | t }}</label>
+        <textarea
+          class="ohf-field__input ohf-field__input--area"
+          rows="8"
+          id="OhfContactForm-body"
+          name="contact[{{ 'templates.contact.form.comment' | t }}]"
+        >
+          {{- form.body -}}
+        </textarea>
+      </div>
+
+      <div class="ohf-contact__foot">
+        <button type="submit" class="ohf-cta ohf-cta--fill">
+          <span>{{ 'templates.contact.form.send' | t }}</span>
+          {%- render 'ohf-icon', icon: 'arrow-right', size: 18 -%}
+        </button>
+        {%- if section.settings.note != blank -%}
+          <div class="ohf-contact__note">{{ section.settings.note }}</div>
+        {%- endif -%}
+      </div>
+    {%- endform -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .ohf-contact {
+    padding-block: 48px 96px;
+  }
+  .ohf-contact__heading {
+    margin: 0 0 var(--s24);
+    font-family: var(--font-heading-family);
+    font-weight: 500;
+    font-size: clamp(2.6rem, 2.6vw, 3.4rem);
+    line-height: 1.15;
+    color: var(--heading);
+  }
+  .ohf-contact__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s20);
+    max-width: 720px;
+  }
+  .ohf-contact__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s20);
+  }
+  .ohf-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s8);
+  }
+  .ohf-field__label {
+    font-family: var(--font-heading-family);
+    font-weight: 600;
+    font-size: 1.4rem;
+    color: var(--heading);
+  }
+  .ohf-field__input {
+    width: 100%;
+    min-height: 52px;
+    padding: 12px var(--s16);
+    border: 1px solid var(--line);
+    border-radius: var(--r-xs);
+    background: #fff;
+    color: var(--ohf-dark-blue);
+    font-family: var(--font-body-family);
+    font-size: 1.6rem;
+    line-height: 1.4;
+    transition: border-color var(--dur-ui) var(--ease);
+  }
+  :root[data-lights='off'] .ohf-field__input {
+    background: color-mix(in srgb, var(--ohf-light-grey) 6%, var(--bg));
+    color: var(--heading);
+  }
+  .ohf-field__input:hover {
+    border-color: var(--body);
+  }
+  .ohf-field__input:focus-visible {
+    outline: 3px solid var(--cta-focus);
+    outline-offset: 1px;
+    border-color: var(--heading);
+  }
+  .ohf-field__input[aria-invalid='true'] {
+    border-color: #c41e3a;
+  }
+  .ohf-field__input--area {
+    min-height: 180px;
+    resize: vertical;
+  }
+  .ohf-field__error {
+    font-size: 1.3rem;
+    color: #c41e3a;
+  }
+  .ohf-contact__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s16) var(--s24);
+  }
+  .ohf-contact__note {
+    flex: 1 1 240px;
+    font-size: 1.3rem;
+    color: var(--body);
+  }
+  .ohf-contact__note p {
+    margin: 0;
+  }
+  .ohf-contact__note a {
+    color: var(--heading);
+  }
+  .ohf-contact__status {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s4);
+    margin: 0;
+    padding: var(--s16) var(--s20);
+    border-radius: var(--r-xs);
+    font-family: var(--font-heading-family);
+    font-size: 1.6rem;
+    color: var(--ohf-dark-blue);
+  }
+  .ohf-contact__status p {
+    margin: 0;
+    font-weight: 600;
+  }
+  .ohf-contact__status a {
+    color: inherit;
+  }
+  .ohf-contact__status--ok {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--s12);
+    background: var(--sustainability-main);
+  }
+  .ohf-contact__status--error {
+    background: color-mix(in srgb, #c41e3a 14%, #fff);
+  }
+  @media (max-width: 640px) {
+    .ohf-contact {
+      padding-block: 32px 72px;
+    }
+    .ohf-contact__row {
+      grid-template-columns: 1fr;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "OHF contact form",
+  "tag": "section",
+  "class": "ohf-contact-section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Shopify's contact form: messages are sent to the store's sender email (Settings › Notifications)."
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Send us a message"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_phone",
+      "label": "Ask for a phone number",
+      "default": true
+    },
+    {
+      "type": "richtext",
+      "id": "note",
+      "label": "Note next to the button",
+      "info": "Optional, e.g. how quickly you reply or a link to the FAQ."
+    }
+  ],
+  "presets": [
+    {
+      "name": "OHF contact form"
+    }
+  ]
+}
+{% endschema %}
