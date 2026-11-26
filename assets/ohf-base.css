@@ -1,0 +1,331 @@
+/*
+ * OHF base styles (redesign 2026). Loaded after base.css and ohf-tokens.css.
+ *
+ * 1. Type and page defaults that bring Dawn's elements in line with the concept.
+ * 2. Shared building blocks used by the new sections. Prefixed with "ohf-" so they never
+ *    collide with Dawn's own classes (Dawn already has .link and .dot).
+ */
+
+/* ---- 1. Dawn defaults ---- */
+
+body {
+  font-size: 1.6rem;
+  letter-spacing: 0;
+  line-height: 1.45;
+  transition: background-color var(--dur-in) var(--ease), color var(--dur-in) var(--ease);
+}
+
+.text-body {
+  font-size: 1.6rem;
+  letter-spacing: 0;
+  line-height: 1.45;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+.h0,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5 {
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+:focus-visible {
+  outline-color: var(--ohf-light-blue);
+}
+
+/* Dawn buttons take the concept's call-to-action type: Figtree semibold, 46px tall */
+.button,
+.shopify-challenge__button,
+.customer button {
+  font-family: var(--font-heading-family);
+  font-weight: 600;
+  font-size: 1.6rem;
+  letter-spacing: 0;
+  min-height: 4.6rem;
+}
+
+/* ---- 2. Building blocks ---- */
+
+.ohf-wrap {
+  padding-inline: var(--margin);
+  max-width: var(--page-max);
+  margin-inline: auto;
+}
+
+/* Eyebrow above a section title */
+.ohf-kicker {
+  font-family: var(--font-heading-family);
+  font-weight: 700;
+  font-size: 1.2rem;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--body);
+  margin: 0 0 var(--s12);
+}
+
+/* Section title */
+.ohf-title {
+  font-family: var(--font-heading-family);
+  font-weight: 500;
+  font-size: clamp(3.2rem, 3.6vw, 5.2rem);
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  color: var(--heading);
+  margin: 0;
+}
+
+/* Call-to-action buttons: .ohf-cta + --fill / --outline / --icon */
+.ohf-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s8);
+  height: 46px;
+  padding: 0 20px;
+  border-radius: var(--r-xs);
+  border: 1px solid var(--ohf-light-blue);
+  font-family: var(--font-heading-family);
+  font-weight: 600;
+  font-size: 1.6rem;
+  line-height: 1;
+  letter-spacing: 0;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  outline: 0 solid transparent;
+  outline-offset: 0;
+  transition: background-color var(--dur-ui) var(--ease), color var(--dur-ui) var(--ease),
+    border-color var(--dur-ui) var(--ease);
+}
+
+.ohf-cta svg {
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  transition: translate var(--dur-ui) var(--ease);
+}
+
+.ohf-cta:not(.ohf-cta--icon):hover svg {
+  translate: var(--nudge) 0;
+}
+
+.ohf-cta--fill {
+  background: var(--ohf-light-blue);
+  color: var(--ohf-dark-blue);
+}
+
+.ohf-cta--fill:hover {
+  background: var(--cta-hover);
+  border-color: var(--cta-hover);
+  color: var(--ohf-dark-blue);
+}
+
+.ohf-cta--fill:active {
+  background: var(--cta-active);
+  border-color: var(--cta-active);
+  color: var(--ohf-light-grey);
+}
+
+.ohf-cta--fill:focus-visible {
+  background: var(--cta-active);
+  border-color: var(--cta-focus);
+  color: var(--ohf-light-grey);
+  outline: 4px solid var(--cta-focus);
+  outline-offset: -4px;
+}
+
+.ohf-cta--outline {
+  background: transparent;
+  color: var(--heading);
+}
+
+.ohf-cta--outline:hover {
+  border-color: var(--cta-hover);
+}
+
+.ohf-cta--outline:active {
+  border-color: var(--cta-active);
+  outline: 2px solid var(--cta-active);
+  outline-offset: -2px;
+}
+
+.ohf-cta--outline:focus-visible {
+  border-color: var(--cta-focus);
+  outline: 4px solid var(--cta-focus);
+  outline-offset: -4px;
+}
+
+.ohf-cta:disabled,
+.ohf-cta[aria-disabled='true'] {
+  background: var(--cta-disabled);
+  border-color: var(--cta-disabled);
+  color: var(--ohf-light-grey);
+  cursor: not-allowed;
+}
+
+.ohf-cta--icon {
+  width: 48px;
+  height: 48px;
+  padding: 0;
+}
+
+/* Text link with an arrow that nudges on hover */
+.ohf-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s6);
+  font-family: var(--font-heading-family);
+  font-weight: 600;
+  font-size: 1.4rem;
+  line-height: 1;
+  color: var(--heading);
+  text-decoration: none;
+  text-underline-offset: 4px;
+  padding: 6px 0;
+}
+
+.ohf-link:hover {
+  text-decoration: underline;
+}
+
+.ohf-link svg {
+  width: 14px;
+  height: 14px;
+  transition: translate var(--dur-ui) var(--ease);
+}
+
+.ohf-link:hover svg {
+  translate: var(--nudge) 0;
+}
+
+/* Labels: NEW, LIMITED EDITION, SOLD OUT, COMING SOON */
+.ohf-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s8);
+  height: 24px;
+  padding: 0 12px;
+  border-radius: var(--r-xs);
+  font-family: var(--font-heading-family);
+  font-weight: 700;
+  font-size: 1.2rem;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  background: var(--ohf-light-blue);
+  color: var(--ohf-dark-blue);
+}
+
+.ohf-label--new {
+  background: var(--choice-main);
+  color: var(--ohf-light-grey);
+  border-radius: 0;
+}
+
+.ohf-label--limited {
+  background: var(--ohf-dark-blue);
+  color: var(--ohf-light-grey);
+  border-radius: 0;
+}
+
+.ohf-label--soldout {
+  background: var(--ohf-dark-grey);
+  color: var(--ohf-light-grey);
+  border-radius: 0;
+}
+
+.ohf-label--soon {
+  background: var(--ohf-light-blue);
+  color: var(--ohf-dark-blue);
+  border-radius: 0;
+}
+
+:root[data-lights='off'] .ohf-label--limited {
+  outline: 1px solid var(--ohf-dark-grey);
+}
+
+/* Rail position dots (under card rails and scrolling thumbnails) */
+.ohf-dots {
+  display: flex;
+  justify-content: center;
+  gap: var(--s8);
+  margin-top: var(--s24);
+}
+
+.ohf-dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--line);
+  cursor: pointer;
+  transition: background-color var(--dur-ui) var(--ease), width var(--dur-ui) var(--ease);
+}
+
+.ohf-dot[aria-current='true'] {
+  width: 24px;
+  border-radius: 4px;
+  background: var(--heading);
+}
+
+/* Entrance: fades and rises once in view (assets/ohf-motion.js adds .is-in) */
+.ohf-reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity var(--dur-in) var(--ease), transform var(--dur-in) var(--ease);
+}
+
+.ohf-reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Section titles rise line by line from behind a mask (words wrapped by ohf-motion.js) */
+.ohf-rise .rw {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
+
+.ohf-rise .rw__in {
+  display: inline-block;
+  translate: 0 110%;
+  transition: translate var(--dur-in) var(--ease);
+  transition-delay: calc(var(--l, 0) * 90ms);
+}
+
+.ohf-rise.is-in .rw__in {
+  translate: none;
+}
+
+/* Without scripts, or before ohf-motion.js has run, nothing stays hidden */
+html:not(.ohf-motion) .ohf-reveal {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ohf-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .ohf-rise .rw__in {
+    translate: none;
+    transition: none;
+  }
+}

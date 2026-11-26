@@ -109,6 +109,13 @@
         "content": "t:settings_schema.typography.settings.header__1.content"
       },
       {
+        "type": "checkbox",
+        "id": "ohf_brand_fonts",
+        "default": true,
+        "label": "Use OHF brand fonts",
+        "info": "Figtree for headings and Instrument Sans for body text, hosted in the theme. When on, the two font pickers below are ignored."
+      },
+      {
         "type": "font_picker",
         "id": "type_header_font",
         "default": "assistant_n4",
