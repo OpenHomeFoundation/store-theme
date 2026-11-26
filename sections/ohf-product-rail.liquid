@@ -1,8 +1,10 @@
 {%- comment -%}
   OHF product rail (redesign 2026): a collection's products as a scrolling row of product cards with position
   dots, ending in a coloured "View all" card. Two layouts from the concept:
-  - "With artwork" (New collection): artwork on the left half fading into the section's background colour,
-    heading and two cards at a time on the right.
+  - "With artwork" (New collection): the artwork (ideally a cut-out with a transparent background) sits whole in
+    its own column, left or right; heading and two cards at a time in the other. The section background is a
+    colour plus an optional texture image (covering or tiled), kept separate from the artwork so both stay small
+    and the artwork never gets cropped.
   - "Full width" (Wear the mission / best sellers): heading above, four cards at a time across the page.
   Cards are the shared OHF product card. Behaviour: assets/ohf-rail.js.
 {%- endcomment -%}
@@ -20,15 +22,16 @@
   endif
   assign count_text = section.settings.view_all_sub | replace: '[count]', c.products_count
   assign bg = section.settings.background
+  assign texture = section.settings.texture
 -%}
 
 {%- if c != blank and c.products_count > 0 -%}
   <script src="{{ 'ohf-rail.js' | asset_url }}" defer="defer"></script>
 
   <section
-    class="ohf-rail-section ohf-rail-section--{{ layout }}"
+    class="ohf-rail-section ohf-rail-section--{{ layout }}{% if texture != blank %} ohf-rail-section--texture ohf-rail-section--texture-{{ section.settings.texture_mode }}{% endif %}{% if section.settings.art_side == 'right' %} ohf-rail-section--art-right{% endif %}"
     aria-labelledby="OhfRailTitle-{{ section.id }}"
-    style="{% if bg != blank and bg.alpha > 0 %}--rail-bg: {{ bg }};{% endif %} --rail-end: {{ section.settings.view_all_color }};"
+    style="{% if bg != blank and bg.alpha > 0 %}--rail-bg: {{ bg }};{% endif %} --rail-end: {{ section.settings.view_all_color }};{% if texture != blank %}{% if section.settings.texture_mode == 'tile' %} --rail-texture: url('{{ texture | image_url: width: 800 }}'); --rail-texture-size: {{ section.settings.tile_size }}px;{% else %} --rail-texture: image-set(url('{{ texture | image_url: width: 1200 }}') 1x, url('{{ texture | image_url: width: 2400 }}') 2x);{% endif %}{% endif %}"
   >
     {%- capture head -%}
       <div class="ohf-rail-section__head">
@@ -71,21 +74,18 @@
     {%- endcapture -%}
 
     {%- if layout == 'art' -%}
-      <div class="ohf-rail-section__bg" aria-hidden="true"></div>
       <div class="ohf-wrap ohf-rail-section__grid">
-        <div class="ohf-rail-section__art">
-          {%- if section.settings.art != blank -%}
-            {{
-              section.settings.art
-              | image_url: width: 2000
-              | image_tag:
-                widths: '600, 900, 1200, 1600, 2000',
-                sizes: '(min-width: 901px) 50vw, 100vw',
-                loading: 'lazy',
-                class: 'ohf-rail-section__art-img',
-                alt: section.settings.art_alt
-            }}
-          {%- endif -%}
+        <div class="ohf-rail-section__art{% if section.settings.art_fade %} ohf-rail-section__art--fade{% endif %}">
+          {{
+            section.settings.art
+            | image_url: width: 1600
+            | image_tag:
+              widths: '400, 600, 800, 1000, 1200, 1600',
+              sizes: '(min-width: 901px) 45vw, 90vw',
+              loading: 'lazy',
+              class: 'ohf-rail-section__art-img',
+              alt: section.settings.art_alt
+          }}
         </div>
         <div class="ohf-rail-section__side">
           {{ head }}
@@ -113,6 +113,19 @@
     isolation: isolate;
     padding-block: 96px;
     background: var(--rail-bg);
+  }
+  /* Optional texture over the colour: covering the section, or tiled at a chosen size */
+  .ohf-rail-section--texture {
+    background-image: var(--rail-texture);
+    background-position: center;
+  }
+  .ohf-rail-section--texture-cover {
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+  .ohf-rail-section--texture-tile {
+    background-size: var(--rail-texture-size, 400px) auto;
+    background-repeat: repeat;
   }
   .ohf-rail-section__head {
     display: flex;
@@ -171,16 +184,24 @@
     align-items: stretch;
   }
   .ohf-rail-section__art {
-    position: relative;
-    min-height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
   }
+  /* The artwork is shown whole (never cropped), as large as the column allows */
   .ohf-rail-section__art-img {
-    position: absolute;
-    inset: 0;
+    display: block;
     width: 100%;
-    height: 100%;
-    object-fit: cover;
-    /* Edges fade into the section colour, as in the concept */
+    height: auto;
+    max-height: 720px;
+    object-fit: contain;
+  }
+  .ohf-rail-section--art-right .ohf-rail-section__art {
+    order: 2;
+  }
+  /* Optional soft edges, for artwork that has its own background rather than a cut-out */
+  .ohf-rail-section__art--fade .ohf-rail-section__art-img {
     -webkit-mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent),
       linear-gradient(to bottom, transparent, #000 10%, #000 90%, transparent);
     -webkit-mask-composite: source-in;
@@ -207,6 +228,7 @@
   /* The section colour is an inline style, so the dark mode override needs !important */
   :root[data-lights='off'] .ohf-rail-section {
     --rail-bg: var(--bg) !important;
+    background-image: none;
   }
 
   /* "View all" end card */
@@ -303,9 +325,11 @@
     .ohf-rail-section__grid {
       grid-template-columns: 1fr;
     }
-    .ohf-rail-section__art {
-      min-height: 0;
-      aspect-ratio: 2000 / 895;
+    .ohf-rail-section--art-right .ohf-rail-section__art {
+      order: 0;
+    }
+    .ohf-rail-section__art-img {
+      max-height: 360px;
     }
     .ohf-rail-section--art .ohf-rail__slide {
       flex-basis: 78%;
@@ -370,7 +394,24 @@
       "type": "image_picker",
       "id": "art",
       "label": "Artwork",
-      "info": "With artwork layout only. Shown in the left half; its edges fade into the background colour. Set its focal point in Content › Files."
+      "info": "With artwork layout only. Shown whole in its own column. A cut-out with a transparent background (PNG or WebP) works best; put any paper or pattern in Background texture instead."
+    },
+    {
+      "type": "select",
+      "id": "art_side",
+      "label": "Artwork side",
+      "default": "left",
+      "options": [
+        { "value": "left", "label": "Left (cards on the right)" },
+        { "value": "right", "label": "Right (cards on the left)" }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "art_fade",
+      "default": false,
+      "label": "Soften the artwork's edges",
+      "info": "For artwork with its own background. Not needed for cut-outs."
     },
     {
       "type": "text",
@@ -382,7 +423,33 @@
       "type": "color",
       "id": "background",
       "label": "Background colour",
-      "info": "Leave empty for the page colour. With artwork, match the artwork's paper tone."
+      "info": "Leave empty for the page colour."
+    },
+    {
+      "type": "image_picker",
+      "id": "texture",
+      "label": "Background texture",
+      "info": "Optional, e.g. a paper texture. Sits over the background colour; hidden with the lights off."
+    },
+    {
+      "type": "select",
+      "id": "texture_mode",
+      "label": "Texture fit",
+      "default": "cover",
+      "options": [
+        { "value": "cover", "label": "Cover the section" },
+        { "value": "tile", "label": "Repeat as a tile" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "tile_size",
+      "min": 100,
+      "max": 800,
+      "step": 20,
+      "unit": "px",
+      "default": 400,
+      "label": "Tile size"
     },
     {
       "type": "header",
