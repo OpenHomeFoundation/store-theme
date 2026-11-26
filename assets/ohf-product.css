@@ -489,6 +489,75 @@
   color: var(--body);
 }
 
+/* ---- Product disclosures (Dawn's snippet, restyled to sit under the description) ---- */
+.ohf-pdp__disclosures {
+  margin-top: var(--s32);
+}
+
+.ohf-pdp__disclosures .disclosures {
+  --disclosures-icon-height: 2rem;
+  color: var(--body);
+}
+
+.ohf-pdp__disclosures .disclosures__heading {
+  margin: 0 0 var(--s12);
+  font-family: var(--font-heading-family);
+  font-weight: 700;
+  font-size: 1.2rem;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--body);
+}
+
+.ohf-pdp__disclosures .disclosures__details {
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.ohf-pdp__disclosures .disclosures__summary {
+  padding: var(--s16) 0;
+  font-family: var(--font-heading-family);
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--heading);
+}
+
+.ohf-pdp__disclosures .disclosures__summary:focus-visible {
+  outline: 3px solid var(--cta-focus);
+  outline-offset: 2px;
+}
+
+.ohf-pdp__disclosures .disclosures__summary {
+  position: relative;
+}
+
+.ohf-pdp__disclosures .disclosures__summary > .icon-caret {
+  inset-inline-end: 0;
+  color: var(--heading);
+}
+
+.ohf-pdp__disclosures .disclosures-separator {
+  color: var(--body);
+}
+
+.ohf-pdp__disclosures .disclosures__content {
+  font-size: 1.4rem;
+  line-height: 1.5;
+  color: var(--body);
+}
+
+.ohf-pdp__disclosures .disclosures-item__header {
+  font-family: var(--font-heading-family);
+  font-weight: 600;
+  color: var(--heading);
+}
+
+.ohf-pdp__disclosures .disclosures__content a {
+  color: var(--heading);
+  text-underline-offset: 3px;
+}
+
 /* ---- Size guide dialog ---- */
 .ohf-pdp__guide {
   width: min(860px, calc(100vw - 32px));
