@@ -9,34 +9,6 @@
  */
 {
   "sections": {
-    "banner": {
-      "type": "main-collection-banner",
-      "settings": {
-        "show_collection_description": true,
-        "show_collection_image": false,
-        "color_scheme": "scheme-1"
-      }
-    },
-    "product-grid": {
-      "type": "main-collection-product-grid",
-      "settings": {
-        "products_per_page": 16,
-        "columns_desktop": 4,
-        "columns_mobile": "2",
-        "color_scheme": "scheme-1",
-        "image_ratio": "portrait",
-        "image_shape": "default",
-        "show_secondary_image": true,
-        "show_vendor": false,
-        "show_rating": false,
-        "quick_add": "none",
-        "enable_filtering": true,
-        "filter_type": "horizontal",
-        "enable_sorting": true,
-        "padding_top": 36,
-        "padding_bottom": 36
-      }
-    },
     "ohf_join": {
       "type": "ohf-join",
       "settings": {
@@ -49,11 +21,143 @@
         "button_new_tab": true,
         "show_stickers": true
       }
+    },
+    "main": {
+      "type": "ohf-collection",
+      "blocks": {
+        "pill_1": {
+          "type": "pill",
+          "settings": {
+            "label": "New collection",
+            "tag": "",
+            "break_before": false,
+            "intro_heading": "",
+            "intro_text": "",
+            "collection": "frontpage"
+          }
+        },
+        "pill_2": {
+          "type": "pill",
+          "settings": {
+            "label": "T-Shirts & Polos",
+            "tag": "",
+            "break_before": false,
+            "intro_heading": "",
+            "intro_text": "",
+            "collection": "t-shirts"
+          }
+        },
+        "pill_3": {
+          "type": "pill",
+          "settings": {
+            "label": "Sweatshirts",
+            "tag": "",
+            "break_before": false,
+            "intro_heading": "",
+            "intro_text": "",
+            "collection": "hoodies"
+          }
+        },
+        "pill_4": {
+          "type": "pill",
+          "settings": {
+            "label": "Hats",
+            "tag": "",
+            "break_before": false,
+            "intro_heading": "",
+            "intro_text": "",
+            "collection": "hats"
+          }
+        },
+        "pill_5": {
+          "type": "pill",
+          "settings": {
+            "label": "Stickers & paper",
+            "tag": "",
+            "break_before": false,
+            "intro_heading": "",
+            "intro_text": "",
+            "collection": "stickers"
+          }
+        },
+        "pill_6": {
+          "type": "pill",
+          "settings": {
+            "label": "Accessories",
+            "tag": "",
+            "break_before": false,
+            "intro_heading": "",
+            "intro_text": "",
+            "collection": "accessories"
+          }
+        },
+        "pill_7": {
+          "type": "pill",
+          "settings": {
+            "label": "Open Home Foundation",
+            "tag": "Open Home Foundation",
+            "break_before": true,
+            "intro_heading": "",
+            "intro_text": ""
+          }
+        },
+        "pill_8": {
+          "type": "pill",
+          "settings": {
+            "label": "Home Assistant",
+            "tag": "Home Assistant",
+            "break_before": false,
+            "intro_heading": "Up your smart home swagger",
+            "intro_text": "Pick up gear from the platform trusted by over 2.7 million households, and help fund the project that keeps your data at home and your devices running when the internet doesn’t."
+          }
+        },
+        "pill_9": {
+          "type": "pill",
+          "settings": {
+            "label": "ESPHome",
+            "tag": "ESPHome",
+            "break_before": false,
+            "intro_heading": "Tees for the tinkerer",
+            "intro_text": "Gear for the people who’d rather build it than buy it. Support the project that turns inexpensive components into sensors, switches, and displays, and frees devices from laggy apps and never-ending subscriptions."
+          }
+        },
+        "pill_10": {
+          "type": "pill",
+          "settings": {
+            "label": "Music Assistant",
+            "tag": "Music Assistant",
+            "break_before": false,
+            "intro_heading": "Hoodies for the home DJ",
+            "intro_text": "Show some love for the project that mixes your streaming services, local files, and podcasts into one private platform for any speaker you own."
+          }
+        }
+      },
+      "block_order": [
+        "pill_1",
+        "pill_2",
+        "pill_3",
+        "pill_4",
+        "pill_5",
+        "pill_6",
+        "pill_7",
+        "pill_8",
+        "pill_9",
+        "pill_10"
+      ],
+      "settings": {
+        "heading": "Hoodies, tees, and stickers with opinions.",
+        "text": "Fiercely private, local by default, and open by design. Wear our principles loud and proud.",
+        "show_all": true,
+        "all_label": "All",
+        "pills_label": "Filter products",
+        "per_page": 9,
+        "empty_text": "Nothing here yet. Have a look at everything else.",
+        "all_kicker": "Shop all"
+      }
     }
   },
   "order": [
-    "banner",
-    "product-grid",
+    "main",
     "ohf_join"
   ]
 }

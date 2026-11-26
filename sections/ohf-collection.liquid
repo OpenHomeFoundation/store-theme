@@ -1,0 +1,589 @@
+{%- comment -%}
+  OHF Shop / collection page (redesign 2026). One template for every collection (decision d01: real collections,
+  with pills linking between them).
+  - Intro band: small heading, big statement (the page's h1) and a line of text over a photo or the concept's
+    blue-grey placeholder. Comes from, in order: the active pill's own intro, then the collection (intro heading
+    metafield custom.intro_heading, description, image), then this section's defaults.
+  - Pills: the section's Pill blocks (categories, a break, then projects). A pill links to its collection, or, until
+    that collection exists, to all products with its tag (/collections/all/<tag>). The current one is highlighted.
+  - Sort: Shopify's own sort options. Grid: the OHF product card, three across (two on phones), with page numbers.
+  Shopify still does the filtering, sorting and paging, so tag URLs, sort_by and page all work as usual.
+{%- endcomment -%}
+{%- liquid
+  assign pills = section.blocks | where: 'type', 'pill'
+  assign all_url = routes.all_products_collection_url
+  assign current_tag = current_tags | first
+
+  # Which pill is active
+  assign active = null
+  for pill in pills
+    if pill.settings.collection != blank and pill.settings.collection.handle == collection.handle and current_tag == blank
+      assign active = pill
+      break
+    endif
+    if pill.settings.collection == blank and pill.settings.tag != blank and current_tag != blank
+      assign tag_lc = pill.settings.tag | downcase
+      assign cur_lc = current_tag | downcase
+      if tag_lc == cur_lc
+        assign active = pill
+        break
+      endif
+    endif
+  endfor
+  assign is_all = false
+  if collection.handle == 'all' and current_tag == blank
+    assign is_all = true
+  endif
+
+  # Intro
+  assign intro_kicker = collection.title
+  if is_all
+    assign intro_kicker = section.settings.all_kicker
+  endif
+  if active
+    assign intro_kicker = active.settings.label
+  elsif current_tag != blank
+    assign intro_kicker = current_tag
+  endif
+  assign intro_heading = section.settings.heading
+  assign intro_text = section.settings.text
+  assign intro_image = section.settings.image
+  if current_tag == blank
+    if collection.metafields.custom.intro_heading != blank
+      assign intro_heading = collection.metafields.custom.intro_heading.value
+    endif
+    if collection.description != blank
+      assign intro_text = collection.description | strip_html
+    endif
+    if collection.image != blank
+      assign intro_image = collection.image
+    endif
+  endif
+  if active
+    if active.settings.intro_heading != blank
+      assign intro_heading = active.settings.intro_heading
+    endif
+    if active.settings.intro_text != blank
+      assign intro_text = active.settings.intro_text
+    endif
+    if active.settings.intro_image != blank
+      assign intro_image = active.settings.intro_image
+    endif
+  endif
+
+  assign sort_by = collection.sort_by | default: collection.default_sort_by
+-%}
+
+<section class="ohf-shop" aria-labelledby="OhfShopTitle-{{ section.id }}">
+  <header class="ohf-shop__intro{% if intro_image != blank %} ohf-shop__intro--photo{% endif %}">
+    {%- if intro_image != blank -%}
+      {{
+        intro_image
+        | image_url: width: 2400
+        | image_tag:
+          widths: '750, 1100, 1500, 2000, 2400',
+          sizes: '100vw',
+          loading: 'eager',
+          class: 'ohf-shop__intro-img',
+          alt: ''
+      }}
+    {%- endif -%}
+    <div class="ohf-wrap ohf-shop__intro-in">
+      <p class="ohf-shop__kicker">{{ intro_kicker | escape }}</p>
+      <h1 id="OhfShopTitle-{{ section.id }}" class="ohf-shop__lede">{{ intro_heading | escape }}</h1>
+      {%- if intro_text != blank -%}
+        <p class="ohf-shop__sub">{{ intro_text | escape }}</p>
+      {%- endif -%}
+    </div>
+  </header>
+
+  <div class="ohf-wrap">
+    <div class="ohf-shop__bar">
+      <nav class="ohf-shop__filters" aria-label="{{ section.settings.pills_label | escape }}">
+        <ul class="ohf-chips" role="list">
+          {%- if section.settings.show_all -%}
+            <li>
+              <a class="ohf-chip" href="{{ all_url }}"{% if is_all %} aria-current="page"{% endif %}>
+                {{- section.settings.all_label | escape -}}
+              </a>
+            </li>
+          {%- endif -%}
+          {%- for pill in pills -%}
+            {%- liquid
+              if pill.settings.collection != blank
+                assign pill_url = pill.settings.collection.url
+              elsif pill.settings.tag != blank
+                assign pill_handle = pill.settings.tag | handleize
+                assign pill_url = all_url | append: '/' | append: pill_handle
+              else
+                assign pill_url = blank
+              endif
+            -%}
+            {%- comment -%}
+              A pill whose collection isn't available on the Online Store (unpublished or deleted) and has no tag
+              would lead nowhere useful, so it's left out; the theme editor still shows it, dimmed.
+            {%- endcomment -%}
+            {%- if pill_url == blank and request.design_mode == false -%}
+              {%- continue -%}
+            {%- endif -%}
+            {%- if pill.settings.break_before -%}
+              <li class="ohf-chips__break" aria-hidden="true"></li>
+            {%- endif -%}
+            <li {{ pill.shopify_attributes }}>
+              <a
+                class="ohf-chip{% if pill_url == blank %} ohf-chip--unavailable{% endif %}"
+                href="{{ pill_url | default: all_url }}"
+                {% if active and active.id == pill.id %}
+                  aria-current="page"
+                {% endif %}
+                {% if pill_url == blank %}
+                  title="Collection not available on the Online Store: hidden on the live site"
+                {% endif %}
+              >
+                {{- pill.settings.label | escape -}}
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </nav>
+
+      {%- if collection.sort_options.size > 1 -%}
+        <label class="ohf-shop__sort">
+          <span>{{ 'products.facets.sort_by_label' | t | remove: ':' }}</span>
+          <select data-ohf-sort>
+            {%- for option in collection.sort_options -%}
+              <option value="{{ option.value | escape }}"{% if option.value == sort_by %} selected{% endif %}>
+                {{- option.name | escape -}}
+              </option>
+            {%- endfor -%}
+          </select>
+        </label>
+      {%- endif -%}
+    </div>
+
+    {%- paginate collection.products by section.settings.per_page -%}
+      <p class="visually-hidden" role="status">
+        {{ 'templates.search.results_with_count' | t: count: collection.products_count }}
+      </p>
+      {%- if collection.products.size > 0 -%}
+        <ul class="ohf-shop__grid" role="list">
+          {%- for product in collection.products -%}
+            <li class="ohf-shop__tile">
+              {%- render 'card-product',
+                card_product: product,
+                show_secondary_image: true,
+                lazy_load: true,
+                quick_add: 'none',
+                section_id: section.id,
+                skip_styles: true
+              -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- else -%}
+        <div class="ohf-shop__empty">
+          <p>{{ section.settings.empty_text | escape }}</p>
+          <a class="ohf-cta ohf-cta--fill" href="{{ all_url }}">
+            {{- section.settings.all_label | escape }}
+            {% render 'ohf-icon', icon: 'arrow-right', size: 18 -%}
+          </a>
+        </div>
+      {%- endif -%}
+
+      {%- if paginate.pages > 1 -%}
+        <nav class="ohf-shop__pages" aria-label="{{ 'general.pagination.label' | t }}">
+          {%- if paginate.previous -%}
+            <a class="ohf-shop__page" href="{{ paginate.previous.url }}" aria-label="{{ 'general.pagination.previous' | t }}">←</a>
+          {%- endif -%}
+          {%- for part in paginate.parts -%}
+            {%- if part.is_link -%}
+              <a class="ohf-shop__page" href="{{ part.url }}">{{ part.title }}</a>
+            {%- elsif part.title == paginate.current_page -%}
+              <span class="ohf-shop__page" aria-current="page">{{ part.title }}</span>
+            {%- else -%}
+              <span class="ohf-shop__page ohf-shop__page--gap">{{ part.title }}</span>
+            {%- endif -%}
+          {%- endfor -%}
+          {%- if paginate.next -%}
+            <a class="ohf-shop__page" href="{{ paginate.next.url }}" aria-label="{{ 'general.pagination.next' | t }}">→</a>
+          {%- endif -%}
+        </nav>
+      {%- endif -%}
+    {%- endpaginate -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .ohf-shop {
+    padding-bottom: 96px;
+  }
+
+  /* Intro band */
+  .ohf-shop__intro {
+    position: relative;
+    overflow: hidden;
+    margin-top: 24px;
+    background: radial-gradient(ellipse 70% 90% at 30% 70%, rgba(9, 32, 46, 0.45), rgba(9, 32, 46, 0.2) 60%, rgba(9, 32, 46, 0.05)),
+      repeating-linear-gradient(135deg, rgba(247, 246, 242, 0.08) 0 14px, rgba(247, 246, 242, 0) 14px 28px),
+      var(--privacy-neutral);
+  }
+  .ohf-shop__intro-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .ohf-shop__intro--photo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(9, 32, 46, 0.72), rgba(9, 32, 46, 0.45) 45%, rgba(9, 32, 46, 0.05) 80%);
+  }
+  .ohf-shop__intro-in {
+    position: relative;
+    z-index: 1;
+    padding-block: 72px;
+  }
+  .ohf-shop__kicker {
+    margin: 0;
+    font-family: var(--font-heading-family);
+    font-weight: 700;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ohf-light-grey);
+  }
+  .ohf-shop__lede {
+    margin: var(--s12) 0 0;
+    max-width: 760px;
+    font-family: var(--font-heading-family);
+    font-weight: 500;
+    font-size: clamp(2.4rem, 2.5vw, 3.6rem);
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    color: var(--ohf-light-grey);
+  }
+  .ohf-shop__sub {
+    margin: var(--s16) 0 0;
+    max-width: 560px;
+    font-size: 1.6rem;
+    color: var(--ohf-light-grey);
+  }
+
+  /* Pills and sort */
+  .ohf-shop__bar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--s16) var(--s24);
+    padding: 40px 0;
+  }
+  .ohf-shop__filters {
+    min-width: 0;
+  }
+  .ohf-chips {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s8);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ohf-chips__break {
+    flex-basis: 100%;
+    height: 0;
+  }
+  .ohf-chip {
+    display: inline-block;
+    padding: 9px 14px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-full);
+    background: var(--card);
+    color: var(--heading);
+    font-family: var(--font-heading-family);
+    font-weight: 500;
+    font-size: 1.3rem;
+    line-height: 1;
+    white-space: nowrap;
+    text-decoration: none;
+    transition: background-color var(--dur-ui) var(--ease), color var(--dur-ui) var(--ease),
+      border-color var(--dur-ui) var(--ease);
+  }
+  .ohf-chip--unavailable {
+    opacity: 0.4;
+    border-style: dashed;
+  }
+  .ohf-chip:hover {
+    border-color: var(--privacy-main);
+    background: var(--privacy-main);
+    color: var(--ohf-dark-blue);
+  }
+  .ohf-chip[aria-current='page'] {
+    border-color: var(--ohf-light-blue);
+    background: var(--ohf-light-blue);
+    color: var(--ohf-dark-blue);
+  }
+  .ohf-shop__sort {
+    justify-self: end;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s8);
+    font-family: var(--font-heading-family);
+    font-size: 1.4rem;
+    color: var(--body);
+    white-space: nowrap;
+  }
+  .ohf-shop__sort select {
+    field-sizing: content;
+    padding: 4px 22px 4px 0;
+    border: 0;
+    background: transparent;
+    background-image: linear-gradient(45deg, transparent 50%, currentColor 50%),
+      linear-gradient(135deg, currentColor 50%, transparent 50%);
+    background-position: calc(100% - 9px) 55%, calc(100% - 4px) 55%;
+    background-size: 5px 5px;
+    background-repeat: no-repeat;
+    color: var(--heading);
+    font: inherit;
+    cursor: pointer;
+    appearance: none;
+  }
+  .ohf-shop__sort select:focus-visible {
+    outline: 2px solid var(--cta-focus);
+    outline-offset: 2px;
+    border-radius: var(--r-xs);
+  }
+
+  /* Grid */
+  .ohf-shop__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ohf-shop__tile {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .ohf-shop__tile > product-component {
+    flex: 1;
+  }
+  .ohf-shop__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--s16);
+    padding: 48px 0;
+    color: var(--body);
+  }
+
+  /* Page numbers */
+  .ohf-shop__pages {
+    display: flex;
+    justify-content: center;
+    gap: var(--s8);
+    margin-top: 48px;
+  }
+  .ohf-shop__page {
+    display: inline-grid;
+    place-items: center;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-xs);
+    color: var(--heading);
+    font-family: var(--font-heading-family);
+    font-size: 1.5rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: border-color var(--dur-ui) var(--ease);
+  }
+  a.ohf-shop__page:hover {
+    border-color: var(--heading);
+  }
+  .ohf-shop__page[aria-current='page'] {
+    border-color: var(--ohf-dark-blue);
+    background: var(--ohf-dark-blue);
+    color: var(--ohf-light-grey);
+  }
+  :root[data-lights='off'] .ohf-shop__page[aria-current='page'] {
+    border-color: var(--ohf-light-grey);
+    background: var(--ohf-light-grey);
+    color: var(--ohf-dark-blue);
+  }
+  .ohf-shop__page--gap {
+    border-color: transparent;
+  }
+
+  @media (max-width: 1100px) {
+    .ohf-shop__filters {
+      grid-column: 1 / -1;
+      grid-row: 2;
+    }
+    .ohf-shop__sort {
+      grid-column: 1 / -1;
+      grid-row: 1;
+    }
+  }
+  @media (max-width: 640px) {
+    .ohf-shop__intro {
+      margin-top: 12px;
+    }
+    .ohf-shop__intro-in {
+      padding-block: 40px 56px;
+    }
+    .ohf-shop__intro--photo::after {
+      background: rgba(9, 32, 46, 0.62);
+    }
+    .ohf-shop__lede {
+      font-size: 2.4rem;
+    }
+    .ohf-shop__bar {
+      padding: 24px 0;
+    }
+    /* Pills scroll sideways on phones instead of wrapping */
+    .ohf-chips {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      margin-inline: calc(var(--margin) * -1);
+      padding-inline: var(--margin);
+      scrollbar-width: none;
+    }
+    .ohf-chips::-webkit-scrollbar {
+      display: none;
+    }
+    .ohf-chips__break {
+      display: none;
+    }
+    .ohf-shop__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (function () {
+    // Sort: Shopify sorts on the server; changing the select reloads with ?sort_by=… (back to page 1)
+    document.addEventListener('change', (e) => {
+      const select = e.target.closest('[data-ohf-sort]');
+      if (!select) return;
+      const url = new URL(window.location.href);
+      url.searchParams.set('sort_by', select.value);
+      url.searchParams.delete('page');
+      window.location.href = url.toString();
+    });
+  })();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "OHF shop",
+  "class": "ohf-shop-section",
+  "enabled_on": {
+    "templates": ["collection"]
+  },
+  "max_blocks": 20,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Intro (used when the pill or collection has none)"
+    },
+    {
+      "type": "text",
+      "id": "all_kicker",
+      "label": "Small heading on All products",
+      "default": "Shop all"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Statement",
+      "default": "Hoodies, tees, and stickers with opinions."
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "Fiercely private, local by default, and open by design. Wear our principles loud and proud."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Photo",
+      "info": "Without one, the band shows the concept's blue-grey pattern."
+    },
+    {
+      "type": "header",
+      "content": "Pills"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_all",
+      "default": true,
+      "label": "Show an All pill first"
+    },
+    {
+      "type": "text",
+      "id": "all_label",
+      "default": "All",
+      "label": "All pill label"
+    },
+    {
+      "type": "text",
+      "id": "pills_label",
+      "default": "Filter products",
+      "label": "Pills name for screen readers"
+    },
+    {
+      "type": "header",
+      "content": "Grid"
+    },
+    {
+      "type": "range",
+      "id": "per_page",
+      "min": 6,
+      "max": 24,
+      "step": 3,
+      "default": 9,
+      "label": "Products per page"
+    },
+    {
+      "type": "text",
+      "id": "empty_text",
+      "default": "Nothing here yet. Have a look at everything else.",
+      "label": "Text when a collection is empty"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "pill",
+      "name": "Pill",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "T-Shirts & Polos" },
+        { "type": "collection", "id": "collection", "label": "Collection" },
+        {
+          "type": "text",
+          "id": "tag",
+          "label": "Or: product tag",
+          "info": "Used when no collection is chosen: links to all products with this tag (e.g. Home Assistant)."
+        },
+        { "type": "checkbox", "id": "break_before", "default": false, "label": "Start a new row before this pill" },
+        {
+          "type": "header",
+          "content": "Intro for this pill (optional)"
+        },
+        { "type": "text", "id": "intro_heading", "label": "Statement" },
+        { "type": "textarea", "id": "intro_text", "label": "Text" },
+        { "type": "image_picker", "id": "intro_image", "label": "Photo" }
+      ]
+    }
+  ]
+}
+{% endschema %}
