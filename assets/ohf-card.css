@@ -1,0 +1,340 @@
+/*
+ * OHF product card (redesign 2026). Markup: snippets/ohf-card.liquid. Ported from the concept's card:
+ * white card on the paper background, 4:5 photo, second photo on hover, category · project, name,
+ * price above a hairline, "View product". Sold-out and coming-soon variants.
+ */
+
+.ohf-card-wrapper {
+  height: 100%;
+}
+
+.ohf-card {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  background: #fff;
+  border: 1px solid transparent;
+  border-radius: var(--r-xs);
+  transition: background-color var(--dur-ui) var(--ease), border-color var(--dur-ui) var(--ease);
+}
+
+.ohf-card:hover {
+  background: color-mix(in srgb, var(--cta-hover) 45%, #fff);
+}
+
+:root[data-lights='off'] .ohf-card {
+  background: color-mix(in srgb, var(--ohf-light-grey) 6%, var(--bg));
+}
+
+:root[data-lights='off'] .ohf-card:hover {
+  background: color-mix(in srgb, var(--ohf-light-grey) 12%, var(--bg));
+}
+
+/* Photo */
+.ohf-card__visual {
+  position: relative;
+}
+
+.ohf-card__media {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: var(--r-xs);
+  background: var(--ohf-light-grey);
+}
+
+.ohf-card__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: var(--r-xs);
+  transition: opacity var(--dur-in) var(--ease), scale var(--dur-in) var(--ease);
+}
+
+.ohf-card__img--back {
+  opacity: 0;
+}
+
+.ohf-card:hover .ohf-card__img--front {
+  scale: 1.04;
+}
+
+.ohf-card:hover .ohf-card__media--swap .ohf-card__img--front {
+  opacity: 0;
+}
+
+.ohf-card:hover .ohf-card__img--back {
+  opacity: 1;
+  scale: 1.04;
+}
+
+/* Swatch hover preview (card-color-swatches.js toggles .is-active) */
+.ohf-card .card__color-preview {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ohf-card .card__color-preview.is-active {
+  opacity: 1;
+}
+
+.ohf-card__placeholder {
+  fill: var(--ohf-grey);
+}
+
+/* Labels, top left */
+.ohf-card__top {
+  position: absolute;
+  inset: 0 0 auto;
+  padding: var(--s16);
+  pointer-events: none;
+}
+
+.ohf-card__labels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s8);
+}
+
+/* Quick add: the "+" bottom right of the photo, shown on hover (always on touch screens) */
+.ohf-card__add {
+  position: absolute;
+  right: var(--s12);
+  bottom: var(--s12);
+  z-index: 2;
+  opacity: 0;
+  translate: 0 6px;
+  transition: opacity var(--dur-ui) var(--ease), translate var(--dur-ui) var(--ease);
+}
+
+.ohf-card__visual:hover .ohf-card__add,
+.ohf-card__add:focus-within {
+  opacity: 1;
+  translate: 0 0;
+}
+
+@media (hover: none) {
+  .ohf-card__add {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+.ohf-card__add .ohf-cta--icon {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  min-width: 0;
+  min-height: 0;
+}
+
+.ohf-card__plus,
+.ohf-card__plus::after {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 16px;
+  height: 2px;
+  translate: -50% -50%;
+  background: currentColor;
+  border-radius: 1px;
+}
+
+.ohf-card__plus::after {
+  content: '';
+  rotate: 90deg;
+}
+
+.ohf-card__add .loading__spinner {
+  position: absolute;
+}
+
+.ohf-card__add .quick-add__submit.loading .ohf-card__plus {
+  visibility: hidden;
+}
+
+/* Text */
+.ohf-card__desc {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding-top: 14px;
+}
+
+.ohf-card__cat {
+  margin: 0;
+  padding: 0 0 6px;
+  font-family: var(--font-heading-family);
+  font-weight: 600;
+  font-size: 1.2rem;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--body);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ohf-card__name {
+  margin: 0 0 14px;
+  font-size: 2rem;
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--heading);
+}
+
+.ohf-card__link {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* The title link covers the whole card */
+.ohf-card__link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.ohf-card__link:focus-visible {
+  outline: none;
+}
+
+.ohf-card:has(.ohf-card__link:focus-visible) {
+  outline: 3px solid var(--ohf-light-blue);
+  outline-offset: 3px;
+}
+
+.ohf-card .card__swatches {
+  margin-top: 0;
+}
+
+.ohf-card__price {
+  margin: auto 0 0;
+  padding: 40px 0 12px;
+  font-family: var(--font-heading-family);
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--heading);
+}
+
+.ohf-card__compare {
+  margin-left: var(--s8);
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: var(--body);
+}
+
+.ohf-card__price--soon {
+  font-size: 1.6rem;
+}
+
+.ohf-card__more {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0;
+  padding: 10px 0 0;
+  border-top: 1px solid var(--line);
+  font: 600 1.4rem/1 var(--font-heading-family);
+  color: var(--heading);
+}
+
+.ohf-card__more svg {
+  transition: translate var(--dur-ui) var(--ease);
+}
+
+.ohf-card:hover .ohf-card__more svg {
+  translate: var(--nudge) 0;
+}
+
+.ohf-card__more--off {
+  font-weight: 500;
+  color: var(--body);
+}
+
+/* Sold out */
+.ohf-card--soldout .ohf-card__media {
+  background: #fff;
+}
+
+.ohf-card--soldout .ohf-card__img {
+  filter: grayscale(1);
+  opacity: 0.45;
+}
+
+.ohf-card--soldout:hover {
+  background: #fff;
+}
+
+.ohf-card--soldout:hover .ohf-card__img--front {
+  scale: 1;
+}
+
+.ohf-card--soldout .ohf-card__cat,
+.ohf-card--soldout .ohf-card__name,
+.ohf-card--soldout .ohf-card__price,
+.ohf-card--soldout .ohf-card__more {
+  color: var(--ohf-grey);
+}
+
+.ohf-card--soldout .card__swatches {
+  opacity: 0.45;
+}
+
+.ohf-card--soldout .ohf-card__price s {
+  text-decoration-thickness: 2px;
+}
+
+/* Coming soon: frosted photo */
+.ohf-card--soon .ohf-card__media {
+  background: #fff;
+}
+
+.ohf-card--soon:hover {
+  background: #fff;
+}
+
+.ohf-card--soon:hover .ohf-card__img--front {
+  scale: 1;
+}
+
+.ohf-card__glass {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r-xs);
+  pointer-events: none;
+  background: linear-gradient(120deg, #ffffffb3, #ffffff26 30%, #fff0 46% 70%, #ffffff59), #ffffff2e;
+  -webkit-backdrop-filter: blur(8px) saturate(1.1);
+  backdrop-filter: blur(8px) saturate(1.1);
+}
+
+:root[data-lights='off'] .ohf-card--soldout:hover,
+:root[data-lights='off'] .ohf-card--soon:hover {
+  background: color-mix(in srgb, var(--ohf-light-grey) 6%, var(--bg));
+}
+
+:root[data-lights='off'] .ohf-card--soldout .ohf-card__media {
+  background: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ohf-card__img,
+  .ohf-card__add {
+    transition: none;
+  }
+
+  .ohf-card:hover .ohf-card__img--front,
+  .ohf-card:hover .ohf-card__img--back {
+    scale: 1;
+  }
+}

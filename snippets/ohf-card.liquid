@@ -1,0 +1,304 @@
+{%- comment -%}
+  OHF product card (redesign 2026). Rendered by snippets/card-product.liquid when the theme setting
+  "Use OHF product cards" is on, so every section that shows products uses it.
+
+  Layout (concept): photo (second photo on hover), labels top left, "+" quick add bottom right;
+  then "CATEGORY · PROJECT", name, colour swatches (2+ colours only), price, "View product".
+  - Category: the product type, renamed by the "Category names" theme setting (e.g. Hoodie → Sweatshirts).
+  - Project: the first product tag that matches the "Project tags" theme setting (decision d04).
+  - Labels: NEW for products in the New collection (theme setting), LIMITED EDITION from
+    custom.limited_edition, COMING SOON from custom.coming_soon, SOLD OUT when nothing is in stock.
+  - States: sold out (greyed photo, struck price, "Out of stock"), coming soon (frosted photo, no add).
+  - The title link stretches over the whole card; the "+" and swatches sit above it.
+  - Quick add is Dawn's: "+" opens the quick-add modal (size picker) for products with options,
+    or adds straight to the cart for one-variant products. Only when the section's Quick add is on.
+  - Colour swatches and their hover preview are the existing card-color-swatches snippet and script.
+
+  Accepts (same names as card-product): card_product, show_secondary_image, lazy_load, quick_add,
+  section_id
+{%- endcomment -%}
+{%- liquid
+  assign p = card_product
+
+  # Category from product type
+  assign category = p.type
+  assign cat_lines = settings.ohf_card_categories | newline_to_br | split: '<br />'
+  for line in cat_lines
+    assign pair = line | split: ':'
+    if pair.size > 1
+      assign from = pair[0] | strip | downcase
+      assign type_lc = p.type | strip | downcase
+      if from == type_lc
+        assign category = pair[1] | strip
+        break
+      endif
+    endif
+  endfor
+
+  # Project from tags
+  assign project = ''
+  assign project_names = settings.ohf_card_projects | split: ','
+  for name in project_names
+    assign wanted = name | strip
+    if p.tags contains wanted
+      assign project = wanted
+      break
+    endif
+  endfor
+
+  # Colour option (swatches only with 2+ colours)
+  assign color_option = null
+  assign color_option_index = 0
+  for option in p.options_with_values
+    assign option_name = option.name | downcase
+    if option_name == 'color' or option_name == 'colour'
+      if option.values.size > 1
+        assign color_option = option
+        assign color_option_index = forloop.index0
+      endif
+      break
+    endif
+  endfor
+
+  # States and labels
+  assign soon = false
+  if p.metafields.custom.coming_soon.value == true
+    assign soon = true
+  endif
+  assign sold_out = false
+  if p.available == false and soon == false
+    assign sold_out = true
+  endif
+  assign limited = false
+  if p.metafields.custom.limited_edition.value == true
+    assign limited = true
+  endif
+  assign is_new = false
+  if settings.ohf_new_collection != blank
+    assign collection_handles = p.collections | map: 'handle'
+    if collection_handles contains settings.ohf_new_collection.handle
+      assign is_new = true
+    endif
+  endif
+
+  assign back = null
+  if show_secondary_image and p.media[1] != null and sold_out == false and soon == false
+    assign back = p.media[1]
+  endif
+
+  assign link_id = 'CardLink-' | append: section_id | append: '-' | append: p.id
+  assign title_id = 'title-' | append: section_id | append: '-' | append: p.id
+  assign sizes = '(min-width: 1440px) 320px, (min-width: 990px) calc((100vw - 160px) / 4), (min-width: 750px) calc((100vw - 120px) / 3), calc((100vw - 48px) / 2)'
+-%}
+
+<product-component view-event-payload="{{ p | standard_event_data: 'view', context: product_view_context | escape }}">
+  <div class="card-wrapper product-card-wrapper ohf-card-wrapper">
+    <article
+      class="ohf-card{% if sold_out %} ohf-card--soldout{% endif %}{% if soon %} ohf-card--soon{% endif %}"
+      aria-labelledby="{{ title_id }}"
+    >
+      <div class="ohf-card__visual">
+        <div class="ohf-card__media{% if back %} ohf-card__media--swap{% endif %}">
+          {%- if p.featured_media -%}
+            {%- liquid
+              assign loading = 'lazy'
+              if lazy_load == false
+                assign loading = 'eager'
+              endif
+            -%}
+            {{
+              p.featured_media
+              | image_url: width: 1066
+              | image_tag:
+                widths: '360, 533, 720, 940, 1066',
+                sizes: sizes,
+                loading: loading,
+                class: 'ohf-card__img ohf-card__img--front',
+                alt: p.featured_media.alt
+            }}
+            {%- if back -%}
+              {{
+                back
+                | image_url: width: 1066
+                | image_tag:
+                  widths: '360, 533, 720, 940, 1066',
+                  sizes: sizes,
+                  loading: 'lazy',
+                  class: 'ohf-card__img ohf-card__img--back',
+                  alt: ''
+              }}
+            {%- endif -%}
+            {%- if color_option -%}
+              {%- comment -%} Filled on first swatch hover by card-color-swatches.js {%- endcomment -%}
+              {% comment %}theme-check-disable ImgLazyLoading{% endcomment %}
+              <img
+                class="ohf-card__img card__color-preview"
+                data-color-preview
+                sizes="{{ sizes }}"
+                alt=""
+                aria-hidden="true"
+                width="{{ p.featured_media.width }}"
+                height="{{ p.featured_media.height }}"
+              >
+              {% comment %}theme-check-enable ImgLazyLoading{% endcomment %}
+            {%- endif -%}
+          {%- else -%}
+            {{ 'product-apparel-2' | placeholder_svg_tag: 'ohf-card__img ohf-card__placeholder' }}
+          {%- endif -%}
+          {%- if soon -%}
+            <span class="ohf-card__glass" aria-hidden="true"></span>
+          {%- endif -%}
+        </div>
+
+        {%- if is_new or limited or sold_out or soon -%}
+          <div class="ohf-card__top">
+            <div class="ohf-card__labels">
+              {%- if soon -%}
+                <span class="ohf-label ohf-label--soon">{{ 'Coming soon' }}</span>
+              {%- elsif sold_out -%}
+                <span class="ohf-label ohf-label--soldout">{{ 'products.product.sold_out' | t }}</span>
+              {%- endif -%}
+              {%- if is_new -%}
+                <span class="ohf-label ohf-label--new">{{ settings.ohf_card_new_label | escape }}</span>
+              {%- endif -%}
+              {%- if limited -%}
+                <span class="ohf-label ohf-label--limited">Limited edition</span>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endif -%}
+
+        {%- if quick_add == 'standard' and sold_out == false and soon == false -%}
+          {%- liquid
+            assign product_form_id = 'quick-add-' | append: section_id | append: p.id
+            assign qty_rules = false
+            assign rule = p.selected_or_first_available_variant.quantity_rule
+            if rule.min > 1 or rule.max != null or rule.increment > 1
+              assign qty_rules = true
+            endif
+          -%}
+          <div class="ohf-card__add quick-add no-js-hidden">
+            {%- if p.variants_count > 1 or qty_rules -%}
+              <modal-opener data-modal="#QuickAdd-{{ p.id }}">
+                <button
+                  id="{{ product_form_id }}-submit"
+                  type="submit"
+                  name="add"
+                  class="ohf-cta ohf-cta--fill ohf-cta--icon quick-add__submit"
+                  aria-haspopup="dialog"
+                  aria-label="{{ 'products.product.choose_product_options' | t: product_name: p.title | escape }}"
+                  data-product-url="{{ p.url }}"
+                >
+                  <span class="ohf-card__plus" aria-hidden="true"></span>
+                  {%- render 'loading-spinner' -%}
+                </button>
+              </modal-opener>
+              <quick-add-modal id="QuickAdd-{{ p.id }}" class="quick-add-modal">
+                <div
+                  role="dialog"
+                  aria-label="{{ 'products.product.choose_product_options' | t: product_name: p.title | escape }}"
+                  aria-modal="true"
+                  class="quick-add-modal__content global-settings-popup"
+                  tabindex="-1"
+                >
+                  <button
+                    id="ModalClose-{{ p.id }}"
+                    type="button"
+                    class="quick-add-modal__toggle"
+                    aria-label="{{ 'accessibility.close' | t }}"
+                  >
+                    {{- 'icon-close.svg' | inline_asset_content -}}
+                  </button>
+                  <div id="QuickAddInfo-{{ p.id }}" class="quick-add-modal__content-info"></div>
+                </div>
+              </quick-add-modal>
+            {%- else -%}
+              <product-form data-section-id="{{ section.id }}">
+                {%- form 'product', p, id: product_form_id, class: 'form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+                  <input
+                    type="hidden"
+                    name="id"
+                    value="{{ p.selected_or_first_available_variant.id }}"
+                    class="product-variant-id"
+                  >
+                  <button
+                    id="{{ product_form_id }}-submit"
+                    type="submit"
+                    name="add"
+                    class="ohf-cta ohf-cta--fill ohf-cta--icon quick-add__submit"
+                    aria-label="{{ 'products.product.add_to_cart' | t }}: {{ p.title | escape }}"
+                    aria-live="polite"
+                    data-sold-out-message="true"
+                  >
+                    <span class="ohf-card__plus" aria-hidden="true"></span>
+                    <span class="sold-out-message hidden">{{ 'products.product.sold_out' | t }}</span>
+                    {%- render 'loading-spinner' -%}
+                  </button>
+                {%- endform -%}
+              </product-form>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      </div>
+
+      <div class="ohf-card__desc">
+        {%- if category != blank or project != blank -%}
+          <p class="ohf-card__cat">
+            {{- category | escape -}}
+            {%- if category != blank and project != blank -%}
+              <span class="ohf-card__sep" aria-hidden="true"> · </span>
+            {%- endif -%}
+            {%- if project != blank -%}
+              <span class="ohf-card__project">{{ project | escape }}</span>
+            {%- endif -%}
+          </p>
+        {%- endif -%}
+
+        <h3 class="ohf-card__name card__heading" id="{{ title_id }}">
+          <a href="{{ p.url }}" id="{{ link_id }}" class="ohf-card__link">{{ p.title | escape }}</a>
+        </h3>
+
+        {%- if color_option -%}
+          {% render 'card-color-swatches',
+            card_product: p,
+            option: color_option,
+            option_index: color_option_index,
+            shape: settings.card_swatch_shape,
+            sizes: sizes
+          %}
+        {%- endif -%}
+
+        <p class="ohf-card__price">
+          {%- if soon -%}
+            <span class="ohf-card__price--soon">Coming soon</span>
+          {%- elsif sold_out -%}
+            <s>{{ p.price | money }}</s>
+            <span class="visually-hidden">{{ 'products.product.sold_out' | t }}</span>
+          {%- else -%}
+            {%- if p.price_varies -%}
+              {%- assign from_price = p.price_min | money -%}
+              {{ 'products.product.price.from_price_html' | t: price: from_price }}
+            {%- else -%}
+              {{ p.price | money }}
+            {%- endif -%}
+            {%- if p.compare_at_price > p.price -%}
+              <span class="visually-hidden">{{ 'products.product.price.regular_price' | t }}</span>
+              <s class="ohf-card__compare">{{ p.compare_at_price | money }}</s>
+            {%- endif -%}
+          {%- endif -%}
+        </p>
+
+        {%- if sold_out -%}
+          <p class="ohf-card__more ohf-card__more--off">Out of stock</p>
+        {%- elsif soon -%}
+          <p class="ohf-card__more ohf-card__more--off">Coming soon</p>
+        {%- else -%}
+          <span class="ohf-card__more" aria-hidden="true">
+            View product
+            {%- render 'ohf-icon', icon: 'arrow-right', size: 16 -%}
+          </span>
+        {%- endif -%}
+      </div>
+    </article>
+  </div>
+</product-component>

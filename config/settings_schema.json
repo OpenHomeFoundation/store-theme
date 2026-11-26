@@ -154,6 +154,44 @@
     ]
   },
   {
+    "name": "OHF product cards",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "ohf_cards",
+        "default": true,
+        "label": "Use OHF product cards",
+        "info": "The redesign's card everywhere products are listed. Turn off to go back to Dawn's card."
+      },
+      {
+        "type": "textarea",
+        "id": "ohf_card_categories",
+        "label": "Category names",
+        "default": "T-Shirt: T-Shirts & Polos\nPolo Shirt: T-Shirts & Polos\nHoodie: Sweatshirts\nCap: Hats\nBeanie: Hats\nSticker Pack: Stickers & paper\nCalendar: Stickers & paper\nTote Bag: Accessories\nSocks: Accessories",
+        "info": "One per line: product type, a colon, then the category name shown on cards. Types not listed show as they are."
+      },
+      {
+        "type": "text",
+        "id": "ohf_card_projects",
+        "label": "Project tags",
+        "default": "Home Assistant, ESPHome, Music Assistant, Open Home Foundation",
+        "info": "Comma-separated, in order of priority. A card shows the first of these tags its product has."
+      },
+      {
+        "type": "collection",
+        "id": "ohf_new_collection",
+        "label": "New collection",
+        "info": "Products in this collection get the NEW label."
+      },
+      {
+        "type": "text",
+        "id": "ohf_card_new_label",
+        "label": "NEW label text",
+        "default": "New"
+      }
+    ]
+  },
+  {
     "name": "t:settings_schema.layout.name",
     "settings": [
       {

@@ -31,7 +31,20 @@
   {{ 'component-swatch.css' | asset_url | stylesheet_tag }}
   {{ 'component-card-swatches.css' | asset_url | stylesheet_tag }}
 {%- endunless -%}
-{%- if card_product and card_product != empty -%}
+{%- comment -%}
+  Redesign 2026: with "Use OHF product cards" on (Theme settings › OHF product cards), every card is the
+  OHF card (snippets/ohf-card.liquid). Dawn's card below stays as the fallback when the setting is off.
+{%- endcomment -%}
+{%- if settings.ohf_cards and card_product and card_product != empty -%}
+  {%- render 'ohf-card',
+    card_product: card_product,
+    show_secondary_image: show_secondary_image,
+    lazy_load: lazy_load,
+    quick_add: quick_add,
+    section_id: section_id,
+    product_view_context: product_view_context
+  -%}
+{%- elsif card_product and card_product != empty -%}
   {%- liquid
     assign ratio = 1
     if card_product.featured_media and media_aspect_ratio == 'portrait'

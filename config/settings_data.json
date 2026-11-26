@@ -201,7 +201,11 @@
         }
       }
     },
-    "ohf_brand_fonts": true
+    "ohf_brand_fonts": true,
+    "ohf_cards": true,
+    "ohf_card_categories": "T-Shirt: T-Shirts & Polos\nPolo Shirt: T-Shirts & Polos\nHoodie: Sweatshirts\nCap: Hats\nBeanie: Hats\nSticker Pack: Stickers & paper\nCalendar: Stickers & paper\nTote Bag: Accessories\nSocks: Accessories",
+    "ohf_card_projects": "Home Assistant, ESPHome, Music Assistant, Open Home Foundation",
+    "ohf_card_new_label": "New"
   },
   "presets": {
     "Dawn": {
